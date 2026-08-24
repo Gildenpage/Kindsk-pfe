@@ -437,7 +437,7 @@ async function manageOwnSignup(type,id,player,character,pin,action){
 }
 
 function renderCountdown(item){
-  const start=getStartDate(item);
+  const start=getStartDate(item).getTime();
   return `<div class="countdown" data-countdown-start="${start}">
     <div class="countdown-title">⏳ Beginn in</div>
     <div class="countdown-value countdown-value-live"></div>
