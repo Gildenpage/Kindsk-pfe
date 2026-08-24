@@ -53,6 +53,7 @@ nav button:hover,.btn:hover{transform:translateY(-1px)}nav button:hover,.btn-pri
 .nav-manage:hover{background:#294554!important;border-color:#D2042D !important;color:#fff!important}
 .nav-admin button{background:#202a31;border-color:#D2042D;color:#d7dde1;box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
 .nav-admin button:hover{background:#2b343a!important;border-color:#D2042D!important;color:#fff!important}
+.admin-only{display:none!important}.admin-only.admin-visible{display:inline-block!important}
 
 .btn-secondary{background:#364653;color:#fff}.btn-green{background:var(--green);color:#fff}.btn-danger{background:var(--red);color:#fff}.btn-small{padding:7px 10px;font-size:12px}
 main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
@@ -174,10 +175,10 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 </nav>
 
 <main>
-<section id="news"><div class="section-title"><h2>📰 Gilden-News</h2><button class="btn btn-primary" onclick="openNewsForm()">+ News erstellen</button></div><div class="news-section-layout"><div id="newsContainer" class="news-grid"></div><a class="raid-list-promo" href="https://docs.google.com/spreadsheets/d/13I4Sy8UiBRHpBlb_rRxFmuodSa6UQtPj_z4y257GPPQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Hier gehts zur Raid Liste"><div class="raid-list-promo-content"><div class="raid-list-promo-kicker">Kindsköpfe · Raidkader</div><h3 class="raid-list-promo-title">Hier gehts zur Raid Liste</h3><p class="raid-list-promo-subtitle">Raidübersicht öffnen und direkt zur aktuellen Liste gelangen.</p></div></a></div></section>
-<section id="raids"><div class="section-title"><h2>⚔️ Raidplaner</h2><button class="btn btn-primary" onclick="openRaidForm()">+ Raid erstellen</button></div><div id="raidContainer"></div></section>
-<section id="events"><div class="section-title"><h2>🎉 Eventplaner</h2><button class="btn btn-primary" onclick="openEventForm()">+ Event erstellen</button></div><div id="eventContainer"></div></section>
-<section id="calendar"><div class="section-title"><h2>📅 Gildenkalender</h2><button class="btn btn-primary" onclick="openCalendarEntryForm()">+ Kalendereintrag</button></div>
+<section id="news"><div class="section-title"><h2>📰 Gilden-News</h2><button class="btn btn-primary admin-only" onclick="openNewsForm()">+ News erstellen</button></div><div class="news-section-layout"><div id="newsContainer" class="news-grid"></div><a class="raid-list-promo" href="https://docs.google.com/spreadsheets/d/13I4Sy8UiBRHpBlb_rRxFmuodSa6UQtPj_z4y257GPPQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Hier gehts zur Raid Liste"><div class="raid-list-promo-content"><div class="raid-list-promo-kicker">Kindsköpfe · Raidkader</div><h3 class="raid-list-promo-title">Hier gehts zur Raid Liste</h3><p class="raid-list-promo-subtitle">Raidübersicht öffnen und direkt zur aktuellen Liste gelangen.</p></div></a></div></section>
+<section id="raids"><div class="section-title"><h2>⚔️ Raidplaner</h2><button class="btn btn-primary admin-only" onclick="openRaidForm()">+ Raid erstellen</button></div><div id="raidContainer"></div></section>
+<section id="events"><div class="section-title"><h2>🎉 Eventplaner</h2><button class="btn btn-primary admin-only" onclick="openEventForm()">+ Event erstellen</button></div><div id="eventContainer"></div></section>
+<section id="calendar"><div class="section-title"><h2>📅 Gildenkalender</h2><button class="btn btn-primary admin-only" onclick="openCalendarEntryForm()">+ Kalendereintrag</button></div>
 <div class="calendar"><div class="calendar-toolbar"><button onclick="changeMonth(-1)">‹</button><h3 id="calendarTitle"></h3><button onclick="changeMonth(1)">›</button></div>
 <div class="weekdays"><div>Mo</div><div>Di</div><div>Mi</div><div>Do</div><div>Fr</div><div>Sa</div><div>So</div></div><div id="calendarGrid" class="calendar-grid"></div></div></section>
 </main>
@@ -304,9 +305,10 @@ async function updateAdminState(session){
  if(!isAdmin) showToast("⚠️ Eingeloggt, aber keine Adminrechte.");
 }
 function updateAdminStatus(){
- const el=document.getElementById("adminStatus");
- el.textContent=isAdmin?"🔐 Admin-Modus aktiv":"🔓 Eingeloggt – keine Adminrechte";
- el.classList.toggle("active",isAdmin);
+  const el=document.getElementById("adminStatus");
+  el.textContent=isAdmin?"🔐 Admin-Modus aktiv":"🔓 Eingeloggt – keine Adminrechte";
+  el.classList.toggle("active",isAdmin);
+  document.querySelectorAll(".admin-only").forEach(el=>el.classList.toggle("admin-visible",isAdmin));
 }
 
 /* ===== ADMIN AUTH ===== */
@@ -328,16 +330,53 @@ async function loginAdmin(){
  if(isAdmin) showToast("🔐 Admin-Modus aktiviert.");
 }
 /* ===== NEWS ===== */
-function openNewsForm(){
- if(!isAdmin){alert("Nur der Admin kann News erstellen.");return;}
- openModal(`<h2>📰 News erstellen</h2><div class="form-group"><label>Überschrift *</label><input id="newsTitle"></div><div class="form-group"><label>Nachricht *</label><textarea id="newsText"></textarea></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveNews()">Veröffentlichen</button></div>`);
+function openNewsForm(id=null){
+  if(!isAdmin){alert("Nur der Admin kann News erstellen oder bearbeiten.");return;}
+  const n=id===null?null:news.find(x=>x.id===id);
+  if(id!==null&&!n)return;
+  openModal(`<h2>📰 ${n?"News bearbeiten":"News erstellen"}</h2>
+    <div class="form-group"><label>Überschrift *</label><input id="newsTitle" value="${n?escapeHTML(n.title):""}"></div>
+    <div class="form-group"><label>Nachricht *</label><textarea id="newsText">${n?escapeHTML(n.text):""}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveNews(${id===null?"null":id})">💾 ${n?"Änderungen speichern":"Veröffentlichen"}</button>
+    </div>`);
 }
-async function saveNews(){ if(!isAdmin){alert("Admin-Sitzung ist nicht mehr aktiv. Bitte neu einloggen.");return;}
- const title=document.getElementById("newsTitle").value.trim(),text=document.getElementById("newsText").value.trim();if(!title||!text){alert("Bitte alle Felder ausfüllen.");return;}
- const {error}=await supabaseClient.from("news").insert({title,text});if(error){dbError(error);return;}closeModal();await refreshData();showToast("📰 News veröffentlicht.");
+async function saveNews(id=null){
+  if(!isAdmin){alert("Admin-Sitzung ist nicht mehr aktiv. Bitte neu einloggen.");return;}
+  const title=document.getElementById("newsTitle")?.value.trim()||"";
+  const text=document.getElementById("newsText")?.value.trim()||"";
+  if(!title||!text){alert("Bitte alle Felder ausfüllen.");return;}
+  const payload={title,text};
+  const q=id===null
+    ?supabaseClient.from("news").insert(payload)
+    :supabaseClient.from("news").update(payload).eq("id",id);
+  const {error}=await q;
+  if(error){dbError(error);return;}
+  closeModal();
+  await refreshData();
+  showToast(id===null?"📰 News veröffentlicht.":"📰 News aktualisiert.");
 }
-async function deleteNews(id){if(!isAdmin||!confirm("News wirklich löschen?"))return;const {error}=await supabaseClient.from("news").delete().eq("id",id);if(error){dbError(error);return;}await refreshData();showToast("News gelöscht.");}
-function renderNews(){const c=document.getElementById("newsContainer");c.innerHTML="";if(!news.length){c.innerHTML='<div class="news-card">Noch keine News vorhanden.</div>';return;}news.forEach(n=>c.insertAdjacentHTML("beforeend",`<article class="news-card"><h3>${escapeHTML(n.title)}</h3><div class="news-date">${escapeHTML(new Date(n.created_at).toLocaleDateString("de-DE"))}</div><div class="news-text">${escapeHTML(n.text)}</div>${isAdmin?`<br><button class="btn btn-danger btn-small" onclick="deleteNews(${n.id})">🗑️ Löschen</button>`:""}</article>`));}
+async function deleteNews(id){
+  if(!isAdmin||!confirm("News wirklich löschen?"))return;
+  const {error}=await supabaseClient.from("news").delete().eq("id",id);
+  if(error){dbError(error);return;}
+  await refreshData();
+  showToast("News gelöscht.");
+}
+function renderNews(){
+  const c=document.getElementById("newsContainer");
+  c.innerHTML="";
+  if(!news.length){c.innerHTML='<div class="news-card">Noch keine News vorhanden.</div>';return;}
+  news.forEach(n=>c.insertAdjacentHTML("beforeend",`<article class="news-card">
+    <h3>${escapeHTML(n.title)}</h3>
+    <div class="news-date">${escapeHTML(new Date(n.created_at).toLocaleDateString("de-DE"))}</div>
+    <div class="news-text">${escapeHTML(n.text)}</div>
+    ${isAdmin?`<br>
+      <button class="btn btn-secondary btn-small" onclick="openNewsForm(${n.id})">✏️ Bearbeiten</button>
+      <button class="btn btn-danger btn-small" onclick="deleteNews(${n.id})">🗑️ Löschen</button>`:""}
+  </article>`));
+}
 
 /* ===== KALENDER ===== */
 function openCalendarEntryForm(id=null){
