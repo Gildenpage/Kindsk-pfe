@@ -38,9 +38,17 @@ background:linear-gradient(rgba(2,8,15,.25),rgba(2,7,13,.88)),radial-gradient(el
 .hero-line{width:min(600px,80%);height:2px;margin:20px auto;background:linear-gradient(90deg,transparent,var(--gold),var(--gold2),var(--gold),transparent)}
 .hero-subtitle{margin:0;color:var(--gold2);font:700 clamp(20px,3vw,34px) Georgia,serif;letter-spacing:4px;text-transform:uppercase}
 .hero-description{color:#d4e5f2;letter-spacing:2px}
-nav{position:sticky;top:0;z-index:100;display:flex;justify-content:center;flex-wrap:wrap;gap:7px;padding:10px;background:rgba(5,10,16,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
-nav button,.btn{border:1px solid #354656;border-radius:5px;padding:10px 15px;color:#eee;background:#17232f;transition:.2s}
+nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;padding:10px 14px;background:rgba(5,10,16,.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--border)}
+.nav-main{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:8px;margin:0}
+.nav-admin{display:flex;align-items:center;flex:0 0 auto;margin-left:0;padding-left:0;border-left:0}
+nav button,.btn{border:1px solid #354656;border-radius:6px;padding:10px 15px;color:#eee;background:#17232f;transition:.2s}
 nav button:hover,.btn:hover{transform:translateY(-1px)}nav button:hover,.btn-primary{background:var(--gold);color:#111;border-color:var(--gold)}
+.nav-separator{width:1px;height:30px;background:linear-gradient(to bottom,transparent,rgba(216,173,75,.55),transparent);margin:0 8px;flex:0 0 1px}
+.nav-manage{margin-left:0;background:#20313d;border-color:#456474;color:#cfe4ec}
+.nav-manage:hover{background:#294554!important;border-color:#628497!important;color:#fff!important}
+.nav-admin button{background:#202a31;border-color:#59636a;color:#d7dde1;box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)}
+.nav-admin button:hover{background:#2b343a!important;border-color:#7a858c!important;color:#fff!important}
+
 .btn-secondary{background:#364653;color:#fff}.btn-green{background:var(--green);color:#fff}.btn-danger{background:var(--red);color:#fff}.btn-small{padding:7px 10px;font-size:12px}
 main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
 .section-title{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
@@ -78,7 +86,7 @@ main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
 .status-action{border:1px solid #35495b;border-radius:4px;background:#17232f;color:#ddd;padding:2px 5px;font-size:12px;line-height:1;cursor:pointer}
 .status-action:hover{border-color:var(--gold);transform:translateY(-1px)}
 
-@media(max-width:800px){.status-groups{grid-template-columns:1fr}}
+@media(max-width:800px){.status-groups{grid-template-columns:1fr}.modal-actions .btn{min-height:40px}}
 .toast{position:fixed;left:50%;bottom:25px;z-index:2000;padding:13px 20px;color:#fff;background:#222c36;border:1px solid var(--gold);border-radius:6px;opacity:0;transform:translate(-50%,30px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
 .admin-status{position:fixed;right:15px;bottom:15px;z-index:900;display:none;padding:10px 14px;color:#fff;background:#2e783f;border-radius:5px;font-size:13px;font-weight:bold}.admin-status.active{display:block}
 footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(--border)}footer strong{color:var(--gold)}
@@ -91,7 +99,10 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   .hero-line{width:75%;margin:12px auto}
   .hero-subtitle{font-size:clamp(15px,5vw,22px);letter-spacing:1.5px}
   .hero-description{font-size:12px;letter-spacing:.5px;margin:10px 0 0}
-  nav{gap:5px;padding:7px 5px}
+  nav{gap:8px;padding:7px 5px}
+  .nav-main{gap:6px}
+  .nav-admin{margin-left:0;padding-left:0}
+  .nav-separator{height:24px;margin:0 6px}
   nav button{padding:7px 9px;font-size:12px}
   main{width:calc(100% - 20px);margin:25px auto 50px}
   section{margin-bottom:45px}
@@ -116,11 +127,18 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 </div></header>
 
 <nav>
-<button onclick="scrollToSection('news')">📰 News</button>
-<button onclick="scrollToSection('raids')">⚔️ Raidplaner</button>
-<button onclick="scrollToSection('events')">🎉 Eventplaner</button>
-<button onclick="scrollToSection('calendar')">📅 Kalender</button>
-<button onclick="openAdminLogin()">🔐 Admin</button>
+  <div class="nav-main">
+    <button onclick="scrollToSection('news')">📰 News</button>
+    <button onclick="scrollToSection('raids')">⚔️ Raidplaner</button>
+    <button onclick="scrollToSection('events')">🎉 Eventplaner</button>
+    <button onclick="scrollToSection('calendar')">📅 Kalender</button>
+    <span class="nav-separator" aria-hidden="true"></span>
+    <button class="nav-manage" onclick="openManageSignupChooser()">🔑 Meine Anmeldung</button>
+  </div>
+  <div class="nav-admin">
+    <span class="nav-separator" aria-hidden="true"></span>
+    <button onclick="openAdminLogin()">🔐 Admin</button>
+  </div>
 </nav>
 
 <main>
@@ -203,7 +221,7 @@ async function refreshData(){
   supabaseClient.from("raids").select("*").order("date",{ascending:true}).order("time",{ascending:true}),
   supabaseClient.from("events").select("*").order("date",{ascending:true}).order("time",{ascending:true}),
   supabaseClient.from("calendar_entries").select("*").order("date",{ascending:true}).order("time",{ascending:true}),
-  supabaseClient.from("signups").select("*").order("created_at",{ascending:true})
+  supabaseClient.rpc("get_public_signups")
  ]);
  for(const x of [n,r,e,c,s]) if(x.error){dbError(x.error);return;}
  news=n.data||[];raids=r.data||[];events=e.data||[];calendarEntries=c.data||[];
@@ -329,47 +347,87 @@ async function deleteRaid(id){
  showToast("⚔️ Raid und zugehörige Teilnehmer gelöscht.");
 }
 async function removeRaidPlayer(rid,pid){if(!isAdmin)return;if(!confirm("Anmeldung wirklich entfernen?"))return;const {error}=await supabaseClient.from("signups").delete().eq("id",pid);if(error){dbError(error);return;}await refreshData();}
-function signupTokenKey(type,id){return `kindsköpfe_signup_token_${type}_${id}`;}
-function rememberSignupToken(type,id,token){if(token){try{localStorage.setItem(signupTokenKey(type,id),String(token));}catch(e){}}}
-function getSignupToken(type,id){try{return localStorage.getItem(signupTokenKey(type,id));}catch(e){return null;}}
-function forgetSignupToken(type,id){try{localStorage.removeItem(signupTokenKey(type,id));}catch(e){}}
-async function removeOwnSignup(pid){
- const p=[...raids.flatMap(r=>r.players||[]),...events.flatMap(e=>e.players||[])].find(x=>x.id===pid); if(!p)return;
- const type=p.item_type,itemId=p.item_id; let token=getSignupToken(type,itemId);
- if(!token){token=prompt("Sicherheitscode eingeben:");if(token===null)return;token=token.trim();}
- if(!token)return alert("Kein Sicherheitscode angegeben.");
- if(!confirm(`Anmeldung von „${p.player}“ für „${p.character}“ wirklich entfernen?`))return;
- const {data,error}=await supabaseClient.rpc("remove_own_signup",{p_signup_id:pid,p_signup_token:token});
- if(error){dbError(error);return;}
- if(data?.ok===false){forgetSignupToken(type,itemId);alert(data.message||"Die Anmeldung konnte nicht entfernt werden.");return;}
- forgetSignupToken(type,itemId);await refreshData();showToast("✅ Deine Anmeldung wurde entfernt.");
+function normalizeName(v){return String(v||"").trim();}
+function pinIsValid(pin){return /^\d{4,6}$/.test(String(pin||"").trim());}
+
+function openManageSignupChooser(){
+  if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
+  openModal(`<h2>🔑 Meine Anmeldung verwalten</h2>
+  <p class="muted">Gib Spielername, Charaktername und deinen persönlichen PIN ein. Damit kannst du deine Anmeldung auf jedem Handy oder PC verwalten.</p>
+  <div class="form-group"><label>Raid / Event *</label><select id="manageItemType"><option value="raid">⚔️ Raid</option><option value="event">🎉 Event</option></select></div>
+  <div class="form-group"><label>Eintrag *</label><select id="manageItemId"></select></div>
+  <div class="form-group"><label>Spielername *</label><input id="managePlayer" autocomplete="username"></div>
+  <div class="form-group"><label>Charaktername *</label><input id="manageCharacter"></div>
+  <div class="form-group"><label>Persönlicher PIN *</label><input id="managePin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="off" placeholder="4–6 Ziffern"></div>
+  <p class="signup-status-help">Der PIN wird nur zur Prüfung verwendet und nicht im Klartext gespeichert. Teile ihn mit niemandem.</p>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="lookupManagedSignup()">Weiter</button></div>`);
+  document.getElementById("manageItemType").addEventListener("change",updateManageItems);
+  updateManageItems();
 }
-function renderCountdown(item){let ms=getStartDate(item)-Date.now();if(ms<=0)return `<div class="countdown"><div class="countdown-title">Status</div><div class="countdown-value started">🔴 STARTZEIT ERREICHT</div></div>`;let s=Math.floor(ms/1000),d=Math.floor(s/86400);s%=86400;let h=Math.floor(s/3600);s%=3600;let min=Math.floor(s/60);s%=60;return `<div class="countdown"><div class="countdown-title">⏳ Beginn in</div><div class="countdown-value"><span>${d}</span> Tage · <span>${String(h).padStart(2,"0")}</span> Stunden · <span>${String(min).padStart(2,"0")}</span> Minuten · <span>${String(s).padStart(2,"0")}</span> Sekunden</div></div>`;}
-async function setOwnSignupStatus(pid,newStatus){
-  const p=[...raids.flatMap(r=>r.players||[]),...events.flatMap(e=>e.players||[])].find(x=>x.id===pid);
-  if(!p)return;
-  const type=p.item_type,itemId=p.item_id;
-  let token=getSignupToken(type,itemId);
-  if(!token){
-    token=prompt("Sicherheitscode eingeben:");
-    if(token===null)return;
-    token=token.trim();
-  }
-  if(!token)return alert("Kein Sicherheitscode angegeben.");
-  const {data,error}=await supabaseClient.rpc("update_own_signup_status",{p_signup_id:pid,p_signup_token:token,p_status:newStatus});
+
+function openManageSignupChooserFor(type,id){
+  openManageSignupChooser();
+  const typeEl=document.getElementById("manageItemType");
+  if(typeEl){typeEl.value=type;updateManageItems();}
+  const idEl=document.getElementById("manageItemId");
+  if(idEl)idEl.value=String(id);
+}
+
+function updateManageItems(){
+  const type=document.getElementById("manageItemType")?.value;
+  const sel=document.getElementById("manageItemId"); if(!sel)return;
+  const list=type==="raid"?raids:events;
+  sel.innerHTML=list.slice().sort((a,b)=>getStartDate(a)-getStartDate(b))
+    .map(x=>`<option value="${x.id}">${escapeHTML(x.name)} · ${escapeHTML(formatDate(x.date))} · ${escapeHTML(x.time)}</option>`).join("");
+  if(!list.length)sel.innerHTML='<option value="">Keine Einträge vorhanden</option>';
+}
+
+async function lookupManagedSignup(){
+  const type=document.getElementById("manageItemType")?.value;
+  const id=Number(document.getElementById("manageItemId")?.value);
+  const player=normalizeName(document.getElementById("managePlayer")?.value);
+  const character=normalizeName(document.getElementById("manageCharacter")?.value);
+  const pin=normalizeName(document.getElementById("managePin")?.value);
+  if(!id||!player||!character||!pinIsValid(pin)){alert("Bitte Eintrag, Spielername, Charaktername und einen 4–6-stelligen PIN eingeben.");return;}
+  const {data,error}=await supabaseClient.rpc("manage_signup",{p_item_type:type,p_item_id:id,p_player:player,p_character:character,p_pin:pin,p_action:"lookup",p_status:null});
   if(error){dbError(error);return;}
-  if(data?.ok===false){
-    forgetSignupToken(type,itemId);
-    alert(data.message||"Der Status konnte nicht geändert werden.");
-    return;
-  }
-  rememberSignupToken(type,itemId,token);
-  await refreshData();
-  const labels={confirmed:"Dabei",bench:"Ersatzbank",uncertain:"Unsicher",absent:"Abwesend"};
-  showToast("✅ Status: "+labels[newStatus]);
+  if(!data?.ok){alert(data?.message||"Anmeldung nicht gefunden oder PIN falsch.");return;}
+  openManagedSignupActions(type,id,player,character,pin,data.signup);
 }
+
+function openManagedSignupActions(type,id,player,character,pin,signup){
+  const labels={confirmed:"Dabei",bench:"Ersatzbank",uncertain:"Unsicher",absent:"Abwesend"};
+  const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);
+  openModal(`<h2>🔑 Anmeldung gefunden</h2>
+  <div class="news-card" style="margin-bottom:15px"><strong>${escapeHTML(player)}</strong> · ${escapeHTML(character)}<br><span class="muted">${escapeHTML(item?.name||"")}</span><br><br>Aktueller Status: <strong>${labels[signup.status]||signup.status}</strong></div>
+  <p class="muted">Was möchtest du ändern?</p>
+  <div class="modal-actions" style="justify-content:flex-start">
+    <button class="btn btn-green" onclick="manageOwnSignup('${type}',${id},'${escapeJS(player)}','${escapeJS(character)}','${escapeJS(pin)}','confirmed')">✅ Dabei</button>
+    <button class="btn btn-secondary" onclick="manageOwnSignup('${type}',${id},'${escapeJS(player)}','${escapeJS(character)}','${escapeJS(pin)}','bench')">🪑 Ersatzbank</button>
+    <button class="btn btn-secondary" onclick="manageOwnSignup('${type}',${id},'${escapeJS(player)}','${escapeJS(character)}','${escapeJS(pin)}','uncertain')">❓ Unsicher</button>
+    <button class="btn btn-secondary" onclick="manageOwnSignup('${type}',${id},'${escapeJS(player)}','${escapeJS(character)}','${escapeJS(pin)}','absent')">🚫 Abwesend</button>
+    <button class="btn btn-danger" onclick="manageOwnSignup('${type}',${id},'${escapeJS(player)}','${escapeJS(character)}','${escapeJS(pin)}','delete')">🗑️ Anmeldung entfernen</button>
+  </div>
+  <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Schließen</button></div>`);
+}
+
+function escapeJS(v){return String(v??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,"\\n").replace(/\r/g,"\\r");}
+
+async function manageOwnSignup(type,id,player,character,pin,action){
+  if(action==="delete"&&!confirm(`Anmeldung von „${player}“ für „${character}“ wirklich entfernen?`))return;
+  const status=action==="delete"?null:action;
+  const {data,error}=await supabaseClient.rpc("manage_signup",{p_item_type:type,p_item_id:id,p_player:player,p_character:character,p_pin:pin,p_action:action,p_status:status});
+  if(error){dbError(error);return;}
+  if(!data?.ok){alert(data?.message||"Die Änderung konnte nicht durchgeführt werden.");return;}
+  closeModal();await refreshData();
+  showToast(action==="delete"?"✅ Anmeldung entfernt.":"✅ Status: "+({confirmed:"Dabei",bench:"Ersatzbank",uncertain:"Unsicher",absent:"Abwesend"}[action]||action));
+}
+
+function renderCountdown(item){let ms=getStartDate(item)-Date.now();if(ms<=0)return `<div class="countdown"><div class="countdown-title">Status</div><div class="countdown-value started">🔴 STARTZEIT ERREICHT</div></div>`;let s=Math.floor(ms/1000),d=Math.floor(s/86400);s%=86400;let h=Math.floor(s/3600);s%=3600;let min=Math.floor(s/60);s%=60;return `<div class="countdown"><div class="countdown-title">⏳ Beginn in</div><div class="countdown-value"><span>${d}</span> Tage · <span>${String(h).padStart(2,"0")}</span> Stunden · <span>${String(min).padStart(2,"0")}</span> Minuten · <span>${String(s).padStart(2,"0")}</span> Sekunden</div></div>`;}
+// Eigene Anmeldungen werden ausschließlich über „Meine Anmeldung verwalten“ und den persönlichen PIN verwaltet.
+
 function renderRaids(){
- const c=document.getElementById("raidContainer");c.innerHTML="";if(!raids.length){c.innerHTML='<div class="raid-card"><div class="card-body muted">Noch keine Raids erstellt.</div></div>';return;}raids.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(r=>{r.players=r.players||[];const confirmed=r.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=r.players.filter(p=>p.status==="bench"),uncertain=r.players.filter(p=>p.status==="uncertain"),absent=r.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,r.size-confirmed.length),pct=Math.min(100,confirmed.length/r.size*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small><span class="status-actions" title="Eigenen Status ändern"><button class="status-action" onclick="setOwnSignupStatus(${p.id},'confirmed')" title="Dabei">✅</button><button class="status-action" onclick="setOwnSignupStatus(${p.id},'bench')" title="Ersatzbank">🪑</button><button class="status-action" onclick="setOwnSignupStatus(${p.id},'uncertain')" title="Unsicher">❓</button><button class="status-action" onclick="setOwnSignupStatus(${p.id},'absent')" title="Abwesend">🚫</button></span><button class="remove-player" title="Meine Anmeldung entfernen" onclick="removeOwnSignup(${p.id})">×</button></div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<r.size;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeRaidPlayer(${r.id},${p.id})">🗑️</button>`:`<button class="btn btn-danger btn-small" onclick="removeOwnSignup(${p.id})">×</button>`}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="raid-card"><div class="card-header"><div><div class="card-title">⚔️ ${escapeHTML(r.name)}</div><div class="card-meta">👥 ${r.size} Spieler<br>📅 ${formatDate(r.date)}<br>🕐 ${escapeHTML(r.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openRaidForm(${r.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteRaid(${r.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(r)}${r.description?`<p class="card-description">${escapeHTML(r.description)}</p>`:""}<div class="requirements"><div class="requirement tank"><strong>${tanks}/${r.tank_limit}</strong>🛡️ Tanks benötigt</div><div class="requirement heal"><strong>${heals}/${r.heal_limit}</strong>💚 Heiler benötigt</div><div class="requirement dd"><strong>${dds}/${r.dd_limit}</strong>⚔️ DDs benötigt</div></div><div class="role-grid"><div class="role-box tank"><span class="role-number">${tanks}</span>🛡️ Tanks</div><div class="role-box heal"><span class="role-number">${heals}</span>💚 Heiler</div><div class="role-box dd"><span class="role-number">${dds}</span>⚔️ DDs</div><div class="role-box free"><span class="role-number">${free}</span>👥 Frei</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${r.size}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('raid',${r.id})">+ Anmeldung / Status setzen</button></div></article>`);});}
+ const c=document.getElementById("raidContainer");c.innerHTML="";if(!raids.length){c.innerHTML='<div class="raid-card"><div class="card-body muted">Noch keine Raids erstellt.</div></div>';return;}raids.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(r=>{r.players=r.players||[];const confirmed=r.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=r.players.filter(p=>p.status==="bench"),uncertain=r.players.filter(p=>p.status==="uncertain"),absent=r.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,r.size-confirmed.length),pct=Math.min(100,confirmed.length/r.size*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small></div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<r.size;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeRaidPlayer(${r.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="raid-card"><div class="card-header"><div><div class="card-title">⚔️ ${escapeHTML(r.name)}</div><div class="card-meta">👥 ${r.size} Spieler<br>📅 ${formatDate(r.date)}<br>🕐 ${escapeHTML(r.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openRaidForm(${r.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteRaid(${r.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(r)}${r.description?`<p class="card-description">${escapeHTML(r.description)}</p>`:""}<div class="requirements"><div class="requirement tank"><strong>${tanks}/${r.tank_limit}</strong>🛡️ Tanks benötigt</div><div class="requirement heal"><strong>${heals}/${r.heal_limit}</strong>💚 Heiler benötigt</div><div class="requirement dd"><strong>${dds}/${r.dd_limit}</strong>⚔️ DDs benötigt</div></div><div class="role-grid"><div class="role-box tank"><span class="role-number">${tanks}</span>🛡️ Tanks</div><div class="role-box heal"><span class="role-number">${heals}</span>💚 Heiler</div><div class="role-box dd"><span class="role-number">${dds}</span>⚔️ DDs</div><div class="role-box free"><span class="role-number">${free}</span>👥 Frei</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${r.size}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('raid',${r.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('raid',${r.id})">🔑 Meine Anmeldung verwalten</button></div></article>`);});}
 
 
 /* ===== EVENTS ===== */
@@ -393,11 +451,11 @@ async function deleteEvent(id){
 }
 async function removeEventPlayer(eid,pid){if(!isAdmin)return;if(!confirm("Anmeldung wirklich entfernen?"))return;const {error}=await supabaseClient.from("signups").delete().eq("id",pid);if(error){dbError(error);return;}await refreshData();}
 function renderEvents(){
- const c=document.getElementById("eventContainer");c.innerHTML="";if(!events.length){c.innerHTML='<div class="event-card"><div class="card-body muted">Noch keine Events erstellt.</div></div>';return;}events.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(e=>{e.players=e.players||[];const confirmed=e.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=e.players.filter(p=>p.status==="bench"),uncertain=e.players.filter(p=>p.status==="uncertain"),absent=e.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,e.max-confirmed.length),pct=Math.min(100,confirmed.length/e.max*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small><span class="status-actions" title="Eigenen Status ändern"><button class="status-action" onclick="setOwnSignupStatus(${p.id},'confirmed')" title="Dabei">✅</button><button class="status-action" onclick="setOwnSignupStatus(${p.id},'bench')" title="Ersatzbank">🪑</button><button class="status-action" onclick="setOwnSignupStatus(${p.id},'uncertain')" title="Unsicher">❓</button><button class="status-action" onclick="setOwnSignupStatus(${p.id},'absent')" title="Abwesend">🚫</button></span><button class="remove-player" title="Meine Anmeldung entfernen" onclick="removeOwnSignup(${p.id})">×</button></div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<e.max;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:`<button class="btn btn-danger btn-small" onclick="removeOwnSignup(${p.id})">×</button>`}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="event-card"><div class="card-header"><div><div class="card-title">🎉 ${escapeHTML(e.name)}</div><div class="card-meta">🏷️ ${escapeHTML(e.type)}<br>📅 ${formatDate(e.date)}<br>🕐 ${escapeHTML(e.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openEventForm(${e.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteEvent(${e.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(e)}${e.description?`<p class="card-description">${escapeHTML(e.description)}</p>`:""}<div class="limit-box"><div class="limit-item limit-tank"><strong>${tanks}/${e.tank_limit}</strong>🛡️ Tanks</div><div class="limit-item limit-heal"><strong>${heals}/${e.heal_limit}</strong>💚 Heiler</div><div class="limit-item limit-dd"><strong>${dds}/${e.dd_limit}</strong>⚔️ DDs</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${e.max}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('event',${e.id})">+ Anmeldung / Status setzen</button></div></article>`);});}
+ const c=document.getElementById("eventContainer");c.innerHTML="";if(!events.length){c.innerHTML='<div class="event-card"><div class="card-body muted">Noch keine Events erstellt.</div></div>';return;}events.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(e=>{e.players=e.players||[];const confirmed=e.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=e.players.filter(p=>p.status==="bench"),uncertain=e.players.filter(p=>p.status==="uncertain"),absent=e.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,e.max-confirmed.length),pct=Math.min(100,confirmed.length/e.max*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small></div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<e.max;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="event-card"><div class="card-header"><div><div class="card-title">🎉 ${escapeHTML(e.name)}</div><div class="card-meta">🏷️ ${escapeHTML(e.type)}<br>📅 ${formatDate(e.date)}<br>🕐 ${escapeHTML(e.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openEventForm(${e.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteEvent(${e.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(e)}${e.description?`<p class="card-description">${escapeHTML(e.description)}</p>`:""}<div class="limit-box"><div class="limit-item limit-tank"><strong>${tanks}/${e.tank_limit}</strong>🛡️ Tanks</div><div class="limit-item limit-heal"><strong>${heals}/${e.heal_limit}</strong>💚 Heiler</div><div class="limit-item limit-dd"><strong>${dds}/${e.dd_limit}</strong>⚔️ DDs</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${e.max}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('event',${e.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('event',${e.id})">🔑 Meine Anmeldung verwalten</button></div></article>`);});}
 
 
 /* ===== ANMELDUNG ===== */
-function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
+function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="new-password" placeholder="4–6 Ziffern"><p class="signup-status-help">Diesen PIN brauchst du später auf anderen Geräten, um deine Anmeldung zu ändern oder zu löschen.</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
 function updateSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
 async function submitSignup(type,payload){
  const {data,error}=await supabaseClient.rpc("register_signup_status",payload);
@@ -408,7 +466,21 @@ async function submitSignup(type,payload){
  showToast(type==="raid"?"⚔️ Status für den Raid gespeichert.":"🎉 Status für das Event gespeichert.");
  return data||{ok:true};
 }
-async function saveSignup(type,id){const player=document.getElementById("signupPlayer").value.trim(),character=document.getElementById("signupCharacter").value.trim(),className=document.getElementById("signupClass").value,specEl=document.getElementById("signupSpec"),spec=specEl.value,role=specEl.selectedOptions[0]?.dataset.role,status=document.getElementById("signupStatus").value;if(!player||!character){alert("Bitte Spieler- und Charaktername eingeben.");return;}const payload={p_item_type:type,p_item_id:id,p_player:player,p_character:character,p_class_name:className,p_spec:spec,p_role:role,p_status:status};let result=await submitSignup(type,payload);if(!result)return;if(result.needs_bench){const ok=confirm((result.message||"Für diese Rolle ist kein fester Platz mehr frei.")+"\n\nMöchtest du stattdessen auf die Ersatzbank?");if(!ok){showToast("Anmeldung nicht gespeichert.");return;}payload.p_status="bench";await submitSignup(type,payload);}}
+async function saveSignup(type,id){
+  const player=document.getElementById("signupPlayer").value.trim(),character=document.getElementById("signupCharacter").value.trim(),
+    className=document.getElementById("signupClass").value,specEl=document.getElementById("signupSpec"),spec=specEl.value,
+    role=specEl.selectedOptions[0]?.dataset.role,status=document.getElementById("signupStatus").value,
+    pin=document.getElementById("signupPin").value.trim();
+  if(!player||!character){alert("Bitte Spieler- und Charaktername eingeben.");return;}
+  if(!pinIsValid(pin)){alert("Der persönliche PIN muss aus 4 bis 6 Ziffern bestehen.");return;}
+  const payload={p_item_type:type,p_item_id:id,p_player:player,p_character:character,p_class_name:className,p_spec:spec,p_role:role,p_status:status,p_pin:pin};
+  let result=await submitSignup(type,payload);if(!result)return;
+  if(result.needs_bench){
+    const ok=confirm((result.message||"Für diese Rolle ist kein fester Platz mehr frei.")+"\n\nMöchtest du stattdessen auf die Ersatzbank?");
+    if(!ok){showToast("Anmeldung nicht gespeichert.");return;}
+    payload.p_status="bench";await submitSignup(type,payload);
+  }
+}
 
 
 function renderAll(){renderNews();renderCalendar();renderRaids();renderEvents();updateAdminStatus();}
