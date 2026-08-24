@@ -436,7 +436,46 @@ async function manageOwnSignup(type,id,player,character,pin,action){
   showToast(action==="delete"?"✅ Anmeldung entfernt.":"✅ Status: "+({confirmed:"Dabei",bench:"Ersatzbank",uncertain:"Unsicher",absent:"Abwesend"}[action]||action));
 }
 
-function renderCountdown(item){let ms=getStartDate(item)-Date.now();if(ms<=0)return `<div class="countdown"><div class="countdown-title">Status</div><div class="countdown-value started">🔴 STARTZEIT ERREICHT</div></div>`;let s=Math.floor(ms/1000),d=Math.floor(s/86400);s%=86400;let h=Math.floor(s/3600);s%=3600;let min=Math.floor(s/60);s%=60;return `<div class="countdown"><div class="countdown-title">⏳ Beginn in</div><div class="countdown-value"><span>${d}</span> Tage · <span>${String(h).padStart(2,"0")}</span> Stunden · <span>${String(min).padStart(2,"0")}</span> Minuten · <span>${String(s).padStart(2,"0")}</span> Sekunden</div></div>`;}
+function renderCountdown(item){
+  const start=getStartDate(item);
+  return `<div class="countdown" data-countdown-start="${start}">
+    <div class="countdown-title">⏳ Beginn in</div>
+    <div class="countdown-value countdown-value-live"></div>
+  </div>`;
+}
+
+function updateCountdowns(){
+  document.querySelectorAll(".countdown[data-countdown-start]").forEach(el=>{
+    const start=Number(el.dataset.countdownStart);
+    let ms=start-Date.now();
+    const value=el.querySelector(".countdown-value-live");
+    const title=el.querySelector(".countdown-title");
+    if(!value||!Number.isFinite(start))return;
+
+    if(ms<=0){
+      title.textContent="Status";
+      value.className="countdown-value countdown-value-live started";
+      value.textContent="🔴 STARTZEIT ERREICHT";
+      return;
+    }
+
+    let s=Math.floor(ms/1000);
+    const d=Math.floor(s/86400);
+    s%=86400;
+    const h=Math.floor(s/3600);
+    s%=3600;
+    const min=Math.floor(s/60);
+    s%=60;
+
+    title.textContent="⏳ Beginn in";
+    value.className="countdown-value countdown-value-live";
+    value.innerHTML=
+      `<span>${d}</span> Tage · `+
+      `<span>${String(h).padStart(2,"0")}</span> Stunden · `+
+      `<span>${String(min).padStart(2,"0")}</span> Minuten · `+
+      `<span>${String(s).padStart(2,"0")}</span> Sekunden`;
+  });
+}
 // Eigene Anmeldungen werden ausschließlich über „Meine Anmeldung verwalten“ und den persönlichen PIN verwaltet.
 
 function renderRaids(){
@@ -536,7 +575,7 @@ async function saveSignup(type,id){
 
 
 function renderAll(){renderNews();renderCalendar();renderRaids();renderEvents();updateAdminStatus();}
-renderAll();init();
+renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
 </script>
 </body>
 </html>
