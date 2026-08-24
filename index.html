@@ -346,7 +346,17 @@ async function deleteRaid(id){
  await refreshData();
  showToast("⚔️ Raid und zugehörige Teilnehmer gelöscht.");
 }
-async function removeRaidPlayer(rid,pid){if(!isAdmin){alert("Nur der Admin kann Anmeldungen entfernen.");return;}if(!confirm("Anmeldung wirklich entfernen?"))return;const {data:{session}}=await supabaseClient.auth.getSession();if(!session){alert("Admin-Sitzung ist abgelaufen. Bitte neu einloggen.");return;}const {error}=await supabaseClient.from("signups").delete().eq("id",pid);if(error){dbError(error);return;}await refreshData();showToast("🗑️ Anmeldung entfernt.");}
+async function removeRaidPlayer(rid,pid){
+ if(!isAdmin){alert("Nur der Admin kann Anmeldungen entfernen.");return;}
+ if(!confirm("Anmeldung wirklich entfernen?"))return;
+ const {data:{session}}=await supabaseClient.auth.getSession();
+ if(!session){alert("Admin-Sitzung ist abgelaufen. Bitte neu einloggen.");return;}
+ const {data,error}=await supabaseClient.rpc("admin_delete_signup",{p_signup_id:pid});
+ if(error){dbError(error);return;}
+ if(!data?.ok){alert(data?.message||"Anmeldung konnte nicht gelöscht werden.");return;}
+ await refreshData();
+ showToast("🗑️ Anmeldung entfernt.");
+}
 function normalizeName(v){return String(v||"").trim();}
 function pinIsValid(pin){return /^\d{4,6}$/.test(String(pin||"").trim());}
 
@@ -449,7 +459,17 @@ async function deleteEvent(id){
  await refreshData();
  showToast("🎉 Event und zugehörige Teilnehmer gelöscht.");
 }
-async function removeEventPlayer(eid,pid){if(!isAdmin){alert("Nur der Admin kann Anmeldungen entfernen.");return;}if(!confirm("Anmeldung wirklich entfernen?"))return;const {data:{session}}=await supabaseClient.auth.getSession();if(!session){alert("Admin-Sitzung ist abgelaufen. Bitte neu einloggen.");return;}const {error}=await supabaseClient.from("signups").delete().eq("id",pid);if(error){dbError(error);return;}await refreshData();showToast("🗑️ Anmeldung entfernt.");}
+async function removeEventPlayer(eid,pid){
+ if(!isAdmin){alert("Nur der Admin kann Anmeldungen entfernen.");return;}
+ if(!confirm("Anmeldung wirklich entfernen?"))return;
+ const {data:{session}}=await supabaseClient.auth.getSession();
+ if(!session){alert("Admin-Sitzung ist abgelaufen. Bitte neu einloggen.");return;}
+ const {data,error}=await supabaseClient.rpc("admin_delete_signup",{p_signup_id:pid});
+ if(error){dbError(error);return;}
+ if(!data?.ok){alert(data?.message||"Anmeldung konnte nicht gelöscht werden.");return;}
+ await refreshData();
+ showToast("🗑️ Anmeldung entfernt.");
+}
 function renderEvents(){
  const c=document.getElementById("eventContainer");c.innerHTML="";if(!events.length){c.innerHTML='<div class="event-card"><div class="card-body muted">Noch keine Events erstellt.</div></div>';return;}events.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(e=>{e.players=e.players||[];const confirmed=e.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=e.players.filter(p=>p.status==="bench"),uncertain=e.players.filter(p=>p.status==="uncertain"),absent=e.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,e.max-confirmed.length),pct=Math.min(100,confirmed.length/e.max*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small>${isAdmin?`<button class="remove-player" title="Anmeldung als Admin entfernen" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<e.max;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="event-card"><div class="card-header"><div><div class="card-title">🎉 ${escapeHTML(e.name)}</div><div class="card-meta">🏷️ ${escapeHTML(e.type)}<br>📅 ${formatDate(e.date)}<br>🕐 ${escapeHTML(e.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openEventForm(${e.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteEvent(${e.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(e)}${e.description?`<p class="card-description">${escapeHTML(e.description)}</p>`:""}<div class="limit-box"><div class="limit-item limit-tank"><strong>${tanks}/${e.tank_limit}</strong>🛡️ Tanks</div><div class="limit-item limit-heal"><strong>${heals}/${e.heal_limit}</strong>💚 Heiler</div><div class="limit-item limit-dd"><strong>${dds}/${e.dd_limit}</strong>⚔️ DDs</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${e.max}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('event',${e.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('event',${e.id})">🔑 Meine Anmeldung verwalten</button></div></article>`);});}
 
