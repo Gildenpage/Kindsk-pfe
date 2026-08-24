@@ -383,13 +383,13 @@ function pinIsValid(pin){return /^\d{4,6}$/.test(String(pin||"").trim());}
 function openManageSignupChooser(){
   if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
   openModal(`<h2>🔑 Meine Anmeldung verwalten</h2>
-  <p class="muted" style="color: red;">Gib Spielername, Charaktername und deinen persönlichen PIN ein. Damit kannst du deine Anmeldung auf jedem Handy oder PC verwalten.</p>
+  <p class="muted" style="color: #FFD700;">Gib Spielername, Charaktername und deinen persönlichen PIN ein. Damit kannst du deine Anmeldung auf jedem Handy oder PC verwalten.</p>
   <div class="form-group"><label>Raid / Event *</label><select id="manageItemType"><option value="raid">⚔️ Raid</option><option value="event">🎉 Event</option></select></div>
   <div class="form-group"><label>Eintrag *</label><select id="manageItemId"></select></div>
   <div class="form-group"><label>Spielername *</label><input id="managePlayer" autocomplete="username"></div>
   <div class="form-group"><label>Charaktername *</label><input id="manageCharacter"></div>
   <div class="form-group"><label>Persönlicher PIN *</label><input id="managePin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="off" placeholder="4–6 Ziffern"></div>
-  <p class="signup-status-help" style="color: red;">Den PIN hast du dir bei der Anmeldung ( RAID/EVENTS ) vergeben. Teile ihn mit niemandem ! Bei Verlust, melde dich an die Gildenleitung.</p>
+  <p class="signup-status-help" style="color: #FFD700;">Den PIN hast du dir bei der Anmeldung ( RAID/EVENTS ) vergeben. Teile ihn mit niemandem ! Bei Verlust, melde dich an die Gildenleitung.</p>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="lookupManagedSignup()">Weiter</button></div>`);
   document.getElementById("manageItemType").addEventListener("change",updateManageItems);
   updateManageItems();
