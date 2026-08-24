@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Kindsköpfe – Raid & Event Portal</title>
+<link rel="shortcut icon" type="image/x-icon"
+        href="https://i.ibb.co/twDMcsqf/Screenshot-2026-08-24-100345.png" />
+
+
+
 <style>
 :root{
   --gold:#d8ad4b;--gold2:#ffe09a;--blue:#3d78a8;--dark:#060b12;
@@ -140,7 +145,9 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   </div>
   <div class="nav-admin">
     <span class="nav-separator" aria-hidden="true"></span>
-    <button onclick="openAdminLogin()">🔐 Admin</button>
+	</div>
+	<div>
+	<button onclick="openAdminLogin()">🔐 Admin</button>
   </div>
 </nav>
 
@@ -366,13 +373,13 @@ function pinIsValid(pin){return /^\d{4,6}$/.test(String(pin||"").trim());}
 function openManageSignupChooser(){
   if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
   openModal(`<h2>🔑 Meine Anmeldung verwalten</h2>
-  <p class="muted">Gib Spielername, Charaktername und deinen persönlichen PIN ein. Damit kannst du deine Anmeldung auf jedem Handy oder PC verwalten.</p>
+  <p class="muted" style="color: red;">Gib Spielername, Charaktername und deinen persönlichen PIN ein. Damit kannst du deine Anmeldung auf jedem Handy oder PC verwalten.</p>
   <div class="form-group"><label>Raid / Event *</label><select id="manageItemType"><option value="raid">⚔️ Raid</option><option value="event">🎉 Event</option></select></div>
   <div class="form-group"><label>Eintrag *</label><select id="manageItemId"></select></div>
   <div class="form-group"><label>Spielername *</label><input id="managePlayer" autocomplete="username"></div>
   <div class="form-group"><label>Charaktername *</label><input id="manageCharacter"></div>
   <div class="form-group"><label>Persönlicher PIN *</label><input id="managePin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="off" placeholder="4–6 Ziffern"></div>
-  <p class="signup-status-help">Der PIN wird nur zur Prüfung verwendet und nicht im Klartext gespeichert. Teile ihn mit niemandem.</p>
+  <p class="signup-status-help" style="color: red;">Der PIN wird nur zur Prüfung verwendet und nicht im Klartext gespeichert. Teile ihn mit niemandem !</p>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="lookupManagedSignup()">Weiter</button></div>`);
   document.getElementById("manageItemType").addEventListener("change",updateManageItems);
   updateManageItems();
