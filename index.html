@@ -92,6 +92,21 @@ main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
 .news-card,.raid-card,.event-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 15px 45px rgba(0,0,0,.45)}
 .news-card{padding:20px;border-left:4px solid var(--gold)}.news-card h3{margin-top:0;color:var(--gold)}.news-date,.muted{color:var(--muted);font-size:13px}
 .news-text,.card-description{white-space:pre-wrap;line-height:1.6}
+.news-text .news-link{color:#78b9e8;text-decoration:underline;text-decoration-color:rgba(120,185,232,.55);font-weight:600;word-break:break-word}
+.news-text .news-link:hover{color:var(--gold2);text-decoration-color:var(--gold2)}
+.news-editor-help{margin-top:8px;padding:10px 12px;border:1px solid rgba(216,173,75,.22);border-radius:6px;background:rgba(216,173,75,.06);color:#9daab5;font-size:12px;line-height:1.55}
+.news-editor-help strong{color:var(--gold2)}
+.news-video{margin:10px 0;padding:7px;border:1px solid rgba(216,173,75,.25);border-radius:8px;background:#0a1016;max-width:100%;box-sizing:border-box}
+.news-video-label{margin:0 0 5px;color:var(--gold2);font-size:12px;font-weight:700;letter-spacing:.3px}
+.news-video-frame{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:6px;background:#000}
+.news-video-preview{position:absolute;inset:0;display:block;overflow:hidden;background:#000}
+.news-video-preview img{width:100%;height:100%;object-fit:cover;display:block}
+.news-video-preview::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(0,0,0,.5));pointer-events:none}
+.news-video-play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:64px;height:45px;border-radius:12px;background:rgba(255,0,0,.92);color:#fff;display:flex;align-items:center;justify-content:center;font-size:25px;padding-left:3px;box-shadow:0 4px 18px rgba(0,0,0,.45);z-index:2}
+.news-video-local{background:#000}
+.news-video-local-note{margin-top:6px;color:#8d98a3;font-size:11px;line-height:1.35}
+.news-video-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+
 .card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;padding:20px;background:linear-gradient(135deg,#1a2b3a,#111b25);border-bottom:1px solid var(--border)}
 .card-title{color:var(--gold);font:700 25px Georgia,serif}.card-meta{margin-top:7px;color:#aaa;line-height:1.8}.card-body{padding:20px}
 .countdown{margin:18px 0;padding:16px;text-align:center;background:linear-gradient(135deg,#252015,#101920);border:1px solid #806229;border-radius:8px}
@@ -571,12 +586,125 @@ function openNewsForm(id=null){
   if(id!==null&&!n)return;
   openModal(`<h2>📰 ${n?"News bearbeiten":"News erstellen"}</h2>
     <div class="form-group"><label>Überschrift *</label><input id="newsTitle" value="${n?escapeHTML(n.title):""}"></div>
-    <div class="form-group"><label>Nachricht *</label><textarea id="newsText">${n?escapeHTML(n.text):""}</textarea></div>
+    <div class="form-group">
+      <label>Nachricht *</label>
+      <textarea id="newsText" placeholder="Text schreiben...&#10;&#10;Link: https://example.de&#10;Beschrifteter Link: [Zur Webseite](https://example.de)&#10;&#10;YouTube-Links werden automatisch als Videoplayer angezeigt.">${n?escapeHTML(n.text):""}</textarea>
+      <div class="news-editor-help">
+        <strong>🔗 Links:</strong> URL einfach einfügen – sie wird anklickbar.<br>
+        <strong>▶️ YouTube:</strong> YouTube-Links werden automatisch als Videoplayer eingebunden.
+      </div>
+    </div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-primary" onclick="saveNews(${id===null?"null":id})">💾 ${n?"Änderungen speichern":"Veröffentlichen"}</button>
     </div>`);
 }
+
+function getYouTubeId(url){
+  try{
+    const u=new URL(url.trim());
+    const host=u.hostname.toLowerCase().replace(/^www\./,'');
+    if(host==='youtu.be'){
+      return u.pathname.split('/').filter(Boolean)[0] || null;
+    }
+    if(host==='youtube.com' || host==='m.youtube.com'){
+      if(u.pathname==='/watch') return u.searchParams.get('v') || null;
+      if(u.pathname.startsWith('/shorts/')) return u.pathname.split('/').filter(Boolean)[1] || null;
+      if(u.pathname.startsWith('/embed/')) return u.pathname.split('/').filter(Boolean)[1] || null;
+    }
+  }catch(e){}
+  return null;
+}
+
+function safeNewsUrl(raw){
+  try{
+    const u=new URL(raw.trim());
+    return (u.protocol==='http:' || u.protocol==='https:') ? u.href : null;
+  }catch(e){return null;}
+}
+
+function renderNewsContent(raw){
+  // NEWS ONLY: URLs werden verarbeitet. YouTube-Player werden bewusst
+  // NICHT als HTML-String erzeugt, sondern später per DOM erstellt.
+  // Dadurch kann der iframe nicht versehentlich als Text erscheinen.
+  const source=String(raw ?? '');
+  const urlRegex=/(https?:\/\/[^\s<]+)/gi;
+  let html='';
+  let last=0;
+  let m;
+
+  while((m=urlRegex.exec(source))){
+    html += escapeHTML(source.slice(last,m.index));
+
+    let rawUrl=m[1];
+    let trailing='';
+    while(/[.,!?;:]$/.test(rawUrl)){
+      trailing=rawUrl.slice(-1)+trailing;
+      rawUrl=rawUrl.slice(0,-1);
+    }
+
+    const clean=safeNewsUrl(rawUrl);
+    const yt=clean ? getYouTubeId(clean) : null;
+
+    if(yt){
+      html += `
+        <div class="news-video" data-youtube-id="${escapeHTML(yt)}">
+          <div class="news-video-label">▶️ YouTube</div>
+          <div class="news-video-frame"></div>
+        </div>`;
+    }else if(clean){
+      html += `<a class="news-link" href="${escapeHTML(clean)}" target="_blank" rel="noopener noreferrer">${escapeHTML(clean)}</a>`;
+    }else{
+      html += escapeHTML(m[1]);
+    }
+
+    html += escapeHTML(trailing);
+    last=m.index+m[1].length;
+  }
+
+  html += escapeHTML(source.slice(last));
+  return html.replace(/\r?\n/g,'<br>');
+}
+
+function activateNewsYouTubePlayers(container){
+  container.querySelectorAll('.news-video[data-youtube-id]').forEach(card=>{
+    const id=card.getAttribute('data-youtube-id');
+    const frame=card.querySelector('.news-video-frame');
+    if(!id || !frame || frame.dataset.ready==='1') return;
+
+    // Bei einer lokal per file:// geöffneten HTML-Datei kann YouTube
+    // den Embed-Player mit Fehler 153 ablehnen. Das ist eine Einschränkung
+    // von YouTube, nicht der News-Funktion. Auf einer HTTPS-Seite wird
+    // unten immer der echte Player verwendet.
+    const isHttpPage = location.protocol === 'http:' || location.protocol === 'https:';
+
+    if(!isHttpPage){
+      frame.classList.add('news-video-local');
+      frame.innerHTML = `
+        <a class="news-video-preview" href="https://www.youtube.com/watch?v=${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">
+          <img src="https://i.ytimg.com/vi/${encodeURIComponent(id)}/hqdefault.jpg" alt="YouTube Video Vorschau" loading="lazy">
+          <span class="news-video-play">▶</span>
+        </a>
+        <div class="news-video-local-note">Der direkte YouTube-Player funktioniert auf der veröffentlichten HTTPS-Seite.</div>`;
+      frame.dataset.ready='1';
+      return;
+    }
+
+    const iframe=document.createElement('iframe');
+    const origin = encodeURIComponent(location.origin);
+    iframe.src=`https://www.youtube.com/embed/${encodeURIComponent(id)}?rel=0&playsinline=1&origin=${origin}`;
+    iframe.title='YouTube Video';
+    iframe.loading='lazy';
+    iframe.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+    iframe.setAttribute('allowfullscreen','');
+    // YouTube verlangt für eingebettete Wiedergabe einen HTTP-Referer.
+    iframe.referrerPolicy='strict-origin-when-cross-origin';
+
+    frame.appendChild(iframe);
+    frame.dataset.ready='1';
+  });
+}
+
 async function saveNews(id=null){
   if(!isAdmin){alert("Admin-Sitzung ist nicht mehr aktiv. Bitte neu einloggen.");return;}
   const title=document.getElementById("newsTitle")?.value.trim()||"";
@@ -606,11 +734,12 @@ function renderNews(){
   news.forEach(n=>c.insertAdjacentHTML("beforeend",`<article class="news-card">
     <h3>${escapeHTML(n.title)}</h3>
     <div class="news-date">${escapeHTML(new Date(n.created_at).toLocaleDateString("de-DE"))}</div>
-    <div class="news-text">${escapeHTML(n.text)}</div>
+    <div class="news-text">${renderNewsContent(n.text)}</div>
     ${isAdmin?`<br>
       <button class="btn btn-secondary btn-small" onclick="openNewsForm(${n.id})">✏️ Bearbeiten</button>
       <button class="btn btn-danger btn-small" onclick="deleteNews(${n.id})">🗑️ Löschen</button>`:""}
   </article>`));
+  activateNewsYouTubePlayers(c);
 }
 
 /* ===== RAIDS ===== */
