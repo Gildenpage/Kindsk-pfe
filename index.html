@@ -233,6 +233,22 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   font-weight:700;
 }
 </style>
+
+<style id="raidkader-pin-profile-style">
+.rk-profile-note{
+  display:flex;gap:10px;align-items:flex-start;
+  padding:12px 14px;margin:0 0 20px;
+  border:1px solid rgba(217,170,58,.25);
+  border-radius:10px;background:rgba(217,170,58,.055);
+  color:#9aaaba;font-size:13px;line-height:1.45;
+}
+.rk-profile-note strong{display:block;color:#e7c45b;white-space:nowrap}
+.rk-profile-note span{color:#8fa0af}
+@media(max-width:700px){
+  .rk-profile-note{flex-direction:column}
+}
+</style>
+
 </head>
 <body>
 <header class="hero"><div class="hero-content">
@@ -751,6 +767,9 @@ async function saveSignup(type,id){
 
 
 let raidKaderRows=[];
+let raidKaderVerifiedPlayer="";
+let raidKaderVerifiedPin="";
+let raidKaderFormMode="create";
 let raidKaderManagePlayer="";
 let raidKaderManagePin="";
 
@@ -878,37 +897,170 @@ function renderRoster(){
   }).join("");
 }
 
-function openRaidkaderForm(playerName=""){const preset=(playerName||"").trim();openModal(`<div class="rk-modal"><div class="modal-title"><div><h2>👤 Profil hinzufügen</h2><p>Lege deinen Spieler an. Mit dem PIN kannst du später alle deine Charaktere verwalten.</p></div><span class="rk-mop-badge">🐼 Mists of Pandaria Classic</span></div><div class="rk-modal-grid"><div class="form-group"><label for="rkName">Name *</label><input id="rkName" autocomplete="name" value="${escapeHTML(preset)}" placeholder="z. B. Toni"></div><div class="form-group"><label for="rkChar">Charaktername *</label><input id="rkChar" placeholder="z. B. Dr.Mett"></div><div class="form-group"><label for="rkClass">Klasse *</label><select id="rkClass" onchange="updateSpecs()"><option value="">Klasse wählen</option><option>Todesritter</option><option>Druide</option><option>Jäger</option><option>Magier</option><option>Mönch</option><option>Paladin</option><option>Priester</option><option>Schamane</option><option>Schurke</option><option>Hexenmeister</option><option>Krieger</option></select></div><div class="form-group"><label for="rkSpec">Spezialisierung *</label><select id="rkSpec"><option value="">Zuerst Klasse auswählen</option></select></div><div class="form-group"><label for="rkRole">Rolle</label><select id="rkRole" disabled><option value="">Wird automatisch gesetzt</option></select></div><div class="form-group"><label for="rkIlvl">Gegenstandsstufe *</label><input id="rkIlvl" type="number" min="1" max="999" placeholder="z. B. 553"></div><div class="form-group rk-pin-group"><label for="rkPin">Persönlicher PIN *</label><input id="rkPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="4–6 Ziffern"><small>Dieser PIN schützt deine Einträge. Bewahre ihn gut auf.</small></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveRoster()">➕ Profil & Charakter speichern</button></div></div>`);if(preset)document.getElementById("rkName").focus();}
+function openRaidkaderForm(playerName="", mode="create"){
+  const preset=(playerName||"").trim();
+  raidKaderFormMode=mode;
+  const isAdd=mode==="add";
+
+  openModal(`<div class="rk-modal">
+    <div class="modal-title">
+      <div>
+        <h2>${isAdd?"👤 Charakter hinzufügen":"👤 Profil hinzufügen"}</h2>
+        <p>${isAdd
+          ?"Füge deinem bestehenden Spielerprofil einen weiteren Charakter hinzu."
+          :"Lege dein Spielerprofil an. Deinen PIN legst du nur einmal fest und benötigst ihn später für weitere Charaktere und die Verwaltung."}</p>
+      </div>
+      <span class="rk-mop-badge">🐼 Mists of Pandaria Classic</span>
+    </div>
+
+    <div class="rk-profile-note">
+      ${isAdd
+        ? `<strong>🔐 Profil geschützt</strong><span>Spieler: ${escapeHTML(preset)} · Dein bestehender PIN wurde bereits bestätigt.</span>`
+        : `<strong>🔐 Ein PIN pro Spielerprofil</strong><span>Der PIN wird einmalig für deinen Spielernamen gespeichert. Für weitere Charaktere wird derselbe PIN verwendet.</span>`}
+    </div>
+
+    <div class="rk-modal-grid">
+      <div class="form-group">
+        <label for="rkName">Name *</label>
+        <input id="rkName" autocomplete="name" value="${escapeHTML(preset)}" ${isAdd?"readonly":""} placeholder="z. B. Toni">
+      </div>
+      <div class="form-group">
+        <label for="rkChar">Charaktername *</label>
+        <input id="rkChar" placeholder="z. B. Dr.Mett">
+      </div>
+      <div class="form-group">
+        <label for="rkClass">Klasse *</label>
+        <select id="rkClass" onchange="updateSpecs()">
+          <option value="">Klasse wählen</option>
+          <option>Todesritter</option><option>Druide</option><option>Jäger</option><option>Magier</option>
+          <option>Mönch</option><option>Paladin</option><option>Priester</option><option>Schamane</option>
+          <option>Schurke</option><option>Hexenmeister</option><option>Krieger</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="rkSpec">Spezialisierung *</label>
+        <select id="rkSpec"><option value="">Zuerst Klasse auswählen</option></select>
+      </div>
+      <div class="form-group">
+        <label for="rkRole">Rolle</label>
+        <select id="rkRole" disabled><option value="">Wird automatisch gesetzt</option></select>
+      </div>
+      <div class="form-group">
+        <label for="rkIlvl">Gegenstandsstufe *</label>
+        <input id="rkIlvl" type="number" min="1" max="999" placeholder="z. B. 553">
+      </div>
+      ${isAdd ? "" : `<div class="form-group rk-pin-group">
+        <label for="rkPin">Persönlicher PIN *</label>
+        <input id="rkPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="4–6 Ziffern">
+        <small>Diesen PIN nur einmal festlegen. Bewahre ihn gut auf.</small>
+      </div>`}
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="saveRoster()">${isAdd?"➕ Charakter hinzufügen":"➕ Profil & Charakter speichern"}</button>
+    </div>
+  </div>`);
+
+  if(preset)document.getElementById("rkName").focus();
+}
 
 async function saveRoster(){
   const player=document.getElementById("rkName").value.trim();
   const character=document.getElementById("rkChar").value.trim();
   const className=document.getElementById("rkClass").value;
   const spec=document.getElementById("rkSpec").value;
-  const selectedSpec=document.getElementById("rkSpec").value;
+  const selectedSpec=spec;
   const roleEntry=(wowClasses[className]||[]).find(([specName])=>specName===selectedSpec);
-  const role=roleEntry ? roleEntry[1] : document.getElementById("rkRole").value;
+  const role=roleEntry ? roleEntry[1] : "";
   const ilvl=Number(document.getElementById("rkIlvl").value);
-  const pin=document.getElementById("rkPin").value.trim();
 
-  if(!player||!character||!className||!spec||!role||!ilvl||!/^\d{4,6}$/.test(pin)){
-    alert("Bitte Name, Charakter, Klasse, Spezialisierung, Gegenstandsstufe und einen 4–6-stelligen PIN ausfüllen.");
+  if(!player||!character||!className||!spec||!role||!ilvl){
+    alert("Bitte Name, Charakter, Klasse, Spezialisierung und Gegenstandsstufe ausfüllen.");
     return;
   }
 
-  const {data,error}=await supabaseClient.rpc("create_raidkader_entry",{
-    p_player_name:player,p_character_name:character,p_class_name:className,
-    p_spec:spec,p_role:role,p_item_level:ilvl,p_pin:pin
-  });
-  if(error){alert("Eintrag konnte nicht gespeichert werden: "+error.message);return;}
-  if(data?.ok===false){alert(data.message||"Eintrag konnte nicht gespeichert werden.");return;}
+  if(raidKaderFormMode==="add"){
+    if(!raidKaderVerifiedPlayer || !raidKaderVerifiedPin){
+      alert("Bitte zuerst deinen PIN bestätigen.");
+      return;
+    }
 
+    const {data,error}=await supabaseClient.rpc("add_raidkader_character",{
+      p_player_name:raidKaderVerifiedPlayer,
+      p_pin:raidKaderVerifiedPin,
+      p_character_name:character,
+      p_class_name:className,
+      p_spec:spec,
+      p_role:role,
+      p_item_level:ilvl
+    });
+    if(error){alert("Charakter konnte nicht gespeichert werden: "+error.message);return;}
+    if(data?.ok===false){alert(data.message||"Charakter konnte nicht gespeichert werden.");return;}
+
+    closeModal();
+    await loadRaidkader();
+    showToast("👤 Weiterer Charakter wurde hinzugefügt.");
+    return;
+  }
+
+  const pin=document.getElementById("rkPin")?.value.trim()||"";
+  if(!/^\d{4,6}$/.test(pin)){
+    alert("Bitte einen 4–6-stelligen PIN festlegen.");
+    return;
+  }
+
+  const {data,error}=await supabaseClient.rpc("create_raidkader_profile",{
+    p_player_name:player,
+    p_character_name:character,
+    p_class_name:className,
+    p_spec:spec,
+    p_role:role,
+    p_item_level:ilvl,
+    p_pin:pin
+  });
+  if(error){alert("Profil konnte nicht erstellt werden: "+error.message);return;}
+  if(data?.ok===false){alert(data.message||"Profil konnte nicht erstellt werden.");return;}
+
+  raidKaderVerifiedPlayer=player;
+  raidKaderVerifiedPin=pin;
   closeModal();
   await loadRaidkader();
-  showToast("👥 Charakter wurde in den Raidkader eingetragen.");
+  showToast("👤 Profil und erster Charakter wurden erstellt.");
 }
 
-function openRaidkaderAddFor(playerName){ openRaidkaderForm(playerName); }
+function openRaidkaderAddFor(playerName){
+  const player=(playerName||"").trim();
+  if(!player)return;
+
+  openModal(`<h2>🔑 PIN erforderlich</h2>
+    <p class="muted">Für <strong>${escapeHTML(player)}</strong> wurde bereits ein Profil angelegt. Gib den einmal festgelegten PIN ein, um einen weiteren Charakter hinzuzufügen.</p>
+    <div class="form-group">
+      <label>Persönlicher PIN</label>
+      <input id="rkAddPin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick='verifyPinForAdd(${JSON.stringify(player)})'>🔓 PIN bestätigen</button>
+    </div>`);
+}
+
+async function verifyPinForAdd(player){
+  const pin=document.getElementById("rkAddPin")?.value.trim()||"";
+  if(!/^\d{4,6}$/.test(pin)){
+    alert("Bitte deinen 4–6-stelligen PIN eingeben.");
+    return;
+  }
+
+  const {data,error}=await supabaseClient.rpc("get_my_raidkader",{p_player_name:player,p_pin:pin});
+  if(error){alert("PIN-Prüfung fehlgeschlagen: "+error.message);return;}
+  if(!data?.length){alert("PIN falsch oder Profil nicht gefunden.");return;}
+
+  raidKaderVerifiedPlayer=player;
+  raidKaderVerifiedPin=pin;
+  closeModal();
+  openRaidkaderForm(player,"add");
+}
 
 async function openRaidkaderManage(){
   openModal(`<h2>🔑 Meine Raidkader-Einträge</h2>
@@ -946,7 +1098,7 @@ async function verifyRaidkaderManage(){
     <div class="rk-manage-list">${items}</div>
     <p class="rk-muted-note">Dein PIN bleibt nur für diese Verwaltungssitzung im Browser verfügbar.</p>
     <div class="modal-actions">
-      <button class="btn btn-primary" onclick="closeModal();openRaidkaderAddFor(${JSON.stringify(player)})">➕ Weiteren Charakter hinzufügen</button>
+      <button class="btn btn-primary" onclick="closeModal();openRaidkaderForm(${JSON.stringify(player)},"add")">➕ Weiteren Charakter hinzufügen</button>
       <button class="btn btn-secondary" onclick="closeModal()">Schließen</button>
     </div>`);
 }
