@@ -268,6 +268,36 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   font-weight: 800 !important;
 }
 
+
+/* ===== RAIDKADER: RAIDPROFIL-HINZUFÜGEN BUTTON ===== */
+.raidprofil-add-btn {
+  min-width: 230px !important;
+  min-height: 58px !important;
+  padding: 14px 24px !important;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  border-radius: 10px !important;
+  letter-spacing: 0.1px;
+  box-shadow: 0 5px 14px rgba(0, 0, 0, 0.25);
+}
+
+/* Falls der Button bisher über seinen Text gefunden wird,
+   wird die größere Darstellung auch über den Container abgesichert. */
+button[onclick*="Profil"],
+button[data-action*="profile"],
+a[href*="raidkader"][class*="btn"] {
+  font-weight: 700;
+}
+
+@media (max-width: 700px) {
+  .raidprofil-add-btn {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 54px !important;
+    font-size: 18px !important;
+  }
+}
+
 </style>
 <style id="raidkader-mop-fix-style">
 </style>
@@ -381,7 +411,7 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
     </div>
   </div>
 
-  <div class="raidkader-action-card"><div><strong>Neu im Raidkader?</strong><span>Erstelle dein Spielerprofil und füge anschließend beliebig viele Charaktere hinzu.</span></div><div class="raidkader-action-buttons"><button class="btn btn-primary" onclick="openRaidkaderForm()">➕ Profil hinzufügen</button></div></div>
+  <div class="raidkader-action-card"><div><strong>Neu im Raidkader?</strong><span>Erstelle dein Spielerprofil und füge anschließend beliebig viele Charaktere hinzu.</span></div><div class="raidkader-action-buttons"><button class="btn btn-primary raidprofil-add-btn" onclick="openRaidkaderForm()">Raidprofil hinzufügen</button></div></div>
 
   <div id="rosterContainer" class="raidkader-list">
     <div class="raid-card"><div class="card-body muted">Raidkader wird geladen …</div></div>
@@ -1143,7 +1173,7 @@ function renderRoster(){
           <div class="rk-player-meta">${group.rows.length} Charakter${group.rows.length===1?"":"e"} im Raidkader</div>
         </div>
         <div class="rk-player-actions">
-          <button class="btn btn-secondary btn-small" onclick='openRaidkaderManageFor(${JSON.stringify(group.name)})'>🔑 Meine Einträge</button>
+          <button class="btn btn-secondary btn-small" onclick='openRaidkaderManageFor(${JSON.stringify(group.name)})'>🔑 Meine Einträge verwalten</button>
           <button class="btn btn-primary btn-small" onclick='openRaidkaderAddFor(${JSON.stringify(group.name)})'>➕ Charakter hinzufügen</button>
         </div>
       </div>
@@ -1165,7 +1195,7 @@ function openRaidkaderForm(playerName="", mode="create"){
   openModal(`<div class="rk-modal">
     <div class="modal-title">
       <div>
-        <h2>${isAdd?"👤 Charakter hinzufügen":"👤 Profil hinzufügen"}</h2>
+        <h2>${isAdd?"👤 Charakter hinzufügen":"👤 Raidprofil hinzufügen"}</h2>
         <p>${isAdd
           ?"Füge deinem bestehenden Spielerprofil einen weiteren Charakter hinzu."
           :"Lege dein Spielerprofil an. Deinen PIN legst du nur einmal fest und benötigst ihn später für weitere Charaktere und die Verwaltung."}</p>
@@ -1324,7 +1354,7 @@ async function verifyPinForAdd(player){
 
 function openRaidkaderManageFor(playerName){
   const player=(playerName||"").trim();
-  openModal(`<h2>🔑 Meine Einträge</h2>
+  openModal(`<h2>🔑 Meine Einträge verwalten</h2>
     <p class="muted">Bestätige deinen persönlichen PIN für <strong>${escapeHTML(player)}</strong>. Danach kannst du deine Charaktere bearbeiten, löschen oder weitere hinzufügen.</p>
     <div class="form-group"><label>Spielername</label><input id="rkManagePlayer" value="${escapeHTML(player)}" readonly></div>
     <div class="form-group"><label>PIN</label><input id="rkManagePin" type="password" inputmode="numeric" maxlength="20" placeholder="4–20 Ziffern"></div>
