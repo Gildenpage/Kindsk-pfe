@@ -156,6 +156,118 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 .raid-list-promo-title{margin:0;color:#fff;font:700 25px Georgia,serif;text-shadow:0 3px 10px #000}
 .raid-list-promo-subtitle{margin:8px 0 0;color:#d4e5f2;font-size:13px;line-height:1.4}
 @media(max-width:800px){.news-section-layout{grid-template-columns:1fr}.raid-list-promo-content{min-height:180px}}
+
+/* Raid/Event – auffälliger Raidkader-Hinweis */
+.raidkader-login-hint,
+.raid-event-hint,
+.signup-raidkader-hint {
+  display: block;
+  margin-top: 18px;
+  padding: 16px 20px;
+  border: 1px solid rgba(224, 179, 62, 0.65);
+  border-left: 5px solid #e0b33e;
+  border-radius: 10px;
+  background: linear-gradient(90deg, rgba(224, 179, 62, 0.13), rgba(224, 179, 62, 0.045));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.22);
+  font-size: 17px;
+  line-height: 1.55;
+  color: #d9e1e8;
+}
+
+.raidkader-login-hint strong,
+.raid-event-hint strong,
+.signup-raidkader-hint strong {
+  color: #e9bd43;
+  font-size: 18px;
+}
+
+@media (max-width: 700px) {
+  .raidkader-login-hint,
+  .raid-event-hint,
+  .signup-raidkader-hint {
+    font-size: 16px;
+    padding: 14px 16px;
+  }
+}
+
+
+/* ===== RAID / EVENT HINWEIS – DEUTLICH HERVORGEHOBEN ===== */
+.signup-roster-hint {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 22px 0 4px !important;
+  padding: 19px 22px !important;
+  border: 2px solid #e0b33e !important;
+  border-left: 7px solid #e0b33e !important;
+  border-radius: 11px !important;
+  background: linear-gradient(
+    90deg,
+    rgba(224, 179, 62, 0.18),
+    rgba(224, 179, 62, 0.07)
+  ) !important;
+  box-shadow:
+    0 5px 18px rgba(0, 0, 0, 0.28),
+    inset 0 0 22px rgba(224, 179, 62, 0.035);
+  color: #e4e9ee !important;
+  font-size: 20px !important;
+  font-weight: 500;
+  line-height: 1.55 !important;
+}
+
+.signup-roster-hint::before {
+  content: "⚠️";
+  flex: 0 0 auto;
+  font-size: 23px;
+  line-height: 1.35;
+}
+
+.signup-roster-hint strong {
+  color: #f0c34f !important;
+  font-size: 21px !important;
+  font-weight: 800 !important;
+  margin-right: 5px;
+}
+
+@media (max-width: 700px) {
+  .signup-roster-hint {
+    font-size: 17px !important;
+    padding: 16px 17px !important;
+  }
+
+  .signup-roster-hint strong {
+    font-size: 18px !important;
+  }
+
+  .signup-roster-hint::before {
+    font-size: 20px;
+  }
+}
+
+/* Hinweis im Anmelde-Modal ebenfalls deutlich sichtbar */
+.raidkader-login-hint {
+  display: block !important;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 18px !important;
+  padding: 17px 20px !important;
+  border: 2px solid #e0b33e !important;
+  border-left: 7px solid #e0b33e !important;
+  border-radius: 10px !important;
+  background: rgba(224, 179, 62, 0.12) !important;
+  color: #e8edf2 !important;
+  font-size: 19px !important;
+  line-height: 1.5 !important;
+}
+
+.raidkader-login-hint strong {
+  color: #f0c34f !important;
+  font-size: 20px !important;
+  font-weight: 800 !important;
+}
+
 </style>
 <style id="raidkader-mop-fix-style">
 </style>
@@ -731,7 +843,7 @@ function openSignup(type,id){
       <input id="signupPin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="off" placeholder="4–20 Ziffern">
       <p class="signup-status-help">Du kannst dich nur mit einem bestehenden Raidkader-Profil anmelden.</p>
     </div>
-    <p id="raidSignupNoProfileHint" class="signup-roster-hint"><strong>Noch kein Raidkader-Profil?</strong> Du kannst dich erst für ein Raid / Event anmelden, wenn du dich in den Raidkader eingetragen hast.</p>
+    <p id="raidSignupNoProfileHint" class="signup-roster-hint"><strong>Noch kein Raidkader-Profil?</strong class="raidkader-login-hint"> Du kannst dich erst für ein Raid / Event anmelden, wenn du dich in den Raidkader eingetragen hast.</p>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-primary" onclick="verifyRaidSignupPin('${type}',${id})">Weiter</button>
