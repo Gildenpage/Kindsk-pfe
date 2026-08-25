@@ -223,6 +223,7 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 }
 </style>
 
+<style id="raidkader-modal-style">.raidkader-action-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(217,170,58,.28);border-left:3px solid #d9aa3a;border-radius:12px;background:linear-gradient(180deg,rgba(18,31,43,.96),rgba(10,18,26,.98));box-shadow:0 8px 24px rgba(0,0,0,.16)}.raidkader-action-card strong{display:block;color:#f0d06b;font-size:16px;margin-bottom:4px}.raidkader-action-card span{color:#8799a9;font-size:13px}.raidkader-action-buttons{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}.rk-modal{max-width:920px;width:min(920px,94vw)}.rk-modal .modal-title{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:20px}.rk-modal .modal-title h2{margin:0;color:#e4bb4d}.rk-modal .modal-title p{margin:5px 0 0;color:#8799a9;font-size:13px}.rk-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.rk-modal .form-group{margin-bottom:0}.rk-modal .rk-pin-group{max-width:none;grid-column:1/-1}.rk-modal .modal-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:22px}@media(max-width:700px){.raidkader-action-card{align-items:flex-start;flex-direction:column}.raidkader-action-buttons{justify-content:flex-start}.rk-modal-grid{grid-template-columns:1fr}.rk-modal .rk-pin-group{grid-column:auto}}</style>
 </head>
 <body>
 <header class="hero"><div class="hero-content">
@@ -261,76 +262,7 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
     </div>
   </div>
 
-  <div class="news-card raidkader-form-card">
-    <div class="rk-form-title">
-      <div>
-        <h3>Raidkader Anmeldung</h3>
-        <p>Trage deinen Charakter ein. Mit deinem persönlichen PIN kannst du ihn später bearbeiten oder löschen.</p>
-      </div>
-      <span class="rk-mop-badge">🐼 Mists of Pandaria Classic</span>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="rkName">Name *</label>
-        <input id="rkName" autocomplete="name" placeholder="z. B. Toni">
-      </div>
-      <div class="form-group">
-        <label for="rkChar">Charaktername *</label>
-        <input id="rkChar" placeholder="z. B. Dr.Mett">
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="rkClass">Klasse *</label>
-        <select id="rkClass" onchange="updateSpecs()">
-          <option value="">Klasse wählen</option>
-          <option value="Todesritter">Todesritter</option>
-          <option value="Druide">Druide</option>
-          <option value="Jäger">Jäger</option>
-          <option value="Magier">Magier</option>
-          <option value="Mönch">Mönch</option>
-          <option value="Paladin">Paladin</option>
-          <option value="Priester">Priester</option>
-          <option value="Schamane">Schamane</option>
-          <option value="Schurke">Schurke</option>
-          <option value="Hexenmeister">Hexenmeister</option>
-          <option value="Krieger">Krieger</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="rkSpec">Spezialisierung *</label>
-        <select id="rkSpec">
-          <option value="">Zuerst Klasse auswählen</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="form-row">
-      <div class="form-group">
-        <label for="rkRole">Rolle</label>
-        <select id="rkRole">
-          <option value="">Wird automatisch gesetzt</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label for="rkIlvl">Gegenstandsstufe *</label>
-        <input id="rkIlvl" type="number" min="1" max="999" placeholder="z. B. 553">
-      </div>
-    </div>
-
-    <div class="form-group rk-pin-group">
-      <label for="rkPin">Persönlicher PIN *</label>
-      <input id="rkPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="4–6 Ziffern">
-      <small>Mit diesem PIN kannst du später alle deine Charaktere verwalten, weitere hinzufügen und bestehende Einträge ändern oder löschen.</small>
-    </div>
-
-    <div class="rk-form-actions">
-      <button class="btn btn-primary" onclick="saveRoster()">➕ In Raidkader eintragen</button>
-      <button class="btn btn-secondary" onclick="openRaidkaderManage()">🔑 Meine Einträge</button>
-    </div>
-  </div>
+  <div class="raidkader-action-card"><div><strong>Neu im Raidkader?</strong><span>Erstelle dein Spielerprofil und füge anschließend beliebig viele Charaktere hinzu.</span></div><div class="raidkader-action-buttons"><button class="btn btn-primary" onclick="openRaidkaderForm()">➕ Profil hinzufügen</button><button class="btn btn-secondary" onclick="openRaidkaderManage()">🔑 Meine Einträge</button></div></div>
 
   <div id="rosterContainer" class="raidkader-list">
     <div class="raid-card"><div class="card-body muted">Raidkader wird geladen …</div></div>
@@ -815,23 +747,12 @@ function updateSpecs(){
     opt.dataset.role=r;
     spec.add(opt);
   });
-
-  // Nach der Klassenauswahl direkt die erste verfügbare Spec wählen.
-  // Dadurch wird die Rolle sofort wie bei der Raid-Anmeldung gesetzt.
-  role.innerHTML='<option value="">Wird automatisch gesetzt</option>';
-  if(entries.length){
-    spec.value=entries[0][0];
-    role.innerHTML=`<option value="${entries[0][1]}">${entries[0][1]}</option>`;
-    role.value=entries[0][1];
-  }else{
-    role.value="";
-  }
-
+  role.innerHTML=entries.length
+    ? `<option value="">Wird automatisch gesetzt</option>`
+    : `<option value="">Wird automatisch gesetzt</option>`;
+  role.value="";
   spec.onchange=()=>{
     const found=entries.find(x=>x[0]===spec.value);
-    role.innerHTML=found
-      ? `<option value="${found[1]}">${found[1]}</option>`
-      : '<option value="">Wird automatisch gesetzt</option>';
     role.value=found?.[1]||"";
   };
 }
@@ -843,7 +764,7 @@ function resetRaidkaderForm(){
   const cls=document.getElementById("rkClass"), spec=document.getElementById("rkSpec"), role=document.getElementById("rkRole");
   if(cls)cls.value="";
   if(spec)spec.innerHTML='<option value="">Zuerst Klasse auswählen</option>';
-  if(role){role.innerHTML='<option value="">Wird automatisch gesetzt</option>';role.value="";}
+  if(role)role.innerHTML='<option value="">Wird automatisch gesetzt</option>';
 }
 
 async function loadRaidkader(){
@@ -922,6 +843,8 @@ function renderRoster(){
   }).join("");
 }
 
+function openRaidkaderForm(playerName=""){const preset=(playerName||"").trim();openModal(`<div class="rk-modal"><div class="modal-title"><div><h2>👤 Profil hinzufügen</h2><p>Lege deinen Spieler an. Mit dem PIN kannst du später alle deine Charaktere verwalten.</p></div><span class="rk-mop-badge">🐼 Mists of Pandaria Classic</span></div><div class="rk-modal-grid"><div class="form-group"><label for="rkName">Name *</label><input id="rkName" autocomplete="name" value="${escapeHTML(preset)}" placeholder="z. B. Toni"></div><div class="form-group"><label for="rkChar">Charaktername *</label><input id="rkChar" placeholder="z. B. Dr.Mett"></div><div class="form-group"><label for="rkClass">Klasse *</label><select id="rkClass" onchange="updateSpecs()"><option value="">Klasse wählen</option><option>Todesritter</option><option>Druide</option><option>Jäger</option><option>Magier</option><option>Mönch</option><option>Paladin</option><option>Priester</option><option>Schamane</option><option>Schurke</option><option>Hexenmeister</option><option>Krieger</option></select></div><div class="form-group"><label for="rkSpec">Spezialisierung *</label><select id="rkSpec"><option value="">Zuerst Klasse auswählen</option></select></div><div class="form-group"><label for="rkRole">Rolle</label><select id="rkRole" disabled><option value="">Wird automatisch gesetzt</option></select></div><div class="form-group"><label for="rkIlvl">Gegenstandsstufe *</label><input id="rkIlvl" type="number" min="1" max="999" placeholder="z. B. 553"></div><div class="form-group rk-pin-group"><label for="rkPin">Persönlicher PIN *</label><input id="rkPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="4–6 Ziffern"><small>Dieser PIN schützt deine Einträge. Bewahre ihn gut auf.</small></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveRoster()">➕ Profil & Charakter speichern</button></div></div>`);if(preset)document.getElementById("rkName").focus();}
+
 async function saveRoster(){
   const player=document.getElementById("rkName").value.trim();
   const character=document.getElementById("rkChar").value.trim();
@@ -943,17 +866,12 @@ async function saveRoster(){
   if(error){alert("Eintrag konnte nicht gespeichert werden: "+error.message);return;}
   if(data?.ok===false){alert(data.message||"Eintrag konnte nicht gespeichert werden.");return;}
 
-  resetRaidkaderForm();
+  closeModal();
   await loadRaidkader();
   showToast("👥 Charakter wurde in den Raidkader eingetragen.");
 }
 
-function openRaidkaderAddFor(playerName){
-  resetRaidkaderForm();
-  document.getElementById("rkName").value=playerName;
-  document.getElementById("rkName").focus();
-  document.getElementById("calendar").scrollIntoView({behavior:"smooth",block:"start"});
-}
+function openRaidkaderAddFor(playerName){ openRaidkaderForm(playerName); }
 
 async function openRaidkaderManage(){
   openModal(`<h2>🔑 Meine Raidkader-Einträge</h2>
