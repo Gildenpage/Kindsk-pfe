@@ -224,6 +224,15 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 </style>
 
 <style id="raidkader-modal-style">.raidkader-action-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(217,170,58,.28);border-left:3px solid #d9aa3a;border-radius:12px;background:linear-gradient(180deg,rgba(18,31,43,.96),rgba(10,18,26,.98));box-shadow:0 8px 24px rgba(0,0,0,.16)}.raidkader-action-card strong{display:block;color:#f0d06b;font-size:16px;margin-bottom:4px}.raidkader-action-card span{color:#8799a9;font-size:13px}.raidkader-action-buttons{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}.rk-modal{max-width:920px;width:min(920px,94vw)}.rk-modal .modal-title{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:20px}.rk-modal .modal-title h2{margin:0;color:#e4bb4d}.rk-modal .modal-title p{margin:5px 0 0;color:#8799a9;font-size:13px}.rk-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.rk-modal .form-group{margin-bottom:0}.rk-modal .rk-pin-group{max-width:none;grid-column:1/-1}.rk-modal .modal-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:22px}@media(max-width:700px){.modal{padding:8px}.modal-box,.modal-box.rk-wide-modal{width:calc(100vw - 16px);max-height:calc(100vh - 16px);padding:20px}.raidkader-action-card{align-items:flex-start;flex-direction:column}.raidkader-action-buttons{justify-content:flex-start}.rk-modal-grid{grid-template-columns:1fr}.rk-modal .rk-pin-group{grid-column:auto}.rk-modal .modal-actions{padding-bottom:2px}}</style>
+
+<style id="raidkader-role-fix">
+#rkRole:disabled{
+  opacity:1!important;
+  color:#f0d06b!important;
+  cursor:not-allowed;
+  font-weight:700;
+}
+</style>
 </head>
 <body>
 <header class="hero"><div class="hero-content">
@@ -749,21 +758,37 @@ function updateSpecs(){
   const cls=document.getElementById("rkClass");
   const spec=document.getElementById("rkSpec");
   const role=document.getElementById("rkRole");
-  if(!cls||!spec)return;
+  if(!cls||!spec||!role)return;
+
   const entries=wowClasses[cls.value]||[];
+
   spec.innerHTML='<option value="">Spezialisierung wählen</option>';
-  entries.forEach(([s,r])=>{
-    const opt=new Option(s,s);
-    opt.dataset.role=r;
-    spec.add(opt);
-  });
-  role.innerHTML=entries.length
-    ? `<option value="">Wird automatisch gesetzt</option>`
-    : `<option value="">Wird automatisch gesetzt</option>`;
+  role.innerHTML='<option value="">Wird automatisch gesetzt</option>';
   role.value="";
-  spec.onchange=()=>{
-    const found=entries.find(x=>x[0]===spec.value);
-    role.value=found?.[1]||"";
+
+  entries.forEach(([specName, roleName])=>{
+    const option=new Option(specName,specName);
+    option.dataset.role=roleName;
+    spec.add(option);
+  });
+
+  // Nach der Klassenauswahl direkt die erste MoP-Spezialisierung
+  // auswählen und deren Rolle anzeigen.
+  if(entries.length){
+    spec.value=entries[0][0];
+    role.innerHTML=`<option value="${entries[0][1]}">${entries[0][1]}</option>`;
+    role.value=entries[0][1];
+  }
+
+  spec.onchange=function(){
+    const found=entries.find(([specName])=>specName===spec.value);
+    if(found){
+      role.innerHTML=`<option value="${found[1]}">${found[1]}</option>`;
+      role.value=found[1];
+    }else{
+      role.innerHTML='<option value="">Wird automatisch gesetzt</option>';
+      role.value="";
+    }
   };
 }
 
@@ -860,7 +885,9 @@ async function saveRoster(){
   const character=document.getElementById("rkChar").value.trim();
   const className=document.getElementById("rkClass").value;
   const spec=document.getElementById("rkSpec").value;
-  const role=document.getElementById("rkRole").value;
+  const selectedSpec=document.getElementById("rkSpec").value;
+  const roleEntry=(wowClasses[className]||[]).find(([specName])=>specName===selectedSpec);
+  const role=roleEntry ? roleEntry[1] : document.getElementById("rkRole").value;
   const ilvl=Number(document.getElementById("rkIlvl").value);
   const pin=document.getElementById("rkPin").value.trim();
 
