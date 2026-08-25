@@ -107,7 +107,7 @@ main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
 .role-number,.requirement strong,.limit-item strong{display:block;font-size:25px;margin-bottom:4px}.tank .role-number,.tank strong,.limit-tank strong{color:#e1a45e}.heal .role-number,.heal strong,.limit-heal strong{color:#55d394}.dd .role-number,.dd strong,.limit-dd strong{color:#df6565}.free .role-number{color:#65a8df}
 .progress-label{display:flex;justify-content:space-between;margin-bottom:6px;color:#aaa}.progress{height:13px;overflow:hidden;margin-bottom:20px;background:#070a0e;border-radius:20px}.progress-bar{height:100%;background:linear-gradient(90deg,#9a7021,var(--gold2));transition:.3s}
 .player-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:8px}.player-card{position:relative;padding:13px;background:#10171e;border:1px solid var(--border);border-radius:6px}.player-card strong{display:block;margin-bottom:5px}.player-card small{display:block;margin-top:4px;color:#aaa}.empty-slot{color:#68737e}.remove-player{position:absolute;top:5px;right:5px;border:0;background:none;color:#999;font-size:20px}.remove-player:hover{color:#ff6464}
-.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(0,0,0,.78);box-sizing:border-box}.modal.active{display:flex}.modal-box{width:min(700px,calc(100vw - 36px));max-height:calc(100vh - 36px);overflow:auto;position:relative;padding:25px;background:#17212b;border:1px solid #56636f;border-top:4px solid var(--gold);border-radius:8px;box-sizing:border-box}.modal-box.rk-wide-modal{width:min(1080px,calc(100vw - 36px));max-height:calc(100vh - 36px);padding:30px}.modal-box.rk-wide-modal .rk-modal{width:100%;max-width:none}.modal-box h2{margin-top:0;color:var(--gold);font-family:Georgia,serif}.close-modal{position:absolute;top:6px;right:10px;border:0;background:none;color:#aaa;font-size:28px}.form-group{margin:15px 0}.form-group label{display:block;margin-bottom:6px;color:#bbb}input,select,textarea{width:100%;padding:11px;color:#fff;background:#0a1016;border:1px solid #414d59;border-radius:5px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--gold)}textarea{min-height:100px;resize:vertical}.form-row,.role-limit-form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.role-limit-form{grid-template-columns:repeat(3,1fr)}.modal-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:20px}
+.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:20px;background:#000c}.modal.active{display:flex}.modal-box{width:min(700px,100%);max-height:93vh;overflow:auto;position:relative;padding:25px;background:#17212b;border:1px solid #56636f;border-top:4px solid var(--gold);border-radius:8px}.modal-box h2{margin-top:0;color:var(--gold);font-family:Georgia,serif}.close-modal{position:absolute;top:6px;right:10px;border:0;background:none;color:#aaa;font-size:28px}.form-group{margin:15px 0}.form-group label{display:block;margin-bottom:6px;color:#bbb}input,select,textarea{width:100%;padding:11px;color:#fff;background:#0a1016;border:1px solid #414d59;border-radius:5px;outline:none}input:focus,select:focus,textarea:focus{border-color:var(--gold)}textarea{min-height:100px;resize:vertical}.form-row,.role-limit-form{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.role-limit-form{grid-template-columns:repeat(3,1fr)}.modal-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin-top:20px}
 .signup-status-help{margin:8px 0 0;color:var(--muted);font-size:12px;line-height:1.5}
 .status-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
 .status-group{padding:12px;background:#0c141c;border:1px solid var(--border);border-radius:6px}
@@ -165,19 +165,12 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 .raid-list-promo-subtitle{margin:8px 0 0;color:#d4e5f2;font-size:13px;line-height:1.4}
 @media(max-width:800px){.news-section-layout{grid-template-columns:1fr}.raid-list-promo-content{min-height:180px}}
 </style>
-<style>
-#rkClass,#rkSpec{width:100%;min-height:44px}
-#rkClass option,#rkSpec option{padding:8px}
-.rk-form-hint{display:block;margin-top:5px;font-size:.78rem;color:#8f8f9b}
-</style>
 <style id="raidkader-mop-fix-style">
 #calendar .news-card{border-left:3px solid #d9aa3a}
 #calendar #rkClass,#calendar #rkSpec{background:#080d12;color:#eee}
 #calendar #rkSpec:disabled{opacity:.65}
 #calendar #rkRole{background:#080d12;color:#eee}
 </style>
-
-
 <style id="raidkader-management-style">
 .raidkader-section{scroll-margin-top:90px}
 .raidkader-subtitle{margin:5px 0 0;color:#8fa2b3;font-size:13px}
@@ -222,9 +215,7 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
  .rk-player-actions{justify-content:flex-start}
 }
 </style>
-
 <style id="raidkader-modal-style">.raidkader-action-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(217,170,58,.28);border-left:3px solid #d9aa3a;border-radius:12px;background:linear-gradient(180deg,rgba(18,31,43,.96),rgba(10,18,26,.98));box-shadow:0 8px 24px rgba(0,0,0,.16)}.raidkader-action-card strong{display:block;color:#f0d06b;font-size:16px;margin-bottom:4px}.raidkader-action-card span{color:#8799a9;font-size:13px}.raidkader-action-buttons{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}.rk-modal{max-width:920px;width:min(920px,94vw)}.rk-modal .modal-title{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:20px}.rk-modal .modal-title h2{margin:0;color:#e4bb4d}.rk-modal .modal-title p{margin:5px 0 0;color:#8799a9;font-size:13px}.rk-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.rk-modal .form-group{margin-bottom:0}.rk-modal .rk-pin-group{max-width:none;grid-column:1/-1}.rk-modal .modal-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:22px}@media(max-width:700px){.modal{padding:8px}.modal-box,.modal-box.rk-wide-modal{width:calc(100vw - 16px);max-height:calc(100vh - 16px);padding:20px}.raidkader-action-card{align-items:flex-start;flex-direction:column}.raidkader-action-buttons{justify-content:flex-start}.rk-modal-grid{grid-template-columns:1fr}.rk-modal .rk-pin-group{grid-column:auto}.rk-modal .modal-actions{padding-bottom:2px}}</style>
-
 <style id="raidkader-role-fix">
 #rkRole:disabled{
   opacity:1!important;
@@ -233,7 +224,6 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   font-weight:700;
 }
 </style>
-
 <style id="raidkader-pin-profile-style">
 .rk-profile-note{
   display:flex;gap:10px;align-items:flex-start;
@@ -248,8 +238,8 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   .rk-profile-note{flex-direction:column}
 }
 </style>
-
-<style id="raidkader-player-actions-style">.rk-player-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.rk-player-actions .btn{white-space:nowrap}@media(max-width:700px){.rk-player-actions{justify-content:flex-start;width:100%}}</style></head>
+<style id="raidkader-player-actions-style">.rk-player-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.rk-player-actions .btn{white-space:nowrap}@media(max-width:700px){.rk-player-actions{justify-content:flex-start;width:100%}}</style>
+</head>
 <body>
 <header class="hero"><div class="hero-content">
 <div class="hero-kicker">Allianz · Gilde · Raids · Zusammenhalt</div>
@@ -262,9 +252,9 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   <div class="nav-main">
     <button onclick="scrollToSection('news')">📰 News</button>
     <button onclick="scrollToSection('raids')">⚔️ Raidplaner</button>
-    <button onclick="scrollToSection('raidkaderSection')">👥 Raidkader</button>
     <button onclick="scrollToSection('events')">🎉 Eventplaner</button>
-        <button onclick="openManageSignupChooser()">🔑 Meine Anmeldung verwalten</button>
+    <button onclick="scrollToSection('raidkader')">👥 Raidkader</button>
+    <button onclick="openManageSignupChooser()">🔑 Meine Anmeldung verwalten</button>
     </div>
   <div class="nav-admin">
 	<button class="nav-manage" onclick="openAdminLogin()">🔐 Admin</button>
@@ -275,8 +265,7 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 <section id="news"><div class="section-title"><h2>📰 Gilden-News</h2><button class="btn btn-primary admin-only" onclick="openNewsForm()">+ News erstellen</button></div><div class="news-section-layout"><div id="newsContainer" class="news-grid"></div><a class="raid-list-promo" href="https://docs.google.com/spreadsheets/d/13I4Sy8UiBRHpBlb_rRxFmuodSa6UQtPj_z4y257GPPQ/edit?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="Hier gehts zur Raid Liste"><div class="raid-list-promo-content"><div class="raid-list-promo-kicker">Kindsköpfe · Raidkader</div><h3 class="raid-list-promo-title">Hier gehts zur Raid Liste</h3><p class="raid-list-promo-subtitle">Raidübersicht öffnen und direkt zur aktuellen Liste gelangen.</p></div></a></div></section>
 <section id="raids"><div class="section-title"><h2>⚔️ Raidplaner</h2><button class="btn btn-primary admin-only" onclick="openRaidForm()">+ Raid erstellen</button></div><div id="raidContainer"></div></section>
 <section id="events"><div class="section-title"><h2>🎉 Eventplaner</h2><button class="btn btn-primary admin-only" onclick="openEventForm()">+ Event erstellen</button></div><div id="eventContainer"></div></section>
-
-<section id="calendar" class="raidkader-section">
+<section id="raidkader" class="raidkader-section">
   <div class="section-title">
     <div>
       <h2>👥 Raidkaderliste</h2>
@@ -290,7 +279,9 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
     <div class="raid-card"><div class="card-body muted">Raidkader wird geladen …</div></div>
   </div>
 </section>
-
+<section id="calendar"><div class="section-title"><h2>📅 Gildenkalender</h2><button class="btn btn-primary admin-only" onclick="openCalendarEntryForm()">+ Kalendereintrag</button></div>
+<div class="calendar"><div class="calendar-toolbar"><button onclick="changeMonth(-1)">‹</button><h3 id="calendarTitle"></h3><button onclick="changeMonth(1)">›</button></div>
+<div class="weekdays"><div>Mo</div><div>Di</div><div>Mi</div><div>Do</div><div>Fr</div><div>Sa</div><div>So</div></div><div id="calendarGrid" class="calendar-grid"></div></div></section>
 </main>
 
 <footer><strong>Kindsköpfe</strong><br><br>Raid und Event Portal</footer>
@@ -350,18 +341,8 @@ function getStartDate(item){
     return d;
 }
 function scrollToSection(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"});}
-function openModal(html){
-  const box=document.querySelector("#modal .modal-box");
-  const content=document.getElementById("modalContent");
-  content.innerHTML=html;
-  box.classList.toggle("rk-wide-modal", !!content.querySelector(".rk-modal"));
-  document.getElementById("modal").classList.add("active");
-}
-function closeModal(){
-  document.getElementById("modal").classList.remove("active");
-  document.querySelector("#modal .modal-box").classList.remove("rk-wide-modal");
-  document.getElementById("modalContent").innerHTML="";
-}
+function openModal(html){document.getElementById("modalContent").innerHTML=html;document.getElementById("modal").classList.add("active");}
+function closeModal(){document.getElementById("modal").classList.remove("active");document.getElementById("modalContent").innerHTML="";}
 document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>t.classList.remove("show"),2500);}
@@ -506,7 +487,7 @@ function openCalendarEntryForm(id=null){
 }
 async function saveCalendarEntry(id){ if(!isAdmin){alert("Admin-Sitzung ist nicht mehr aktiv. Bitte neu einloggen.");return;}
  const payload={title:document.getElementById("calTitle").value.trim(),type:document.getElementById("calType").value,date:document.getElementById("calDate").value,time:document.getElementById("calTime").value,description:document.getElementById("calDescription").value.trim()};if(!payload.title||!payload.date){alert("Titel und Datum sind erforderlich.");return;}
- const q=id===null?supabaseClient.from("calendar_entries").insert(payload):supabaseClient.from("calendar_entries").update(payload).eq("id",id);const {error}=await q;if(error){dbError(error);return;}closeModal();await refreshData();showToast("👥 Raidkader aktualisiert.");
+ const q=id===null?supabaseClient.from("calendar_entries").insert(payload):supabaseClient.from("calendar_entries").update(payload).eq("id",id);const {error}=await q;if(error){dbError(error);return;}closeModal();await refreshData();showToast("📅 Kalender aktualisiert.");
 }
 async function deleteCalendarEntry(id){if(!isAdmin||!confirm("Kalendereintrag löschen?"))return;const {error}=await supabaseClient.from("calendar_entries").delete().eq("id",id);if(error){dbError(error);return;}await refreshData();showToast("Kalendereintrag gelöscht.");}
 function changeMonth(n){calendarDate.setMonth(calendarDate.getMonth()+n);renderCalendar();}
@@ -734,8 +715,8 @@ function renderEvents(){
 
 
 /* ===== ANMELDUNG ===== */
-function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSignupSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="new-password" placeholder="4–6 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
-function updateSignupSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
+function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="new-password" placeholder="4–6 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
+function updateSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
 async function submitSignup(type,payload){
  const {data,error}=await supabaseClient.rpc("register_signup_status",payload);
  if(error){alert("Anmeldung fehlgeschlagen: "+error.message);return null;}
@@ -763,6 +744,7 @@ async function saveSignup(type,id){
 
 
 
+/* ===== RAIDKADER ===== */
 let raidKaderRows=[];
 let raidKaderVerifiedPlayer="";
 let raidKaderVerifiedPin="";
@@ -770,7 +752,7 @@ let raidKaderFormMode="create";
 let raidKaderManagePlayer="";
 let raidKaderManagePin="";
 
-function updateSpecs(){
+function updateRaidkaderSpecs(){
   const cls=document.getElementById("rkClass");
   const spec=document.getElementById("rkSpec");
   const role=document.getElementById("rkRole");
@@ -928,7 +910,7 @@ function openRaidkaderForm(playerName="", mode="create"){
       </div>
       <div class="form-group">
         <label for="rkClass">Klasse *</label>
-        <select id="rkClass" onchange="updateSpecs()">
+        <select id="rkClass" onchange="updateRaidkaderSpecs()">
           <option value="">Klasse wählen</option>
           <option>Todesritter</option><option>Druide</option><option>Jäger</option><option>Magier</option>
           <option>Mönch</option><option>Paladin</option><option>Priester</option><option>Schamane</option>
@@ -1246,10 +1228,8 @@ async function adminDeleteRaidkader(id){
   await loadRaidkader();showToast("👑 Raidkader-Eintrag gelöscht.");
 }
 
-function renderAll(){renderNews();renderRaids();renderEvents();updateAdminStatus();setTimeout(()=>{updateSpecs();loadRaidkader();},0);}
-
+function renderAll(){renderNews();renderCalendar();renderRaids();renderEvents();updateAdminStatus();setTimeout(()=>loadRaidkader(),0);}
 renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
 </script>
-
 </body>
 </html>
