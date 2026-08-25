@@ -203,6 +203,14 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
  .rk-player-actions{justify-content:flex-start}
 }
 </style>
+<style id="raidkader-signup-style">
+.signup-roster-hint{margin:9px 0 0;color:#8fa2b3;font-size:13px;line-height:1.45}
+.signup-roster-hint strong{color:#e4bb4d}
+.rk-signup-context{padding:12px 14px;border:1px solid rgba(217,170,58,.25);border-left:3px solid #d9aa3a;border-radius:10px;background:rgba(18,31,43,.72);margin:12px 0 16px}
+.rk-signup-context strong{color:#f0d06b}
+.rk-signup-readonly{opacity:.82}
+.rk-signup-readonly select,.rk-signup-readonly input{cursor:not-allowed}
+</style>
 <style id="raidkader-modal-style">.raidkader-action-card{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 20px;margin-bottom:14px;border:1px solid rgba(217,170,58,.28);border-left:3px solid #d9aa3a;border-radius:12px;background:linear-gradient(180deg,rgba(18,31,43,.96),rgba(10,18,26,.98));box-shadow:0 8px 24px rgba(0,0,0,.16)}.raidkader-action-card strong{display:block;color:#f0d06b;font-size:16px;margin-bottom:4px}.raidkader-action-card span{color:#8799a9;font-size:13px}.raidkader-action-buttons{display:flex;gap:9px;flex-wrap:wrap;justify-content:flex-end}.modal-box.rk-wide-modal{width:min(1400px,calc(100vw - 30px));max-width:1400px;max-height:calc(100vh - 30px);padding:30px}.rk-modal{max-width:none;width:100%}.rk-modal .modal-title{display:flex;justify-content:space-between;gap:15px;align-items:flex-start;margin-bottom:20px}.rk-modal .modal-title h2{margin:0;color:#e4bb4d}.rk-modal .modal-title p{margin:5px 0 0;color:#8799a9;font-size:13px}.rk-modal-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.rk-modal .form-group{margin-bottom:0}.rk-modal .rk-pin-group{max-width:none;grid-column:1/-1}.rk-modal .modal-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:22px}@media(max-width:700px){.modal{padding:8px}.modal-box,.modal-box.rk-wide-modal{width:calc(100vw - 16px);max-height:calc(100vh - 16px);padding:20px}.raidkader-action-card{align-items:flex-start;flex-direction:column}.raidkader-action-buttons{justify-content:flex-start}.rk-modal-grid{grid-template-columns:1fr}.rk-modal .rk-pin-group{grid-column:auto}.rk-modal .modal-actions{padding-bottom:2px}}</style>
 <style id="raidkader-role-fix">
 #rkRole:disabled{
@@ -502,11 +510,11 @@ function pinIsValid(pin){return /^\d{4,20}$/.test(String(pin||"").trim());}
 function openManageSignupChooser(){
   if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
   openModal(`<h2>🔑 Meine Anmeldung verwalten</h2>
-  <p class="muted" style="color:#FFD700;">Gib einfach deinen persönlichen PIN ein. Danach kannst du deine Anmeldung bearbeiten oder löschen.</p>
+  <p class="muted" style="color:#FFD700;">Gib den PIN deines Raidkader-Profils ein. Danach kannst du deine Raid-/Event-Anmeldungen bearbeiten oder löschen.</p>
   <div class="form-group"><label>Raid / Event *</label><select id="manageItemType"><option value="raid">⚔️ Raid</option><option value="event">🎉 Event</option></select></div>
   <div class="form-group"><label>Eintrag *</label><select id="manageItemId"></select></div>
   <div class="form-group"><label>Persönlicher PIN *</label><input id="managePin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="off" placeholder="4–20 Ziffern"></div>
-  <p class="signup-status-help" style="color:#FFD700;">* Gib den PIN ein, den du bei deiner Anmeldung vergeben hast. Teile ihn mit niemandem.</p>
+  <p class="signup-status-help" style="color:#FFD700;">* Gib den PIN ein, den du bei der Erstellung deines Raidkader-Profils vergeben hast. Teile ihn mit niemandem.</p>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="lookupManagedSignup()">Weiter</button></div>`);
   document.getElementById("manageItemType").addEventListener("change",updateManageItems);
   updateManageItems();
@@ -639,7 +647,7 @@ function updateCountdowns(){
 // Eigene Anmeldungen werden ausschließlich über „Meine Anmeldung verwalten“ und den persönlichen PIN verwaltet.
 
 function renderRaids(){
- const c=document.getElementById("raidContainer");c.innerHTML="";if(!raids.length){c.innerHTML='<div class="raid-card"><div class="card-body muted">Noch keine Raids erstellt.</div></div>';return;}raids.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(r=>{r.players=r.players||[];const confirmed=r.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=r.players.filter(p=>p.status==="bench"),uncertain=r.players.filter(p=>p.status==="uncertain"),absent=r.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,r.size-confirmed.length),pct=Math.min(100,confirmed.length/r.size*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small>${adminStatusControl(p)}${isAdmin?`<button class="remove-player" title="Anmeldung als Admin entfernen" onclick="removeRaidPlayer(${r.id},${p.id})">🗑️</button>`:""}</div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<r.size;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${adminStatusControl(p)} ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeRaidPlayer(${r.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="raid-card"><div class="card-header"><div><div class="card-title">⚔️ ${escapeHTML(r.name)}</div><div class="card-meta">👥 ${r.size} Spieler<br>📅 ${formatDate(r.date)}<br>🕐 ${escapeHTML(r.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openRaidForm(${r.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteRaid(${r.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(r)}${r.description?`<p class="card-description">${escapeHTML(r.description)}</p>`:""}<div class="requirements"><div class="requirement tank"><strong>${tanks}/${r.tank_limit}</strong>🛡️ Tanks benötigt</div><div class="requirement heal"><strong>${heals}/${r.heal_limit}</strong>💚 Heiler benötigt</div><div class="requirement dd"><strong>${dds}/${r.dd_limit}</strong>⚔️ DDs benötigt</div></div><div class="role-grid"><div class="role-box tank"><span class="role-number">${tanks}</span>🛡️ Tanks</div><div class="role-box heal"><span class="role-number">${heals}</span>💚 Heiler</div><div class="role-box dd"><span class="role-number">${dds}</span>⚔️ DDs</div><div class="role-box free"><span class="role-number">${free}</span>👥 Frei</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${r.size}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('raid',${r.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('raid',${r.id})">🔑 Meine Anmeldung verwalten</button></div></article>`);});}
+ const c=document.getElementById("raidContainer");c.innerHTML="";if(!raids.length){c.innerHTML='<div class="raid-card"><div class="card-body muted">Noch keine Raids erstellt.</div></div>';return;}raids.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(r=>{r.players=r.players||[];const confirmed=r.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=r.players.filter(p=>p.status==="bench"),uncertain=r.players.filter(p=>p.status==="uncertain"),absent=r.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,r.size-confirmed.length),pct=Math.min(100,confirmed.length/r.size*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small>${adminStatusControl(p)}${isAdmin?`<button class="remove-player" title="Anmeldung als Admin entfernen" onclick="removeRaidPlayer(${r.id},${p.id})">🗑️</button>`:""}</div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<r.size;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${adminStatusControl(p)} ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeRaidPlayer(${r.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="raid-card"><div class="card-header"><div><div class="card-title">⚔️ ${escapeHTML(r.name)}</div><div class="card-meta">👥 ${r.size} Spieler<br>📅 ${formatDate(r.date)}<br>🕐 ${escapeHTML(r.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openRaidForm(${r.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteRaid(${r.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(r)}${r.description?`<p class="card-description">${escapeHTML(r.description)}</p>`:""}<div class="requirements"><div class="requirement tank"><strong>${tanks}/${r.tank_limit}</strong>🛡️ Tanks benötigt</div><div class="requirement heal"><strong>${heals}/${r.heal_limit}</strong>💚 Heiler benötigt</div><div class="requirement dd"><strong>${dds}/${r.dd_limit}</strong>⚔️ DDs benötigt</div></div><div class="role-grid"><div class="role-box tank"><span class="role-number">${tanks}</span>🛡️ Tanks</div><div class="role-box heal"><span class="role-number">${heals}</span>💚 Heiler</div><div class="role-box dd"><span class="role-number">${dds}</span>⚔️ DDs</div><div class="role-box free"><span class="role-number">${free}</span>👥 Frei</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${r.size}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('raid',${r.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('raid',${r.id})">🔑 Meine Anmeldung verwalten</button><p class="signup-roster-hint"><strong>Hinweis:</strong> Du kannst dich erst für ein Raid anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.</p></div></article>`);});}
 
 
 /* ===== EVENTS ===== */
@@ -702,11 +710,180 @@ async function removeEventPlayer(eid,pid){
  showToast("🗑️ Anmeldung entfernt.");
 }
 function renderEvents(){
- const c=document.getElementById("eventContainer");c.innerHTML="";if(!events.length){c.innerHTML='<div class="event-card"><div class="card-body muted">Noch keine Events erstellt.</div></div>';return;}events.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(e=>{e.players=e.players||[];const confirmed=e.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=e.players.filter(p=>p.status==="bench"),uncertain=e.players.filter(p=>p.status==="uncertain"),absent=e.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,e.max-confirmed.length),pct=Math.min(100,confirmed.length/e.max*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small>${adminStatusControl(p)}${isAdmin?`<button class="remove-player" title="Anmeldung als Admin entfernen" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<e.max;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${adminStatusControl(p)} ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="event-card"><div class="card-header"><div><div class="card-title">🎉 ${escapeHTML(e.name)}</div><div class="card-meta">🏷️ ${escapeHTML(e.type)}<br>📅 ${formatDate(e.date)}<br>🕐 ${escapeHTML(e.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openEventForm(${e.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteEvent(${e.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(e)}${e.description?`<p class="card-description">${escapeHTML(e.description)}</p>`:""}<div class="limit-box"><div class="limit-item limit-tank"><strong>${tanks}/${e.tank_limit}</strong>🛡️ Tanks</div><div class="limit-item limit-heal"><strong>${heals}/${e.heal_limit}</strong>💚 Heiler</div><div class="limit-item limit-dd"><strong>${dds}/${e.dd_limit}</strong>⚔️ DDs</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${e.max}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('event',${e.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('event',${e.id})">🔑 Meine Anmeldung verwalten</button></div></article>`);});}
+ const c=document.getElementById("eventContainer");c.innerHTML="";if(!events.length){c.innerHTML='<div class="event-card"><div class="card-body muted">Noch keine Events erstellt.</div></div>';return;}events.slice().sort((a,b)=>getStartDate(a)-getStartDate(b)).forEach(e=>{e.players=e.players||[];const confirmed=e.players.filter(p=>(p.status||"confirmed")==="confirmed"),bench=e.players.filter(p=>p.status==="bench"),uncertain=e.players.filter(p=>p.status==="uncertain"),absent=e.players.filter(p=>p.status==="absent");const tanks=confirmed.filter(p=>p.role==="Tank").length,heals=confirmed.filter(p=>p.role==="Heiler").length,dds=confirmed.filter(p=>p.role==="DD").length,free=Math.max(0,e.max-confirmed.length),pct=Math.min(100,confirmed.length/e.max*100);const cardPlayer=p=>`<div class="player-card"><strong>${escapeHTML(p.player)}</strong><small>⚔️ ${escapeHTML(p.character)}</small><small>${escapeHTML(p.class_name)} · ${escapeHTML(p.spec)}</small><small>${escapeHTML(p.role)}</small>${adminStatusControl(p)}${isAdmin?`<button class="remove-player" title="Anmeldung als Admin entfernen" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`;let ph=confirmed.map(cardPlayer).join("");for(let i=confirmed.length;i<e.max;i++)ph+='<div class="player-card"><span class="empty-slot">Freier Platz</span></div>';const statusList=arr=>arr.length?arr.map(p=>`<div class="status-player"><strong>${escapeHTML(p.player)}</strong> · ${escapeHTML(p.character)} <span class="muted">(${escapeHTML(p.role)})</span> ${adminStatusControl(p)} ${isAdmin?`<button class="btn btn-danger btn-small" onclick="removeEventPlayer(${e.id},${p.id})">🗑️</button>`:""}</div>`).join(""):'<span class="muted">Keine Einträge</span>';c.insertAdjacentHTML("beforeend",`<article class="event-card"><div class="card-header"><div><div class="card-title">🎉 ${escapeHTML(e.name)}</div><div class="card-meta">🏷️ ${escapeHTML(e.type)}<br>📅 ${formatDate(e.date)}<br>🕐 ${escapeHTML(e.time)} Uhr</div></div>${isAdmin?`<div><button class="btn btn-secondary btn-small" onclick="openEventForm(${e.id})">✏️ Bearbeiten</button> <button class="btn btn-danger btn-small" onclick="deleteEvent(${e.id})">🗑️ Löschen</button></div>`:""}</div><div class="card-body">${renderCountdown(e)}${e.description?`<p class="card-description">${escapeHTML(e.description)}</p>`:""}<div class="limit-box"><div class="limit-item limit-tank"><strong>${tanks}/${e.tank_limit}</strong>🛡️ Tanks</div><div class="limit-item limit-heal"><strong>${heals}/${e.heal_limit}</strong>💚 Heiler</div><div class="limit-item limit-dd"><strong>${dds}/${e.dd_limit}</strong>⚔️ DDs</div></div><div class="progress-label"><span>Teilnehmer</span><span>${confirmed.length}/${e.max}</span></div><div class="progress"><div class="progress-bar" style="width:${pct}%"></div></div><div class="player-grid">${ph}</div><div class="status-groups"><div class="status-group bench"><h4>🪑 Ersatzbank (${bench.length})</h4>${statusList(bench)}</div><div class="status-group uncertain"><h4>❓ Unsicher (${uncertain.length})</h4>${statusList(uncertain)}</div><div class="status-group absent"><h4>🚫 Abwesend (${absent.length})</h4>${statusList(absent)}</div></div><br><button class="btn btn-primary" onclick="openSignup('event',${e.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('event',${e.id})">🔑 Meine Anmeldung verwalten</button><p class="signup-roster-hint"><strong>Hinweis:</strong> Du kannst dich erst für ein Event anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.</p></div></article>`);});}
 
 
 /* ===== ANMELDUNG ===== */
-function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="new-password" placeholder="4–20 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
+let raidSignupContext = null;
+
+function openSignup(type,id){
+  const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);
+  if(!item)return;
+
+  openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2>
+    <p class="muted">${escapeHTML(item.name)}</p>
+    <div class="rk-signup-context">
+      <strong>🔐 Anmeldung über dein Raidkader-Profil</strong><br>
+      <span class="muted">Verwende den PIN, den du bei der Erstellung deines Raidkader-Profils vergeben hast. Danach kannst du einen deiner dort eingetragenen Charaktere auswählen.</span>
+    </div>
+    <div class="form-group">
+      <label>Raidkader-PIN *</label>
+      <input id="signupPin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="off" placeholder="4–20 Ziffern">
+      <p class="signup-status-help">Du kannst dich nur mit einem bestehenden Raidkader-Profil anmelden.</p>
+    </div>
+    <p id="raidSignupNoProfileHint" class="signup-roster-hint"><strong>Noch kein Raidkader-Profil?</strong> Du kannst dich erst für ein Raid / Event anmelden, wenn du dich in den Raidkader eingetragen hast.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="verifyRaidSignupPin('${type}',${id})">Weiter</button>
+    </div>`);
+}
+
+async function verifyRaidSignupPin(type,id){
+  const pin=normalizeName(document.getElementById("signupPin")?.value);
+  if(!pinIsValid(pin)){
+    alert("Bitte deinen 4–20-stelligen Raidkader-PIN eingeben.");
+    return;
+  }
+
+  const {data,error}=await supabaseClient.rpc("get_raidkader_signup_context",{p_pin:pin});
+  if(error){dbError(error);return;}
+  if(!data?.ok){
+    alert(data?.message||"Kein Raidkader-Profil mit diesem PIN gefunden.");
+    return;
+  }
+
+  const chars=Array.isArray(data.characters)?data.characters:[];
+  if(!chars.length){
+    alert("Zu diesem Raidkader-Profil wurden keine Charaktere gefunden.");
+    return;
+  }
+
+  raidSignupContext={type,id,pin,player:data.player_name,characters:chars};
+  renderRaidSignupForm();
+}
+
+function renderRaidSignupForm(){
+  if(!raidSignupContext)return;
+  const {type,id,pin,player,characters}=raidSignupContext;
+  const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);
+  if(!item)return;
+
+  const options=characters.map((c,i)=>`<option value="${i}">${escapeHTML(c.character_name)} · ${escapeHTML(c.class_name)} · ${escapeHTML(c.spec)}</option>`).join("");
+
+  openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2>
+    <p class="muted">${escapeHTML(item.name)}</p>
+
+    <div class="rk-signup-context">
+      <strong>👤 Spielerprofil: ${escapeHTML(player)}</strong><br>
+      <span class="muted">Dein Raidkader-PIN wurde bestätigt. Wähle jetzt den Charakter, mit dem du dich anmelden möchtest.</span>
+    </div>
+
+    <div class="form-group">
+      <label>Charakter *</label>
+      <select id="signupCharacterSelect" onchange="updateRaidSignupCharacter()">${options}</select>
+    </div>
+
+    <div class="form-group rk-signup-readonly">
+      <label>Klasse</label>
+      <input id="signupClassDisplay" readonly>
+    </div>
+
+    <div class="form-group rk-signup-readonly">
+      <label>Spezialisierung</label>
+      <input id="signupSpecDisplay" readonly>
+    </div>
+
+    <div class="form-group rk-signup-readonly">
+      <label>Rolle</label>
+      <input id="signupRoleDisplay" readonly>
+    </div>
+
+    <div class="form-group">
+      <label>Status *</label>
+      <select id="signupStatus">
+        <option value="confirmed">✅ Dabei</option>
+        <option value="bench">🪑 Ersatzbank</option>
+        <option value="uncertain">❓ Unsicher</option>
+        <option value="absent">🚫 Abwesend</option>
+      </select>
+      <p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p>
+    </div>
+
+    <div class="form-group rk-signup-readonly">
+      <label>Raidkader-PIN</label>
+      <input value="${escapeHTML(pin)}" readonly type="password">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="openSignup('${type}',${id})">↩ Zurück</button>
+      <button class="btn btn-primary" onclick="saveRaidkaderSignup()">💾 Anmeldung speichern</button>
+    </div>`);
+
+  updateRaidSignupCharacter();
+}
+
+function updateRaidSignupCharacter(){
+  if(!raidSignupContext)return;
+  const idx=Number(document.getElementById("signupCharacterSelect")?.value||0);
+  const c=raidSignupContext.characters[idx];
+  if(!c)return;
+  const classEl=document.getElementById("signupClassDisplay");
+  const specEl=document.getElementById("signupSpecDisplay");
+  const roleEl=document.getElementById("signupRoleDisplay");
+  if(classEl)classEl.value=c.class_name||"";
+  if(specEl)specEl.value=c.spec||"";
+  if(roleEl)roleEl.value=c.role||"";
+}
+
+async function saveRaidkaderSignup(){
+  if(!raidSignupContext)return;
+
+  const {type,id,pin,player,characters}=raidSignupContext;
+  const idx=Number(document.getElementById("signupCharacterSelect")?.value||0);
+  const c=characters[idx];
+  const status=document.getElementById("signupStatus")?.value;
+
+  if(!c){
+    alert("Bitte einen Charakter auswählen.");
+    return;
+  }
+
+  const {data,error}=await supabaseClient.rpc("register_signup_from_raidkader",{
+    p_item_type:type,
+    p_item_id:id,
+    p_raidkader_id:c.id,
+    p_pin:pin,
+    p_status:status
+  });
+
+  if(error){dbError(error);return;}
+
+  if(data?.ok===false){
+    if(data?.needs_bench){
+      const ok=confirm((data.message||"Für diese Rolle ist kein fester Platz mehr frei.")+"\n\nMöchtest du stattdessen auf die Ersatzbank?");
+      if(!ok){showToast("Anmeldung nicht gespeichert.");return;}
+
+      const retry=await supabaseClient.rpc("register_signup_from_raidkader",{
+        p_item_type:type,
+        p_item_id:id,
+        p_raidkader_id:c.id,
+        p_pin:pin,
+        p_status:"bench"
+      });
+      if(retry.error){dbError(retry.error);return;}
+      if(!retry.data?.ok){alert(retry.data?.message||"Anmeldung konnte nicht gespeichert werden.");return;}
+    }else{
+      alert(data.message||"Anmeldung konnte nicht gespeichert werden.");
+      return;
+    }
+  }
+
+  raidSignupContext=null;
+  closeModal();
+  await refreshData();
+  showToast(type==="raid"?"⚔️ Status für den Raid gespeichert.":"🎉 Status für das Event gespeichert.");
+}
+
 function updateSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
 async function submitSignup(type,payload){
  const {data,error}=await supabaseClient.rpc("register_signup_status",payload);
