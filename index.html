@@ -165,7 +165,11 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 .raid-list-promo-subtitle{margin:8px 0 0;color:#d4e5f2;font-size:13px;line-height:1.4}
 @media(max-width:800px){.news-section-layout{grid-template-columns:1fr}.raid-list-promo-content{min-height:180px}}
 </style>
-</head>
+<style>
+#rkClass,#rkSpec{width:100%;min-height:44px}
+#rkClass option,#rkSpec option{padding:8px}
+.rk-form-hint{display:block;margin-top:5px;font-size:.78rem;color:#8f8f9b}
+</style></head>
 <body>
 <header class="hero"><div class="hero-content">
 <div class="hero-kicker">Allianz · Gilde · Raids · Zusammenhalt</div>
@@ -178,9 +182,9 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
   <div class="nav-main">
     <button onclick="scrollToSection('news')">📰 News</button>
     <button onclick="scrollToSection('raids')">⚔️ Raidplaner</button>
+    <button onclick="scrollToSection('raidkaderSection')">👥 Raidkader</button>
     <button onclick="scrollToSection('events')">🎉 Eventplaner</button>
-    <button onclick="scrollToSection('calendar')">👥 Raidkader</button>
-    <button onclick="openManageSignupChooser()">🔑 Meine Anmeldung verwalten</button>
+        <button onclick="openManageSignupChooser()">🔑 Meine Anmeldung verwalten</button>
     </div>
   <div class="nav-admin">
 	<button class="nav-manage" onclick="openAdminLogin()">🔐 Admin</button>
@@ -218,6 +222,23 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 <tbody id="rosterBody"></tbody>
 </table>
 </div></div>
+</section>
+<section id="raidkaderSection">
+  <div class="raidkader-shell">
+    <div class="section-header">
+      <h1>👥 Raidkader</h1>
+      <p class="muted">Alle Charaktere der Gilde auf einen Blick – mehrere Charaktere pro Spieler sind möglich.</p>
+    </div>
+    <div class="raidkader-toolbar">
+      <button class="btn btn-primary" onclick="openRaidkaderForm()">➕ Charakter hinzufügen</button>
+      <button class="btn btn-secondary" onclick="openRaidkaderManage()">🔑 Meine Einträge verwalten</button>
+      <button class="btn btn-secondary" onclick="loadRaidkader()">🔄 Aktualisieren</button>
+    </div>
+    <p class="rk-note">Beim Anlegen vergibst du einen persönlichen PIN. Mit Spielername, Charaktername und PIN kannst du deine eigenen Charaktere später bearbeiten oder löschen. Admins dürfen alle Einträge unabhängig vom PIN verwalten.</p>
+    <div id="raidkaderList" class="raidkader-list">
+      <div class="rk-empty">Raidkader wird geladen …</div>
+    </div>
+  </div>
 </section>
 </main>
 
@@ -652,8 +673,8 @@ function renderEvents(){
 
 
 /* ===== ANMELDUNG ===== */
-function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="new-password" placeholder="4–6 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
-function updateSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
+function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSignupSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="new-password" placeholder="4–6 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
+function updateSignupSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
 async function submitSignup(type,payload){
  const {data,error}=await supabaseClient.rpc("register_signup_status",payload);
  if(error){alert("Anmeldung fehlgeschlagen: "+error.message);return null;}
@@ -710,12 +731,12 @@ function renderRoster(){
 }
 function renderAll(){renderNews();renderRaids();renderEvents();updateAdminStatus();setTimeout(initRoster,0);}
 
-renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
+renderAll();init();if(typeof initRaidkader2==="function")initRaidkader2();updateCountdowns();setInterval(updateCountdowns,1000);
 </script>
 
 <!-- ===== RAIDKADER 2.0 ===== -->
 <style>
-#raidkaderSection{display:none}
+#raidkaderSection{display:block}
 .raidkader-shell{max-width:1200px;margin:0 auto}
 .raidkader-toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 18px}
 .raidkader-toolbar .btn{margin:0}
@@ -743,82 +764,110 @@ renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
 }
 </style>
 
-<section id="raidkaderSection">
-  <div class="raidkader-shell">
-    <div class="section-header">
-      <h1>👥 Raidkader</h1>
-      <p class="muted">Alle Charaktere der Gilde auf einen Blick – mehrere Charaktere pro Spieler sind möglich.</p>
-    </div>
-    <div class="raidkader-toolbar">
-      <button class="btn btn-primary" onclick="openRaidkaderForm()">➕ Charakter hinzufügen</button>
-      <button class="btn btn-secondary" onclick="openRaidkaderManage()">🔑 Meine Einträge verwalten</button>
-      <button class="btn btn-secondary" onclick="loadRaidkader()">🔄 Aktualisieren</button>
-    </div>
-    <p class="rk-note">Beim Anlegen vergibst du einen persönlichen PIN. Mit Spielername, Charaktername und PIN kannst du deine eigenen Charaktere später bearbeiten oder löschen. Admins dürfen alle Einträge unabhängig vom PIN verwalten.</p>
-    <div id="raidkaderList" class="raidkader-list">
-      <div class="rk-empty">Raidkader wird geladen …</div>
-    </div>
-  </div>
-</section>
+
 
 <script>
 (function(){
   const RK_TABLE = "raidkader";
-  const specs = {
-    "Todesritter":[["Blut","Tank"],["Frost","DD"],["Unheilig","DD"]],
-    "Druide":[["Gleichgewicht","DD"],["Wildheit","DD"],["Wächter","Tank"],["Wiederherstellung","Heiler"]],
-    "Jäger":[["Tierherrschaft","DD"],["Treffsicherheit","DD"],["Überleben","DD"]],
-    "Magier":[["Arkan","DD"],["Feuer","DD"],["Frost","DD"]],
-    "Mönch":[["Braumeister","Tank"],["Nebelwirker","Heiler"],["Windläufer","DD"]],
-    "Paladin":[["Heilig","Heiler"],["Schutz","Tank"],["Vergeltung","DD"]],
-    "Priester":[["Disziplin","Heiler"],["Heilig","Heiler"],["Schatten","DD"]],
-    "Schurke":[["Meucheln","DD"],["Kampf","DD"],["Täuschung","DD"]],
-    "Schamane":[["Elementar","DD"],["Verstärkung","DD"],["Wiederherstellung","Heiler"]],
-    "Hexenmeister":[["Gebrechen","DD"],["Dämonologie","DD"],["Zerstörung","DD"]],
-    "Krieger":[["Waffen","DD"],["Furor","DD"],["Schutz","Tank"]]
-  };
+  const specs = {"Todesritter":[["Blut","Tank"],["Frost","DD"],["Unheilig","DD"]],"Druide":[["Gleichgewicht","DD"],["Wildheit","DD"],["Wächter","Tank"],["Wiederherstellung","Heiler"]],"Jäger":[["Tierherrschaft","DD"],["Treffsicherheit","DD"],["Überleben","DD"]],"Magier":[["Arkan","DD"],["Feuer","DD"],["Frost","DD"]],"Mönch":[["Braumeister","Tank"],["Nebelwirker","Heiler"],["Windläufer","DD"]],"Paladin":[["Heilig","Heiler"],["Schutz","Tank"],["Vergeltung","DD"]],"Priester":[["Disziplin","Heiler"],["Heilig","Heiler"],["Schatten","DD"]],"Schamane":[["Elementar","DD"],["Verstärkung","DD"],["Wiederherstellung","Heiler"]],"Schurke":[["Meucheln","DD"],["Kampf","DD"],["Täuschung","DD"]],"Hexenmeister":[["Gebrechen","DD"],["Dämonologie","DD"],["Zerstörung","DD"]],"Krieger":[["Waffen","DD"],["Furor","DD"],["Schutz","Tank"]]};
   const classes = Object.keys(specs);
 
   function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
   function isAdminRK(){return !!window.isAdmin;}
   function rkClient(){return window.supabaseClient || (typeof supabaseClient!=="undefined"?supabaseClient:null);}
 
+  function updateRaidkaderSpecs(){
+    const classSelect = document.getElementById("rkClass");
+    const specSelect = document.getElementById("rkSpec");
+    const roleInput = document.getElementById("rkRole");
+    if(!classSelect || !specSelect) return;
+
+    const selectedClass = classSelect.value;
+    const entries = specs[selectedClass] || [];
+
+    specSelect.innerHTML = "";
+
+    if(!selectedClass || !entries.length){
+      specSelect.innerHTML = '<option value="">Spezialisierung auswählen</option>';
+      if(roleInput) roleInput.value = "";
+      return;
+    }
+
+    entries.forEach(function(entry){
+      const option = document.createElement("option");
+      option.value = entry[0];
+      option.textContent = entry[0] + " – " + entry[1];
+      option.dataset.role = entry[1];
+      specSelect.appendChild(option);
+    });
+
+    if(roleInput){
+      roleInput.value = specSelect.options[0]?.dataset.role || "";
+    }
+
+    specSelect.onchange = function(){
+      if(roleInput){
+        roleInput.value = specSelect.selectedOptions[0]?.dataset.role || "";
+      }
+    };
+  }
   function formHtml(row){
-    const editing=!!row, cls=row?.class_name||"", sp=row?.spec||"";
+    const editing=!!row, cls=row?.class_name||"", pinValue=document.getElementById("modalContent")?.dataset?.rkPin||"";
     return `<h2>${editing?"✏️ Charakter bearbeiten":"➕ Charakter hinzufügen"}</h2>
       <div class="form-row">
         <div class="form-group"><label>Spielername *</label><input id="rkPlayer" value="${esc(row?.player_name||"")}" placeholder="z.B. Müller"></div>
         <div class="form-group"><label>Charaktername *</label><input id="rkCharacter" value="${esc(row?.character_name||"")}" placeholder="z.B. Arthas"></div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Klasse *</label><select id="rkClass">${classes.map(c=>`<option ${c===cls?"selected":""}>${esc(c)}</option>`).join("")}</select></div>
-        <div class="form-group"><label>Spec *</label><select id="rkSpec"></select></div>
+        <div class="form-group">
+          <label>Klasse *</label>
+          <select id="rkClass" onchange="window.rkUpdateSpecs()">
+            <option value="">— Klasse auswählen —</option>
+            <option value="Todesritter" ${cls==="Todesritter"?"selected":""}>Todesritter</option><option value="Druide" ${cls==="Druide"?"selected":""}>Druide</option><option value="Jäger" ${cls==="Jäger"?"selected":""}>Jäger</option><option value="Magier" ${cls==="Magier"?"selected":""}>Magier</option><option value="Mönch" ${cls==="Mönch"?"selected":""}>Mönch</option><option value="Paladin" ${cls==="Paladin"?"selected":""}>Paladin</option><option value="Priester" ${cls==="Priester"?"selected":""}>Priester</option><option value="Schamane" ${cls==="Schamane"?"selected":""}>Schamane</option><option value="Schurke" ${cls==="Schurke"?"selected":""}>Schurke</option><option value="Hexenmeister" ${cls==="Hexenmeister"?"selected":""}>Hexenmeister</option><option value="Krieger" ${cls==="Krieger"?"selected":""}>Krieger</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Spezialisierung *</label>
+          <select id="rkSpec" onchange="window.rkUpdateRole()">
+            <option value="">— zuerst Klasse auswählen —</option>
+          </select>
+        </div>
       </div>
       <div class="form-row">
-        <div class="form-group"><label>Rolle</label><input id="rkRole" readonly></div>
+        <div class="form-group"><label>Rolle</label><input id="rkRole" readonly placeholder="wird automatisch gesetzt"></div>
         <div class="form-group"><label>Gegenstandsstufe *</label><input id="rkIlvl" type="number" min="1" max="999" value="${esc(row?.item_level||"")}" placeholder="z.B. 642"></div>
       </div>
-      ${editing?`<div class="form-group"><label>Persönlicher PIN *</label><input id="rkPin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern"></div>`:`<div class="form-group"><label>Persönlicher PIN *</label><input id="rkPin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern"><small class="muted">Mit diesem PIN kannst du deine eigenen Einträge später bearbeiten oder löschen.</small></div>`}
+      ${editing&&!isAdminRK()?`<div class="form-group"><label>Persönlicher PIN *</label><input id="rkPin" type="password" inputmode="numeric" maxlength="6" value="${esc(pinValue)}" placeholder="4–6 Ziffern"></div>`:
+      !editing?`<div class="form-group"><label>Persönlicher PIN *</label><input id="rkPin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern"><small class="muted">4–6 Ziffern. Mit diesem PIN verwaltest du deine Charaktere.</small></div>`:""}
       <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveRaidkader(${editing?Number(row.id):"null"})">${editing?"Speichern":"Eintragen"}</button></div>`;
   }
 
-  function fillSpecs(){
-    const c=document.getElementById("rkClass"), s=document.getElementById("rkSpec"), r=document.getElementById("rkRole");
+  window.rkUpdateRole=function(){
+    const s=document.getElementById("rkSpec"), r=document.getElementById("rkRole");
+    if(!s||!r)return;
+    r.value=s.selectedOptions[0]?.dataset?.role||"";
+  };
+
+  window.rkUpdateSpecs=function(){
+    const c=document.getElementById("rkClass"), s=document.getElementById("rkSpec");
     if(!c||!s)return;
+    const selectedBefore=s.dataset.wanted||"";
     const list=specs[c.value]||[];
-    s.innerHTML=list.map(([n,role])=>`<option value="${esc(n)}" data-role="${esc(role)}">${esc(n)}</option>`).join("");
-    const wanted=s.dataset.wanted||"";
-    if(wanted && [...s.options].some(o=>o.value===wanted))s.value=wanted;
-    r.value=s.selectedOptions[0]?.dataset.role||"";
-    s.onchange=()=>r.value=s.selectedOptions[0]?.dataset.role||"";
-  }
+    s.innerHTML='<option value="">— Spezialisierung auswählen —</option>'+
+      list.map(([name,role])=>`<option value="${esc(name)}" data-role="${esc(role)}">${esc(name)}</option>`).join("");
+    if(selectedBefore && list.some(x=>x[0]===selectedBefore)) s.value=selectedBefore;
+    rkUpdateRole();
+  };
+
 
   window.openRaidkaderForm=function(row=null){
     if(typeof openModal!=="function")return alert("Modal-Funktion der Seite nicht gefunden.");
     openModal(formHtml(row));
-    document.getElementById("rkClass").addEventListener("change",fillSpecs);
-    document.getElementById("rkSpec").dataset.wanted=row?.spec||"";
-    fillSpecs();
+    updateRaidkaderSpecs();
+    const c=document.getElementById("rkClass"), sp=document.getElementById("rkSpec");
+    sp.dataset.wanted=row?.spec||"";
+    if(row?.class_name)c.value=row.class_name;
+    window.rkUpdateSpecs();
   };
 
   window.saveRaidkader=async function(id){
@@ -831,13 +880,38 @@ renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
     const role=document.getElementById("rkRole").value;
     const ilvl=Number(document.getElementById("rkIlvl").value);
     const pin=document.getElementById("rkPin").value.trim();
-    if(!player||!character||!cls||!spec||!role||!ilvl){alert("Bitte alle Pflichtfelder ausfüllen.");return;}
-    if(!/^\d{4,6}$/.test(pin)){alert("Der PIN muss aus 4 bis 6 Ziffern bestehen.");return;}
 
-    const payload={player_name:player,character_name:character,class_name:cls,spec,role,item_level:ilvl,pin};
-    let q=id===null?client.from(RK_TABLE).insert(payload):client.from(RK_TABLE).update(payload).eq("id",id);
-    const {error}=await q;
-    if(error){alert("Speichern fehlgeschlagen: "+error.message);return;}
+    if(!player||!character||!cls||!spec||!role||!ilvl){
+      alert("Bitte alle Pflichtfelder ausfüllen.");return;
+    }
+
+    let result;
+    if(id===null){
+      if(!/^\d{4,6}$/.test(pin)){
+        alert("Der PIN muss aus 4 bis 6 Ziffern bestehen.");return;
+      }
+      result=await client.rpc("create_raidkader_entry",{
+        p_player_name:player,p_character_name:character,p_class_name:cls,
+        p_spec:spec,p_role:role,p_item_level:ilvl,p_pin:pin
+      });
+    }else if(isAdminRK()){
+      result=await client.rpc("admin_update_raidkader",{
+        p_id:Number(id),p_player_name:player,p_character_name:character,
+        p_class_name:cls,p_spec:spec,p_role:role,p_item_level:ilvl
+      });
+    }else{
+      if(!/^\d{4,6}$/.test(pin)){
+        alert("Bitte deinen persönlichen PIN eingeben.");return;
+      }
+      result=await client.rpc("update_my_raidkader",{
+        p_id:Number(id),p_player_name:player,p_pin:pin,
+        p_character_name:character,p_class_name:cls,p_spec:spec,
+        p_role:role,p_item_level:ilvl
+      });
+    }
+
+    if(result.error){alert("Speichern fehlgeschlagen: "+result.error.message);return;}
+    if(result.data?.ok===false){alert(result.data.message||"Speichern fehlgeschlagen.");return;}
     closeModal(); await loadRaidkader();
     if(typeof showToast==="function")showToast(id===null?"👥 Charakter eingetragen.":"✏️ Charakter aktualisiert.");
   };
@@ -869,12 +943,28 @@ renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
     }).join("");
   };
 
-  window.deleteRaidkader=async function(id){
+  window.deleteRaidkader=async function(id, playerName="", pin=""){
     const client=rkClient();
     if(!client||!confirm("Diesen Charakter wirklich löschen?"))return;
-    const {error}=await client.from(RK_TABLE).delete().eq("id",id);
-    if(error){alert("Löschen fehlgeschlagen: "+error.message);return;}
-    await loadRaidkader(); if(typeof showToast==="function")showToast("🗑️ Charakter gelöscht.");
+
+    let result;
+    if(isAdminRK()){
+      result=await client.rpc("admin_delete_raidkader",{p_id:Number(id)});
+    }else{
+      if(!playerName)playerName=document.getElementById("rkmPlayer")?.value?.trim()||"";
+      if(!pin)pin=document.getElementById("rkmPin")?.value?.trim()||"";
+      if(!playerName||!/^\d{4,6}$/.test(pin)){
+        alert("Für das Löschen werden Spielername und persönlicher PIN benötigt.");return;
+      }
+      result=await client.rpc("delete_my_raidkader",{
+        p_id:Number(id),p_player_name:playerName,p_pin:pin
+      });
+    }
+
+    if(result.error){alert("Löschen fehlgeschlagen: "+result.error.message);return;}
+    if(result.data?.ok===false){alert(result.data.message||"Löschen fehlgeschlagen.");return;}
+    await loadRaidkader();
+    if(typeof showToast==="function")showToast("🗑️ Charakter gelöscht.");
   };
 
   window.openRaidkaderManage=function(playerPrefill=""){
@@ -887,20 +977,60 @@ renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
   };
 
   window.lookupRaidkader=async function(){
-    const client=rkClient(), p=document.getElementById("rkmPlayer").value.trim(), pin=document.getElementById("rkmPin").value.trim();
-    if(!p||!/^\d{4,6}$/.test(pin)){alert("Bitte Spielername und einen 4–6-stelligen PIN eingeben.");return;}
-    const {data,error}=await client.from(RK_TABLE).select("*").eq("player_name",p).eq("pin",pin).order("item_level",{ascending:false});
+    const client=rkClient(), p=document.getElementById("rkmPlayer").value.trim(),
+      pin=document.getElementById("rkmPin").value.trim();
+    if(!p||!/^\d{4,6}$/.test(pin)){
+      alert("Bitte Spielername und einen 4–6-stelligen PIN eingeben.");return;
+    }
+
+    const {data,error}=await client.rpc("get_my_raidkader",{
+      p_player_name:p,p_pin:pin
+    });
     if(error){alert("Suche fehlgeschlagen: "+error.message);return;}
     if(!data?.length){alert("Keine Einträge gefunden oder PIN ist falsch.");return;}
+
     openModal(`<h2>👤 ${esc(p)} – meine Charaktere</h2>
       <div class="rk-char-list" style="border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden">
-      ${data.map(x=>`<div class="rk-char"><div class="rk-cell"><small>Charakter</small><strong>${esc(x.character_name)}</strong></div><div class="rk-cell"><small>Klasse</small>${esc(x.class_name)}</div><div class="rk-cell"><small>Spec</small>${esc(x.spec)}</div><div class="rk-cell rk-role"><small>Rolle</small>${esc(x.role)}</div><div class="rk-cell rk-ilvl"><small>GS</small>${esc(x.item_level)}</div><div class="rk-actions"><button class="btn btn-secondary btn-small" onclick='openRaidkaderForm(${JSON.stringify(x).replace(/</g,"\\u003c")})'>✏️</button><button class="btn btn-danger btn-small" onclick="deleteRaidkader(${Number(x.id)});openRaidkaderManage()">🗑️</button></div></div>`).join("")}
+      ${data.map(x=>`<div class="rk-char">
+        <div class="rk-cell"><small>Charakter</small><strong>${esc(x.character_name)}</strong></div>
+        <div class="rk-cell"><small>Klasse</small>${esc(x.class_name)}</div>
+        <div class="rk-cell"><small>Spec</small>${esc(x.spec)}</div>
+        <div class="rk-cell rk-role"><small>Rolle</small>${esc(x.role)}</div>
+        <div class="rk-cell rk-ilvl"><small>GS</small>${esc(x.item_level)}</div>
+        <div class="rk-actions">
+          <button class="btn btn-secondary btn-small" onclick='openRaidkaderForm(${JSON.stringify(x).replace(/</g,"\\u003c")})'>✏️</button>
+          <button class="btn btn-danger btn-small" onclick='deleteRaidkader(${Number(x.id)},${JSON.stringify(p)},${JSON.stringify(pin)})'>🗑️</button>
+        </div>
+      </div>`).join("")}
       </div>
-      <div class="modal-actions"><button class="btn btn-primary" onclick="closeModal();openRaidkaderForm({player_name:${JSON.stringify(p)}})">➕ Weiteren Charakter hinzufügen</button><button class="btn btn-secondary" onclick="closeModal()">Schließen</button></div>`);
+      <div class="modal-actions">
+        <button class="btn btn-primary" onclick='closeModal();openRaidkaderForm(${JSON.stringify({player_name:""+p})})'>➕ Weiteren Charakter hinzufügen</button>
+        <button class="btn btn-secondary" onclick="closeModal()">Schließen</button>
+      </div>`);
+
+    // Store the verified PIN temporarily in the modal DOM for editing.
+    document.getElementById("modalContent").dataset.rkPlayer=p;
+    document.getElementById("modalContent").dataset.rkPin=pin;
   };
 
   // Expose an initializer so the surrounding page can call it after Supabase setup.
   window.initRaidkader2=function(){loadRaidkader();};
+})();
+</script>
+
+
+<script>
+(function(){
+  function ensureRaidkaderSelectors(){
+    if(typeof updateRaidkaderSpecs !== "function") return;
+    const c=document.getElementById("rkClass");
+    const s=document.getElementById("rkSpec");
+    if(c && s && c.value && s.options.length===0) updateRaidkaderSpecs();
+  }
+  document.addEventListener("change", function(e){
+    if(e.target && e.target.id==="rkClass") updateRaidkaderSpecs();
+  });
+  document.addEventListener("DOMContentLoaded", ensureRaidkaderSelectors);
 })();
 </script>
 
