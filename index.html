@@ -497,18 +497,16 @@ async function removeRaidPlayer(rid,pid){
  showToast("🗑️ Anmeldung entfernt.");
 }
 function normalizeName(v){return String(v||"").trim();}
-function pinIsValid(pin){return /^\d{4,6}$/.test(String(pin||"").trim());}
+function pinIsValid(pin){return /^\d{4,20}$/.test(String(pin||"").trim());}
 
 function openManageSignupChooser(){
   if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
   openModal(`<h2>🔑 Meine Anmeldung verwalten</h2>
-  <p class="muted" style="color: #FFD700;">Gib Spielername, Charaktername und deinen persönlichen PIN ein. Damit kannst du deine Anmeldung auf jedem Handy oder PC zu jederzeit verwalten.</p>
+  <p class="muted" style="color:#FFD700;">Gib einfach deinen persönlichen PIN ein. Danach kannst du deine Anmeldung bearbeiten oder löschen.</p>
   <div class="form-group"><label>Raid / Event *</label><select id="manageItemType"><option value="raid">⚔️ Raid</option><option value="event">🎉 Event</option></select></div>
   <div class="form-group"><label>Eintrag *</label><select id="manageItemId"></select></div>
-  <div class="form-group"><label>Spielername *</label><input id="managePlayer" autocomplete="username"></div>
-  <div class="form-group"><label>Charaktername *</label><input id="manageCharacter"></div>
-  <div class="form-group"><label>Persönlicher PIN *</label><input id="managePin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="off" placeholder="4–6 Ziffern"></div>
-  <p class="signup-status-help" style="color: #FFD700;">*Den PIN hast du dir bei der Anmeldung ( RAID / EVENTS ) vergeben. Teile ihn mit niemandem ! Bei Verlust, melde dich an die Gildenleitung im Discord oder Ingame.</p>
+  <div class="form-group"><label>Persönlicher PIN *</label><input id="managePin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="off" placeholder="4–20 Ziffern"></div>
+  <p class="signup-status-help" style="color:#FFD700;">* Gib den PIN ein, den du bei deiner Anmeldung vergeben hast. Teile ihn mit niemandem.</p>
   <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="lookupManagedSignup()">Weiter</button></div>`);
   document.getElementById("manageItemType").addEventListener("change",updateManageItems);
   updateManageItems();
@@ -532,16 +530,42 @@ function updateManageItems(){
 }
 
 async function lookupManagedSignup(){
-  const type=document.getElementById("manageItemType")?.value;
-  const id=Number(document.getElementById("manageItemId")?.value);
-  const player=normalizeName(document.getElementById("managePlayer")?.value);
-  const character=normalizeName(document.getElementById("manageCharacter")?.value);
   const pin=normalizeName(document.getElementById("managePin")?.value);
-  if(!id||!player||!character||!pinIsValid(pin)){alert("Bitte Eintrag, Spielername, Charaktername und einen 4–6-stelligen PIN eingeben.");return;}
-  const {data,error}=await supabaseClient.rpc("manage_signup",{p_item_type:type,p_item_id:id,p_player:player,p_character:character,p_pin:pin,p_action:"lookup",p_status:null});
+  if(!pinIsValid(pin)){alert("Bitte deinen 4–20-stelligen PIN eingeben.");return;}
+
+  const {data,error}=await supabaseClient.rpc("manage_signup_by_pin",{p_pin:pin});
   if(error){dbError(error);return;}
-  if(!data?.ok){alert(data?.message||"Anmeldung nicht gefunden oder PIN falsch.");return;}
-  openManagedSignupActions(type,id,player,character,pin,data.signup);
+  if(!data?.ok){alert(data?.message||"Keine Anmeldung mit diesem PIN gefunden.");return;}
+
+  const signups=Array.isArray(data.signups)?data.signups:[];
+  if(!signups.length){alert("Keine Anmeldung mit diesem PIN gefunden.");return;}
+
+  if(signups.length===1){
+    const x=signups[0];
+    openManagedSignupActions(x.item_type,x.item_id,x.player,x.character,pin,x);
+    return;
+  }
+
+  const labels={confirmed:"Dabei",bench:"Ersatzbank",uncertain:"Unsicher",absent:"Abwesend"};
+  const items=signups.map((x,i)=>`
+    <button class="rk-manage-item" style="width:100%;text-align:left;cursor:pointer" onclick="selectManagedSignup(${i})">
+      <div><strong>${escapeHTML(x.player)}</strong><span>${escapeHTML(x.character)} · ${x.item_type==="raid"?"⚔️ Raid":"🎉 Event"} · ${escapeHTML(x.item_name||("Eintrag #"+x.item_id))}</span></div>
+      <div>${escapeHTML(labels[x.status]||x.status||"")}</div>
+    </button>`).join("");
+
+  window.__managedPin=pin;
+  window.__managedSignups=signups;
+  openModal(`<h2>🔑 Meine Anmeldungen</h2>
+    <p class="muted">Mit diesem PIN wurden mehrere Anmeldungen gefunden. Wähle die Anmeldung aus, die du bearbeiten möchtest.</p>
+    <div class="rk-manage-list">${items}</div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button></div>`);
+}
+
+function selectManagedSignup(index){
+  const x=window.__managedSignups?.[index];
+  const pin=window.__managedPin||"";
+  if(!x||!pin)return;
+  openManagedSignupActions(x.item_type,x.item_id,x.player,x.character,pin,x);
 }
 
 function openManagedSignupActions(type,id,player,character,pin,signup){
@@ -682,7 +706,7 @@ function renderEvents(){
 
 
 /* ===== ANMELDUNG ===== */
-function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,6}" maxlength="6" type="password" autocomplete="new-password" placeholder="4–6 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
+function openSignup(type,id){const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);if(!item)return;const classes=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2><p class="muted">${escapeHTML(item.name)}</p><div class="form-group"><label>Spielername *</label><input id="signupPlayer" placeholder="Discord-/WoW-Name"></div><div class="form-group"><label>Charaktername *</label><input id="signupCharacter" placeholder="Charakter"></div><div class="form-group"><label>Klasse *</label><select id="signupClass" onchange="updateSpecs()">${classes}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="signupSpec"></select></div><div class="form-group"><label>Persönlicher PIN *</label><input id="signupPin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="new-password" placeholder="4–20 Ziffern"><p class="signup-status-help" style="color: #FFD700;">*Vergebe dir einen PIN , diesen PIN brauchst du später dazu, um deine Anmeldung zu ändern oder zu löschen. **WICHTIG** Merke dir dein PIN gut !</p></div><div class="form-group"><label>Status *</label><select id="signupStatus"><option value="confirmed">✅ Dabei</option><option value="bench">🪑 Ersatzbank</option><option value="uncertain">❓ Unsicher</option><option value="absent">🚫 Abwesend</option></select><p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveSignup('${type}',${id})">💾 Status speichern</button></div>`);updateSpecs();}
 function updateSpecs(){const c=document.getElementById("signupClass"),s=document.getElementById("signupSpec");if(!c||!s)return;s.innerHTML=wowClasses[c.value].map(([spec,role])=>`<option value="${escapeHTML(spec)}" data-role="${role}">${escapeHTML(spec)} – ${escapeHTML(role)}</option>`).join("");}
 async function submitSignup(type,payload){
  const {data,error}=await supabaseClient.rpc("register_signup_status",payload);
@@ -699,7 +723,7 @@ async function saveSignup(type,id){
     role=specEl.selectedOptions[0]?.dataset.role,status=document.getElementById("signupStatus").value,
     pin=document.getElementById("signupPin").value.trim();
   if(!player||!character){alert("Bitte Spieler- und Charaktername eingeben.");return;}
-  if(!pinIsValid(pin)){alert("Der persönliche PIN muss aus 4 bis 6 Ziffern bestehen.");return;}
+  if(!pinIsValid(pin)){alert("Der persönliche PIN muss aus 4 bis 20 Ziffern bestehen.");return;}
   const payload={p_item_type:type,p_item_id:id,p_player:player,p_character:character,p_class_name:className,p_spec:spec,p_role:role,p_status:status,p_pin:pin};
   let result=await submitSignup(type,payload);if(!result)return;
   if(result.needs_bench){
@@ -898,7 +922,7 @@ function openRaidkaderForm(playerName="", mode="create"){
       </div>
       ${isAdd ? "" : `<div class="form-group rk-pin-group">
         <label for="rkPin">Persönlicher PIN *</label>
-        <input id="rkPin" type="password" inputmode="numeric" maxlength="6" autocomplete="new-password" placeholder="4–6 Ziffern">
+        <input id="rkPin" type="password" inputmode="numeric" maxlength="20" autocomplete="new-password" placeholder="4–20 Ziffern">
         <small>Diesen PIN nur einmal festlegen. Bewahre ihn gut auf.</small>
       </div>`}
     </div>
@@ -952,8 +976,8 @@ async function saveRoster(){
   }
 
   const pin=document.getElementById("rkPin")?.value.trim()||"";
-  if(!/^\d{4,6}$/.test(pin)){
-    alert("Bitte einen 4–6-stelligen PIN festlegen.");
+  if(!/^\d{4,20}$/.test(pin)){
+    alert("Bitte einen 4–20-stelligen PIN festlegen.");
     return;
   }
 
@@ -984,7 +1008,7 @@ function openRaidkaderAddFor(playerName){
     <p class="muted">Für <strong>${escapeHTML(player)}</strong> wurde bereits ein Profil angelegt. Gib den einmal festgelegten PIN ein, um einen weiteren Charakter hinzuzufügen.</p>
     <div class="form-group">
       <label>Persönlicher PIN</label>
-      <input id="rkAddPin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern">
+      <input id="rkAddPin" type="password" inputmode="numeric" maxlength="20" placeholder="4–20 Ziffern">
     </div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
@@ -994,7 +1018,7 @@ function openRaidkaderAddFor(playerName){
 
 async function verifyPinForAdd(player){
   const pin=document.getElementById("rkAddPin")?.value.trim()||"";
-  if(!/^\d{4,6}$/.test(pin)){
+  if(!/^\d{4,20}$/.test(pin)){
     alert("Bitte deinen 4–6-stelligen PIN eingeben.");
     return;
   }
@@ -1014,7 +1038,7 @@ function openRaidkaderManageFor(playerName){
   openModal(`<h2>🔑 Meine Einträge</h2>
     <p class="muted">Bestätige deinen persönlichen PIN für <strong>${escapeHTML(player)}</strong>. Danach kannst du deine Charaktere bearbeiten, löschen oder weitere hinzufügen.</p>
     <div class="form-group"><label>Spielername</label><input id="rkManagePlayer" value="${escapeHTML(player)}" readonly></div>
-    <div class="form-group"><label>PIN</label><input id="rkManagePin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern"></div>
+    <div class="form-group"><label>PIN</label><input id="rkManagePin" type="password" inputmode="numeric" maxlength="20" placeholder="4–20 Ziffern"></div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-primary" onclick="verifyRaidkaderManage()">🔓 Einträge anzeigen</button>
@@ -1025,7 +1049,7 @@ async function openRaidkaderManage(){
   openModal(`<h2>🔑 Meine Raidkader-Einträge</h2>
     <p class="muted">Gib deinen Spielernamen und deinen persönlichen PIN ein. Danach kannst du alle deine Charaktere bearbeiten, löschen oder einen weiteren hinzufügen.</p>
     <div class="form-group"><label>Spielername</label><input id="rkManagePlayer" placeholder="z. B. Toni"></div>
-    <div class="form-group"><label>PIN</label><input id="rkManagePin" type="password" inputmode="numeric" maxlength="6" placeholder="4–6 Ziffern"></div>
+    <div class="form-group"><label>PIN</label><input id="rkManagePin" type="password" inputmode="numeric" maxlength="20" placeholder="4–20 Ziffern"></div>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-primary" onclick="verifyRaidkaderManage()">🔓 Einträge anzeigen</button>
@@ -1035,7 +1059,7 @@ async function openRaidkaderManage(){
 async function verifyRaidkaderManage(){
   const player=document.getElementById("rkManagePlayer").value.trim();
   const pin=document.getElementById("rkManagePin").value.trim();
-  if(!player||!/^\d{4,6}$/.test(pin)){alert("Bitte Spielername und 4–6-stelligen PIN eingeben.");return;}
+  if(!player||!/^\d{4,20}$/.test(pin)){alert("Bitte Spielername und 4–6-stelligen PIN eingeben.");return;}
 
   const {data,error}=await supabaseClient.rpc("get_my_raidkader",{p_player_name:player,p_pin:pin});
   if(error){alert("Verwaltung konnte nicht geöffnet werden: "+error.message);return;}
