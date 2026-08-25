@@ -766,21 +766,18 @@ renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
   const RK_TABLE = "raidkader";
   const specs = {
     "Todesritter":[["Blut","Tank"],["Frost","DD"],["Unheilig","DD"]],
-    "Dämonenjäger":[["Rachsucht","Tank"],["Verwüstung","DD"]],
-    "Druide":[["Wächter","Tank"],["Wiederherstellung","Heiler"],["Gleichgewicht","DD"],["Wildheit","DD"]],
-    "Evoker":[["Bewahrung","Heiler"],["Verheerung","DD"],["Augmentation","DD"]],
+    "Druide":[["Gleichgewicht","DD"],["Wildheit","DD"],["Wächter","Tank"],["Wiederherstellung","Heiler"]],
     "Jäger":[["Tierherrschaft","DD"],["Treffsicherheit","DD"],["Überleben","DD"]],
     "Magier":[["Arkan","DD"],["Feuer","DD"],["Frost","DD"]],
     "Mönch":[["Braumeister","Tank"],["Nebelwirker","Heiler"],["Windläufer","DD"]],
-    "Paladin":[["Schutz","Tank"],["Heilig","Heiler"],["Vergeltung","DD"]],
+    "Paladin":[["Heilig","Heiler"],["Schutz","Tank"],["Vergeltung","DD"]],
     "Priester":[["Disziplin","Heiler"],["Heilig","Heiler"],["Schatten","DD"]],
-    "Schamane":[["Elementar","DD"],["Verstärkung","DD"],["Wiederherstellung","Heiler"]],
     "Schurke":[["Meucheln","DD"],["Kampf","DD"],["Täuschung","DD"]],
+    "Schamane":[["Elementar","DD"],["Verstärkung","DD"],["Wiederherstellung","Heiler"]],
     "Hexenmeister":[["Gebrechen","DD"],["Dämonologie","DD"],["Zerstörung","DD"]],
-    "Krieger":[["Schutz","Tank"],["Waffen","DD"],["Furor","DD"]],
-    "Jägerin":[["Tierherrschaft","DD"],["Treffsicherheit","DD"],["Überleben","DD"]]
+    "Krieger":[["Waffen","DD"],["Furor","DD"],["Schutz","Tank"]]
   };
-  const classes = Object.keys(specs).filter(x=>x!=="Jägerin");
+  const classes = Object.keys(specs);
 
   function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));}
   function isAdminRK(){return !!window.isAdmin;}
