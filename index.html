@@ -88,9 +88,9 @@ nav button:hover,.btn:hover{transform:translateY(-1px)}nav button:hover,.btn-pri
 main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
 .section-title{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border)}
 .section-title h2{margin:0;color:var(--gold);font:700 28px Georgia,serif}
-.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+.news-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;align-items:stretch}
 .news-card,.raid-card,.event-card{background:var(--panel);border:1px solid var(--border);border-radius:8px;box-shadow:0 15px 45px rgba(0,0,0,.45)}
-.news-card{padding:20px;border-left:4px solid var(--gold)}.news-card h3{margin-top:0;color:var(--gold)}.news-date,.muted{color:var(--muted);font-size:13px}
+.news-card{padding:20px;border-left:4px solid var(--gold);height:100%;display:flex;flex-direction:column}.news-card h3{margin-top:0;color:var(--gold)}.news-date,.muted{color:var(--muted);font-size:13px}
 .news-text,.card-description{white-space:pre-wrap;line-height:1.6}
 .news-text .news-link{color:#78b9e8;text-decoration:underline;text-decoration-color:rgba(120,185,232,.55);font-weight:600;word-break:break-word}
 .news-text .news-link:hover{color:var(--gold2);text-decoration-color:var(--gold2)}
@@ -727,18 +727,92 @@ async function deleteNews(id){
   await refreshData();
   showToast("News gelöscht.");
 }
+function getNewsYouTubeIds(raw){
+  const source=String(raw ?? '');
+  const urlRegex=/(https?:\/\/[^\s<]+)/gi;
+  const ids=[];
+  let m;
+
+  while((m=urlRegex.exec(source))){
+    let rawUrl=m[1];
+    while(/[.,!?;:]$/.test(rawUrl)) rawUrl=rawUrl.slice(0,-1);
+    const clean=safeNewsUrl(rawUrl);
+    const yt=clean ? getYouTubeId(clean) : null;
+    if(yt && !ids.includes(yt)) ids.push(yt);
+  }
+  return ids;
+}
+
+function renderNewsTextWithoutYouTube(raw){
+  const source=String(raw ?? '');
+  const urlRegex=/(https?:\/\/[^\s<]+)/gi;
+  let html='';
+  let last=0;
+  let m;
+
+  while((m=urlRegex.exec(source))){
+    html += escapeHTML(source.slice(last,m.index));
+
+    let rawUrl=m[1];
+    let trailing='';
+    while(/[.,!?;:]$/.test(rawUrl)){
+      trailing=rawUrl.slice(-1)+trailing;
+      rawUrl=rawUrl.slice(0,-1);
+    }
+
+    const clean=safeNewsUrl(rawUrl);
+    const yt=clean ? getYouTubeId(clean) : null;
+
+    if(yt){
+      // YouTube-URL nicht mehr im normalen Nachrichtentext anzeigen.
+    }else if(clean){
+      html += `<a class="news-link" href="${escapeHTML(clean)}" target="_blank" rel="noopener noreferrer">${escapeHTML(clean)}</a>`;
+    }else{
+      html += escapeHTML(m[1]);
+    }
+
+    if(!yt) html += escapeHTML(trailing);
+    last=m.index+m[1].length;
+  }
+
+  html += escapeHTML(source.slice(last));
+
+  return html
+    .replace(/(?:<br>\s*){3,}/g,'<br><br>')
+    .replace(/^(?:<br>\s*)+|(?:<br>\s*)+$/g,'')
+    .trim();
+}
+
+function renderNewsVideoBlocks(ids){
+  return ids.map(id=>`
+    <div class="news-video" data-youtube-id="${escapeHTML(id)}">
+      <div class="news-video-label">▶️ YouTube</div>
+      <div class="news-video-frame"></div>
+    </div>
+  `).join('');
+}
+
 function renderNews(){
   const c=document.getElementById("newsContainer");
   c.innerHTML="";
   if(!news.length){c.innerHTML='<div class="news-card">Noch keine News vorhanden.</div>';return;}
-  news.forEach(n=>c.insertAdjacentHTML("beforeend",`<article class="news-card">
-    <h3>${escapeHTML(n.title)}</h3>
-    <div class="news-date">${escapeHTML(new Date(n.created_at).toLocaleDateString("de-DE"))}</div>
-    <div class="news-text">${renderNewsContent(n.text)}</div>
-    ${isAdmin?`<br>
-      <button class="btn btn-secondary btn-small" onclick="openNewsForm(${n.id})">✏️ Bearbeiten</button>
-      <button class="btn btn-danger btn-small" onclick="deleteNews(${n.id})">🗑️ Löschen</button>`:""}
-  </article>`));
+
+  news.forEach(n=>{
+    const youtubeIds=getNewsYouTubeIds(n.text);
+    const newsText=renderNewsTextWithoutYouTube(n.text);
+    const hasVideo=youtubeIds.length>0;
+
+    c.insertAdjacentHTML("beforeend",`<article class="news-card${hasVideo?' has-news-video':''}">
+      <h3>${escapeHTML(n.title)}</h3>
+      <div class="news-date">${escapeHTML(new Date(n.created_at).toLocaleDateString("de-DE"))}</div>
+      ${hasVideo?renderNewsVideoBlocks(youtubeIds):''}
+      ${newsText?`<div class="news-text">${newsText}</div>`:''}
+      ${isAdmin?`<br>
+        <button class="btn btn-secondary btn-small" onclick="openNewsForm(${n.id})">✏️ Bearbeiten</button>
+        <button class="btn btn-danger btn-small" onclick="deleteNews(${n.id})">🗑️ Löschen</button>`:""}
+    </article>`);
+  });
+
   activateNewsYouTubePlayers(c);
 }
 
