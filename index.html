@@ -480,7 +480,28 @@ function scrollToSection(id){document.getElementById(id)?.scrollIntoView({behavi
 function openModal(html){const box=document.querySelector("#modal .modal-box");box.classList.toggle("rk-wide-modal",html.includes("rk-modal"));document.getElementById("modalContent").innerHTML=html;document.getElementById("modal").classList.add("active");}
 function closeModal(){document.getElementById("modal").classList.remove("active");document.getElementById("modalContent").innerHTML="";document.querySelector("#modal .modal-box").classList.remove("rk-wide-modal");}
 document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal();});
-document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+document.addEventListener("keydown",e=>{
+  const modal=document.getElementById("modal");
+  if(!modal?.classList.contains("active"))return;
+
+  if(e.key==="Escape"){
+    e.preventDefault();
+    closeModal();
+    return;
+  }
+
+  if(e.key==="Enter" && !e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey){
+    const target=e.target;
+    // In Textareas soll Enter weiterhin einen Zeilenumbruch machen.
+    if(target?.tagName==="TEXTAREA")return;
+
+    const weiter=modal.querySelector(".modal-actions .btn-primary");
+    if(weiter){
+      e.preventDefault();
+      weiter.click();
+    }
+  }
+});
 function showToast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>t.classList.remove("show"),2500);}
 function dbError(error){console.error("Supabase-Fehler:",error);const msg=error?.message||error?.details||error?.hint||"Unbekannter Datenbankfehler";showToast("❌ "+msg);alert("Supabase-Fehler:\n\n"+msg+(error?.details?"\n\nDetails: "+error.details:"")+(error?.hint?"\n\nHinweis: "+error.hint:""));}
 
