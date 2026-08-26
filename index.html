@@ -131,6 +131,15 @@ main{width:min(1280px,94%);margin:40px auto 80px}section{margin-bottom:70px}
 .status-action:hover{border-color:var(--gold);transform:translateY(-1px)}
 
 @media(max-width:800px){.status-groups{grid-template-columns:1fr}.modal-actions .btn{min-height:40px}}
+.rk-success-modal{text-align:center;padding:8px 4px 2px}
+.rk-success-icon{width:58px;height:58px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(216,173,75,.55);border-radius:50%;background:rgba(216,173,75,.10);font-size:28px;box-shadow:0 0 22px rgba(216,173,75,.16)}
+.rk-success-modal h2{margin:0 0 14px;color:var(--gold2);font-size:28px}
+.rk-success-message{margin:0 auto;color:#dce5eb;line-height:1.7;max-width:680px}
+.rk-success-message strong{color:var(--gold2)}
+.rk-success-hint{margin:18px auto 0;padding:13px 15px;text-align:left;color:#b9c6d0;background:rgba(10,16,22,.65);border:1px solid rgba(216,173,75,.28);border-radius:7px;line-height:1.55}
+.rk-success-hint strong{color:var(--gold2)}
+.rk-success-actions{justify-content:center;margin-top:22px}
+.rk-success-actions .btn{min-width:130px}
 .toast{position:fixed;left:50%;bottom:25px;z-index:2000;padding:13px 20px;color:#fff;background:#222c36;border:1px solid var(--gold);border-radius:6px;opacity:0;transform:translate(-50%,30px);pointer-events:none;transition:.25s}.toast.show{opacity:1;transform:translate(-50%,0)}
 .admin-status{position:fixed;right:15px;bottom:15px;z-index:900;display:none;padding:10px 14px;color:#fff;background:#2e783f;border-radius:5px;font-size:13px;font-weight:bold}.admin-status.active{display:block}
 footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(--border)}footer strong{color:var(--gold)}
@@ -505,12 +514,19 @@ function getStartDate(item){
 function scrollToSection(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"});}
 function openModal(html){const box=document.querySelector("#modal .modal-box");box.classList.toggle("rk-wide-modal",html.includes("rk-modal"));document.getElementById("modalContent").innerHTML=html;document.getElementById("modal").classList.add("active");}
 function closeModal(){document.getElementById("modal").classList.remove("active");document.getElementById("modalContent").innerHTML="";document.querySelector("#modal .modal-box").classList.remove("rk-wide-modal");}
-document.getElementById("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal();});
+document.getElementById("modal").addEventListener("click",e=>{
+  if(e.target.id==="modal" && !document.getElementById("modalContent")?.querySelector(".rk-success-modal"))closeModal();
+});
 document.addEventListener("keydown",e=>{
   const modal=document.getElementById("modal");
   if(!modal?.classList.contains("active"))return;
 
   if(e.key==="Escape"){
+    // Der Erfolgsdialog darf erst über „Okay“ bestätigt werden.
+    if(modal.querySelector(".rk-success-modal")){
+      e.preventDefault();
+      return;
+    }
     e.preventDefault();
     closeModal();
     return;
@@ -1533,6 +1549,40 @@ function openRaidkaderForm(playerName="", mode="create"){
   if(preset)document.getElementById("rkName").focus();
 }
 
+function showRaidProfileCreatedSuccess(player, character){
+  const safePlayer=escapeHTML(player);
+  const safeCharacter=escapeHTML(character);
+
+  openModal(`
+    <div class="rk-success-modal" role="dialog" aria-modal="true" aria-labelledby="raidProfileSuccessTitle">
+      <div class="rk-success-icon" aria-hidden="true">✓</div>
+      <h2 id="raidProfileSuccessTitle">Profil erfolgreich angelegt</h2>
+      <p class="rk-success-message">
+        Dein Profil wurde erfolgreich unter <strong>„${safePlayer}“</strong> angelegt.
+        Dein erster Charakter <strong>„${safeCharacter}“</strong> wurde ebenfalls erfolgreich hinzugefügt.
+      </p>
+      <div class="rk-success-hint">
+        <strong>Hinweis:</strong> Im Raidkader kannst du unter deinem Namen weitere Charaktere
+        über den Button <strong>„Charakter hinzufügen“</strong> hinterlegen.
+        <br><br>
+        <strong>Wichtig:</strong> Merke dir deinen PIN gut – du wirst ihn künftig für weitere
+        Charaktere und die Verwaltung deines Profils benötigen.
+      </div>
+      <div class="modal-actions rk-success-actions">
+        <button class="btn btn-primary" type="button" id="raidProfileSuccessOkay" onclick="confirmRaidProfileCreated()">Okay</button>
+      </div>
+    </div>
+  `);
+
+  requestAnimationFrame(()=>{
+    document.getElementById("raidProfileSuccessOkay")?.focus();
+  });
+}
+
+function confirmRaidProfileCreated(){
+  window.location.href="raidkader.html";
+}
+
 async function saveRoster(){
   const player=document.getElementById("rkName").value.trim();
   const character=document.getElementById("rkChar").value.trim();
@@ -1592,9 +1642,8 @@ async function saveRoster(){
 
   raidKaderVerifiedPlayer=player;
   raidKaderVerifiedPin=pin;
-  closeModal();
   await loadRaidkader();
-  showToast("👤 Profil und erster Charakter wurden erstellt.");
+  showRaidProfileCreatedSuccess(player,character);
 }
 
 function openRaidkaderAddFor(playerName){
