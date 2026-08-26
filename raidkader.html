@@ -593,7 +593,7 @@ function render(){
           <td class="char">${esc(r.character_name)}</td>
           <td>${esc(r.class_name)}</td>
           <td>${esc(r.spec)}</td>
-          <td>${r.spec2?`<strong>${esc(r.spec2)}</strong> <span class="role ${roleClass(r.role2||"DD")}">${esc(r.role2||"DD")}</span>`:`<span class="muted">—</span>`}</td>
+          <td>${(r.spec2||r.offspec)?`<strong>${esc(r.spec2||r.offspec)}</strong> <span class="role ${roleClass(r.role2||r.offspec_role||"DD")}">${esc(r.role2||r.offspec_role||"DD")}</span>`:`<span class="muted">—</span>`}</td>
           <td><span class="role ${roleClass(r.role)}">${esc(r.role)}</span></td>
           <td class="gs">${esc(r.item_level)}</td>
           <td>${isAdmin?`<button class="btn btn-secondary small" onclick="adminEdit(${r.id})">✏️</button> <button class="btn btn-danger small" onclick="adminDelete(${r.id})">🗑️</button>`:`—`}</td>
@@ -721,10 +721,10 @@ function editMine(r){
   updateSpecs("eClass","eSpec","eRole","eSpec2","eRole2");$("eSpec").value=r.spec;$("eSpec").onchange();if(r.spec2)$("eSpec2").value=r.spec2;$("eSpec2").onchange();
 }
 async function saveMine(id){
-  const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,s2=$("eSpec2").value,r2=$("eRole2").value,n=Number($("eIlvl").value);
+  const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,s2=($("eSpec2").value||"").trim(),r2=$("eRole2").value,n=Number($("eIlvl").value);
   if(!cl||!s||!r||!n)return alert("Bitte Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
   if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
-  const {data,error}=await sb.rpc("update_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n});
+  const payload={p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n}; const {data,error}=await sb.rpc("update_my_raidkader",payload);
   if(error)return alert("Änderung fehlgeschlagen: "+error.message);if(data?.ok===false)return alert(data.message||"Änderung fehlgeschlagen.");await load();manage(managePlayer)
 }
 async function deleteMine(id){if(!confirm("Diesen Charakter wirklich löschen?"))return;const {data,error}=await sb.rpc("delete_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);await load();const left=rows.filter(x=>x.player_name.trim().toLowerCase()===managePlayer.trim().toLowerCase());left.length?manage(managePlayer):closeModal()}
