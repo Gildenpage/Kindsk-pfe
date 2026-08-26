@@ -430,7 +430,7 @@ main{width:min(1280px,94%);margin:38px auto 80px}.titlebar{display:flex;justify-
 }
 
 .roster{display:grid;gap:16px}.card{overflow:hidden;border:1px solid var(--border);border-radius:12px;background:var(--panel);box-shadow:0 12px 40px #0008}.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;padding:17px 20px;background:linear-gradient(135deg,#1a2b39,#121d27);border-bottom:1px solid var(--border)}.player{color:var(--gold);font:700 22px Georgia,serif}.meta{color:var(--muted);font-size:12px;margin-top:5px}.actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}.small{padding:7px 10px;font-size:12px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;table-layout:fixed}
-th,td{width:16.6667%}
+th,td{width:14.2857%}
 th{padding:11px 14px;background:#17232f;color:#c9d4dc;font-size:12px;text-align:left;text-transform:uppercase}
 td{padding:12px 14px;border-top:1px solid #26333f;font-size:14px;vertical-align:middle}
 tr:hover td{background:#ffffff04}
@@ -556,7 +556,7 @@ function setupEnterSubmit(){
   };
 }
 
-async function load(){const {data,error}=await sb.from("raidkader").select("id,player_name,character_name,class_name,spec,role,item_level,created_at,updated_at").order("player_name").order("item_level",{ascending:false});if(error){$("roster").innerHTML='<div class="empty">Raidkader konnte nicht geladen werden.<br>'+esc(error.message)+'</div>';return}rows=data||[];render()}
+async function load(){const {data,error}=await sb.from("raidkader").select("*").order("player_name").order("item_level",{ascending:false});if(error){$("roster").innerHTML='<div class="empty">Raidkader konnte nicht geladen werden.<br>'+esc(error.message)+'</div>';return}rows=data||[];render()}
 
 function render(){
   const groups={};
@@ -587,12 +587,13 @@ function render(){
         </div>
       </div>
       <div class="table-wrap"><table><thead><tr>
-        <th>Charakter</th><th>Klasse</th><th>Spec</th><th>Rolle</th><th>GS</th><th>Verwaltung</th>
+        <th>Charakter</th><th>Klasse</th><th>Spec</th><th>Offspec</th><th>Rolle</th><th>GS</th><th>Verwaltung</th>
       </tr></thead><tbody>
         ${g.rows.map(r=>`<tr>
           <td class="char">${esc(r.character_name)}</td>
           <td>${esc(r.class_name)}</td>
           <td>${esc(r.spec)}</td>
+          <td>${r.spec2?`<strong>${esc(r.spec2)}</strong> <span class="role ${roleClass(r.role2||"DD")}">${esc(r.role2||"DD")}</span>`:`<span class="muted">—</span>`}</td>
           <td><span class="role ${roleClass(r.role)}">${esc(r.role)}</span></td>
           <td class="gs">${esc(r.item_level)}</td>
           <td>${isAdmin?`<button class="btn btn-secondary small" onclick="adminEdit(${r.id})">✏️</button> <button class="btn btn-danger small" onclick="adminDelete(${r.id})">🗑️</button>`:`—`}</td>
@@ -637,37 +638,50 @@ document.getElementById("playerSearch").addEventListener("keydown",e=>{
   }
 });
 
-function profileForm(player="",mode="create"){formMode=mode;const add=mode==="add";openModal(`<h2>${add?"👤 Charakter hinzufügen":"👤 Raidprofil hinzufügen"}</h2><p class="muted">${add?"Füge deinem bestehenden Spielerprofil einen weiteren Charakter hinzu.":"Lege dein Spielerprofil einmalig an. Deinen PIN benötigst du später zur Verwaltung."}</p><div class="grid"><div class="form-group"><label>Spielername *</label><input id="pName" value="${esc(player)}" ${add?"readonly":""} placeholder="z. B. Toni"></div><div class="form-group"><label>Charaktername *</label><input id="pChar" placeholder="z. B. Dr.Mett"></div><div class="form-group"><label>Klasse *</label><select id="pClass" onchange="specs('pClass','pSpec','pRole')"><option value="">Klasse wählen</option>${Object.keys(classes).map(c=>`<option>${esc(c)}</option>`).join("")}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="pSpec"><option value="">Zuerst Klasse wählen</option></select></div><div class="form-group"><label>Rolle</label><select id="pRole" disabled><option>Automatisch</option></select></div><div class="form-group"><label>Gegenstandsstufe *</label><input id="pIlvl" type="number" min="1" max="999" placeholder="z. B. 553"></div>${add?"":'<div class="form-group"><label>Persönlicher PIN *</label><input id="pPin" type="password" inputmode="numeric" maxlength="20" placeholder="4–20 Ziffern"></div>'}</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveProfile()">${add?"➕ Charakter hinzufügen":"➕ Profil & Charakter speichern"}</button></div>`)}
-function specs(c,s,r){const entries=classes[$(c).value]||[];$(s).innerHTML='<option value="">Spezialisierung wählen</option>'+entries.map(x=>`<option value="${esc(x[0])}">${esc(x[0])}</option>`).join("");$(r).innerHTML='<option value="">Automatisch</option>';$(s).onchange=()=>{const x=entries.find(v=>v[0]===$(s).value);$(r).innerHTML=x?`<option value="${x[1]}">${x[1]}</option>`:'<option value="">Automatisch</option>'}}
-
-async function saveProfile(){
-  const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,n=Number($("pIlvl").value);
-  if(!p||!c||!cl||!s||!r||!n)return alert("Bitte alle Felder ausfüllen.");
-  
-  if(formMode==="add"){
-    const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});
-    if(error)return alert(error.message);
-    if(data?.ok===false)return alert(data.message);
-    closeModal();
-    return load();
-  }
-  
-  const pin=$("pPin").value.trim();
-  if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");
-  
-  const {data,error}=await sb.rpc("create_raidkader_profile",{p_player_name:p,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n,p_pin:pin});
-  
-  const genericErrorMsg = "Der gewählte PIN erfüllt nicht die Sicherheitsanforderungen. Bitte wähle einen anderen PIN.";
-  
-  if(error) return alert(genericErrorMsg);
-  if(data?.ok===false) return alert(genericErrorMsg);
-  
-  verifiedPlayer=p;
-  verifiedPin=pin;
-  closeModal();
-  load();
+function profileForm(player="",mode="create",existing=null){
+  formMode=mode;const add=mode==="add";const e=existing||{};
+  openModal(`<h2>${add?"👤 Charakter hinzufügen":"👤 Raidprofil hinzufügen"}</h2><p class="muted">${add?"Füge deinem bestehenden Spielerprofil einen weiteren Charakter hinzu.":"Lege dein Spielerprofil einmalig an. Deinen PIN benötigst du später zur Verwaltung."}</p><div class="grid">
+  <div class="form-group"><label>Spielername *</label><input id="pName" value="${esc(player)}" ${add?"readonly":""} placeholder="z. B. Toni"></div>
+  <div class="form-group"><label>Charaktername *</label><input id="pChar" value="${esc(e.character_name||"")}" placeholder="z. B. Dr.Mett"></div>
+  <div class="form-group"><label>Klasse *</label><select id="pClass" onchange="updateSpecs('pClass','pSpec','pRole','pSpec2','pRole2')"><option value="">Klasse wählen</option>${Object.keys(classes).map(c=>`<option ${c===e.class_name?"selected":""}>${esc(c)}</option>`).join("")}</select></div>
+  <div class="form-group"><label>1. Spezialisierung *</label><select id="pSpec"><option value="">Zuerst Klasse wählen</option></select></div>
+  <div class="form-group"><label>Rolle</label><select id="pRole" disabled><option>Automatisch</option></select></div>
+  <div class="form-group"><label>2. Spezialisierung / Offspec <span class="muted">(optional)</span></label><select id="pSpec2"><option value="">Keine Offspec</option></select></div>
+  <div class="form-group"><label>Offspec-Rolle</label><select id="pRole2" disabled><option>Automatisch</option></select></div>
+  <div class="form-group"><label>Gegenstandsstufe *</label><input id="pIlvl" type="number" min="1" max="999" value="${esc(e.item_level||"")}" placeholder="z. B. 553"></div>
+  ${add?"":'<div class="form-group"><label>Persönlicher PIN *</label><input id="pPin" type="password" inputmode="numeric" maxlength="20" autocomplete="new-password" placeholder="4–20 Ziffern"></div>'}
+  </div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveProfile()">${add?"➕ Charakter hinzufügen":"➕ Profil & Charakter speichern"}</button></div>`);
+  if($("pClass").value){updateSpecs("pClass","pSpec","pRole","pSpec2","pRole2");if(e.spec)$("pSpec").value=e.spec;$("pSpec").onchange();if(e.spec2)$("pSpec2").value=e.spec2;$("pSpec2").onchange();}
+}
+function updateSpecs(c,s,r,s2,r2){
+  const cls=$(c),main=$(s),mainRole=$(r),off=$(s2),offRole=$(r2),entries=classes[cls.value]||[];
+  main.innerHTML='<option value="">Spezialisierung wählen</option>'+entries.map(x=>`<option value="${esc(x[0])}">${esc(x[0])}</option>`).join("");
+  off.innerHTML='<option value="">Keine Offspec</option>'+entries.map(x=>`<option value="${esc(x[0])}">${esc(x[0])}</option>`).join("");
+  mainRole.innerHTML='<option value="">Automatisch</option>';offRole.innerHTML='<option value="">Automatisch</option>';
+  const sync=()=>{
+    const mainEntry=entries.find(v=>v[0]===main.value);mainRole.innerHTML=mainEntry?`<option value="${esc(mainEntry[1])}">${esc(mainEntry[1])}</option>`:'<option value="">Automatisch</option>';
+    [...off.options].forEach(o=>{if(o.value) o.disabled=o.value===main.value;});
+    if(off.value===main.value)off.value="";
+    const offEntry=entries.find(v=>v[0]===off.value);offRole.innerHTML=offEntry?`<option value="${esc(offEntry[1])}">${esc(offEntry[1])}</option>`:'<option value="">Automatisch</option>';
+  };
+  main.onchange=sync;off.onchange=sync;sync();
 }
 
+async function saveProfile(){
+  const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,s2=$("pSpec2").value,r2=$("pRole2").value,n=Number($("pIlvl").value);
+  if(!p||!c||!cl||!s||!r||!n)return alert("Bitte Name, Charakter, Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
+  if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
+  if(formMode==="add"){
+    const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n});
+    if(error)return alert("Charakter konnte nicht gespeichert werden: "+error.message);
+    if(data?.ok===false)return alert(data.message||"Charakter konnte nicht gespeichert werden.");closeModal();return load();
+  }
+  const pin=$("pPin").value.trim();if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");
+  const {data,error}=await sb.rpc("create_raidkader_profile",{p_player_name:p,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n,p_pin:pin});
+  if(error)return alert("Profil konnte nicht erstellt werden: "+error.message);
+  if(data?.ok===false)return alert(data.message||"Profil konnte nicht erstellt werden.");
+  verifiedPlayer=p;verifiedPin=pin;closeModal();load();
+}
 function openProfile(){profileForm()}
 function addChar(player){
   if(verifiedPlayer===player && verifiedPin){
@@ -699,23 +713,33 @@ async function verifyManage(){
   openManageList(data);
 }
 
-function openManageList(data){openModal(`<h2>👤 ${esc(managePlayer)} – Charaktere</h2><div class="manage-list">${data.map(r=>`<div class="manage-item"><div><strong>${esc(r.character_name)}</strong><span>${esc(r.class_name)} · ${esc(r.spec)} · ${esc(r.item_level)} GS</span></div><div><button class="btn btn-secondary small" onclick='editMine(${JSON.stringify(r)})'>✏️</button> <button class="btn btn-danger small" onclick="deleteMine(${r.id})">🗑️</button></div></div>`).join("")}</div><div class="modal-actions"><button class="btn btn-primary" onclick='closeModal();profileForm(${JSON.stringify(managePlayer)},"add")'>➕ Charakter hinzufügen</button><button class="btn btn-secondary" onclick="closeModal()">Schließen</button></div>`)}
+function openManageList(data){openModal(`<h2>👤 ${esc(managePlayer)} – Charaktere</h2><div class="manage-list">${data.map(r=>`<div class="manage-item"><div><strong>${esc(r.character_name)}</strong><span>${esc(r.class_name)} · ${esc(r.spec)} · Rolle: ${esc(r.role)}${r.spec2?` · Offspec: ${esc(r.spec2)} (${esc(r.role2||"DD")})`:""} · GS: ${esc(r.item_level)}</span></div><div><button class="btn btn-secondary small" onclick='editMine(${JSON.stringify(r)})'>✏️</button> <button class="btn btn-danger small" onclick="deleteMine(${r.id})">🗑️</button></div></div>`).join("")}</div><div class="modal-actions"><button class="btn btn-primary" onclick='closeModal();profileForm(${JSON.stringify(managePlayer)},"add")'>➕ Charakter hinzufügen</button><button class="btn btn-secondary" onclick="closeModal()">Schließen</button></div>`)}
 
 function editMine(r){
   const opts=Object.keys(classes).map(c=>`<option ${c===r.class_name?"selected":""}>${esc(c)}</option>`).join("");
-  openModal(`<h2>✏️ ${esc(r.character_name)} bearbeiten</h2><div class="grid"><div class="form-group"><label>Charaktername</label><input id="eChar" value="${esc(r.character_name)}"></div><div class="form-group"><label>Klasse</label><select id="eClass" onchange="specs('eClass','eSpec','eRole')">${opts}</select></div><div class="form-group"><label>Spezialisierung</label><select id="eSpec"></select></div><div class="form-group"><label>Rolle</label><select id="eRole" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="eIlvl" type="number" value="${esc(r.item_level)}"></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="manage(managePlayer)">↩ Zurück</button><button class="btn btn-primary" onclick="saveMine(${r.id})">💾 Speichern</button></div>`);
-  specs("eClass","eSpec","eRole");
-  $("eSpec").value=r.spec;
-  $("eSpec").onchange();
+  openModal(`<h2>✏️ ${esc(r.character_name)} bearbeiten</h2><div class="grid"><div class="form-group"><label>Charaktername</label><input id="eChar" value="${esc(r.character_name)}"></div><div class="form-group"><label>Klasse</label><select id="eClass" onchange="updateSpecs('eClass','eSpec','eRole','eSpec2','eRole2')">${opts}</select></div><div class="form-group"><label>1. Spezialisierung</label><select id="eSpec"></select></div><div class="form-group"><label>Rolle</label><select id="eRole" disabled></select></div><div class="form-group"><label>2. Spezialisierung / Offspec <span class="muted">(optional)</span></label><select id="eSpec2"></select></div><div class="form-group"><label>Offspec-Rolle</label><select id="eRole2" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="eIlvl" type="number" min="1" max="999" value="${esc(r.item_level)}"></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="manage(managePlayer)">↩ Zurück</button><button class="btn btn-primary" onclick="saveMine(${r.id})">💾 Speichern</button></div>`);
+  updateSpecs("eClass","eSpec","eRole","eSpec2","eRole2");$("eSpec").value=r.spec;$("eSpec").onchange();if(r.spec2)$("eSpec2").value=r.spec2;$("eSpec2").onchange();
 }
-
-async function saveMine(id){const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,n=Number($("eIlvl").value);const {data,error}=await sb.rpc("update_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);await load();manage(managePlayer)}
+async function saveMine(id){
+  const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,s2=$("eSpec2").value,r2=$("eRole2").value,n=Number($("eIlvl").value);
+  if(!cl||!s||!r||!n)return alert("Bitte Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
+  if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
+  const {data,error}=await sb.rpc("update_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n});
+  if(error)return alert("Änderung fehlgeschlagen: "+error.message);if(data?.ok===false)return alert(data.message||"Änderung fehlgeschlagen.");await load();manage(managePlayer)
+}
 async function deleteMine(id){if(!confirm("Diesen Charakter wirklich löschen?"))return;const {data,error}=await sb.rpc("delete_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);await load();const left=rows.filter(x=>x.player_name.trim().toLowerCase()===managePlayer.trim().toLowerCase());left.length?manage(managePlayer):closeModal()}
 async function openAdminLogin(){if(isAdmin){await sb.auth.signOut();return}openModal('<h2>🔐 Admin Login</h2><div class="form-group"><label>E-Mail</label><input id="aMail" type="email"></div><div class="form-group"><label>Passwort</label><input id="aPass" type="password"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="loginAdmin()">Einloggen</button></div>')}
 async function loginAdmin(){const {data,error}=await sb.auth.signInWithPassword({email:$("aMail").value.trim(),password:$("aPass").value});if(error)return alert(error.message);closeModal();await adminState(data.session)}
 async function adminState(session){if(!session){isAdmin=false}else{const {data}=await sb.rpc("is_admin");isAdmin=data===true}$("adminStatus").classList.toggle("show",isAdmin);render()}
-function adminEdit(id){const r=rows.find(x=>x.id===id);if(!r)return;const opts=Object.keys(classes).map(c=>`<option ${c===r.class_name?"selected":""}>${esc(c)}</option>`).join("");openModal(`<h2>👑 Raidkader – Charakter bearbeiten</h2><div class="grid"><div class="form-group"><label>Spielername</label><input id="aPlayer" value="${esc(r.player_name)}"></div><div class="form-group"><label>Charaktername</label><input id="aChar" value="${esc(r.character_name)}"></div><div class="form-group"><label>Klasse</label><select id="aClass" onchange="specs('aClass','aSpec','aRole')">${opts}</select></div><div class="form-group"><label>Spezialisierung</label><select id="aSpec"></select></div><div class="form-group"><label>Rolle</label><select id="aRole" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="aIlvl" type="number" value="${esc(r.item_level)}"></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveAdmin(${id})">💾 Speichern</button></div>`);specs("aClass","aSpec","aRole");$("aSpec").value=r.spec;$("aSpec").onchange();}
-async function saveAdmin(id){const {data,error}=await sb.rpc("admin_update_raidkader",{p_id:id,p_player_name:$("aPlayer").value.trim(),p_character_name:$("aChar").value.trim(),p_class_name:$("aClass").value,p_spec:$("aSpec").value,p_role:$("aRole").value,p_item_level:Number($("aIlvl").value)});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);closeModal();load()}
+function adminEdit(id){
+  const r=rows.find(x=>x.id===id);if(!r)return;const opts=Object.keys(classes).map(c=>`<option ${c===r.class_name?"selected":""}>${esc(c)}</option>`).join("");
+  openModal(`<h2>👑 Raidkader – Charakter bearbeiten</h2><div class="grid"><div class="form-group"><label>Spielername</label><input id="aPlayer" value="${esc(r.player_name)}"></div><div class="form-group"><label>Charaktername</label><input id="aChar" value="${esc(r.character_name)}"></div><div class="form-group"><label>Klasse</label><select id="aClass" onchange="updateSpecs('aClass','aSpec','aRole','aSpec2','aRole2')">${opts}</select></div><div class="form-group"><label>1. Spezialisierung</label><select id="aSpec"></select></div><div class="form-group"><label>Rolle</label><select id="aRole" disabled></select></div><div class="form-group"><label>2. Spezialisierung / Offspec <span class="muted">(optional)</span></label><select id="aSpec2"></select></div><div class="form-group"><label>Offspec-Rolle</label><select id="aRole2" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="aIlvl" type="number" min="1" max="999" value="${esc(r.item_level)}"></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveAdmin(${id})">💾 Speichern</button></div>`);
+  updateSpecs("aClass","aSpec","aRole","aSpec2","aRole2");$("aSpec").value=r.spec;$("aSpec").onchange();if(r.spec2)$("aSpec2").value=r.spec2;$("aSpec2").onchange();
+}
+async function saveAdmin(id){
+  const {data,error}=await sb.rpc("admin_update_raidkader",{p_id:id,p_player_name:$("aPlayer").value.trim(),p_character_name:$("aChar").value.trim(),p_class_name:$("aClass").value,p_spec:$("aSpec").value,p_role:$("aRole").value,p_spec2:$("aSpec2").value||null,p_role2:$("aSpec2").value?($("aRole2").value||null):null,p_item_level:Number($("aIlvl").value)});
+  if(error)return alert("Änderung fehlgeschlagen: "+error.message);if(data?.ok===false)return alert(data.message||"Änderung fehlgeschlagen.");closeModal();load()
+}
 async function adminDelete(id){if(!confirm("Diesen Charakter als Admin löschen?"))return;const {data,error}=await sb.rpc("admin_delete_raidkader",{p_id:id});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);load()}
 function openManageSignup(){openModal('<h2>🔑 Meine Anmeldung verwalten</h2><p class="muted">Diese Schaltfläche ist mit der bestehenden Portal-Navigation verbunden. Wenn deine Hauptseite bereits eine eigene Verwaltungsfunktion besitzt, kannst du den Link unten entsprechend anpassen.</p><div class="modal-actions"><a class="btn btn-primary" href="index.html#raids">Zum Raidplaner</a><a class="btn btn-secondary" href="index.html">Zur Startseite</a></div>')}
 $("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal()});
