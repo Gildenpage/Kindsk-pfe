@@ -88,7 +88,35 @@ function render(){
 
 function profileForm(player="",mode="create"){formMode=mode;const add=mode==="add";openModal(`<h2>${add?"👤 Charakter hinzufügen":"👤 Raidprofil hinzufügen"}</h2><p class="muted">${add?"Füge deinem bestehenden Spielerprofil einen weiteren Charakter hinzu.":"Lege dein Spielerprofil einmalig an. Deinen PIN benötigst du später zur Verwaltung."}</p><div class="grid"><div class="form-group"><label>Spielername *</label><input id="pName" value="${esc(player)}" ${add?"readonly":""} placeholder="z. B. Toni"></div><div class="form-group"><label>Charaktername *</label><input id="pChar" placeholder="z. B. Dr.Mett"></div><div class="form-group"><label>Klasse *</label><select id="pClass" onchange="specs('pClass','pSpec','pRole')"><option value="">Klasse wählen</option>${Object.keys(classes).map(c=>`<option>${esc(c)}</option>`).join("")}</select></div><div class="form-group"><label>Spezialisierung *</label><select id="pSpec"><option value="">Zuerst Klasse wählen</option></select></div><div class="form-group"><label>Rolle</label><select id="pRole" disabled><option>Automatisch</option></select></div><div class="form-group"><label>Gegenstandsstufe *</label><input id="pIlvl" type="number" min="1" max="999" placeholder="z. B. 553"></div>${add?"":'<div class="form-group"><label>Persönlicher PIN *</label><input id="pPin" type="password" inputmode="numeric" maxlength="20" placeholder="4–20 Ziffern"></div>'}</div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="saveProfile()">${add?"➕ Charakter hinzufügen":"➕ Profil & Charakter speichern"}</button></div>`)}
 function specs(c,s,r){const entries=classes[$(c).value]||[];$(s).innerHTML='<option value="">Spezialisierung wählen</option>'+entries.map(x=>`<option value="${esc(x[0])}">${esc(x[0])}</option>`).join("");$(r).innerHTML='<option value="">Automatisch</option>';$(s).onchange=()=>{const x=entries.find(v=>v[0]===$(s).value);$(r).innerHTML=x?`<option value="${x[1]}">${x[1]}</option>`:'<option value="">Automatisch</option>'}}
-async function saveProfile(){const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,n=Number($("pIlvl").value);if(!p||!c||!cl||!s||!r||!n)return alert("Bitte alle Felder ausfüllen.");if(formMode==="add"){const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);closeModal();return load()}const pin=$("pPin").value.trim();if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");const {data,error}=await sb.rpc("create_raidkader_profile",{p_player_name:p,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n,p_pin:pin});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);verifiedPlayer=p;verifiedPin=pin;closeModal();load()}
+
+async function saveProfile(){
+  const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,n=Number($("pIlvl").value);
+  if(!p||!c||!cl||!s||!r||!n)return alert("Bitte alle Felder ausfüllen.");
+  
+  if(formMode==="add"){
+    const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});
+    if(error)return alert(error.message);
+    if(data?.ok===false)return alert(data.message);
+    closeModal();
+    return load();
+  }
+  
+  const pin=$("pPin").value.trim();
+  if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");
+  
+  const {data,error}=await sb.rpc("create_raidkader_profile",{p_player_name:p,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n,p_pin:pin});
+  
+  const genericErrorMsg = "Der gewählte PIN erfüllt nicht die Sicherheitsanforderungen. Bitte wähle einen anderen PIN.";
+  
+  if(error) return alert(genericErrorMsg);
+  if(data?.ok===false) return alert(genericErrorMsg);
+  
+  verifiedPlayer=p;
+  verifiedPin=pin;
+  closeModal();
+  load();
+}
+
 function openProfile(){profileForm()}
 function addChar(player){
   if(verifiedPlayer===player && verifiedPin){
