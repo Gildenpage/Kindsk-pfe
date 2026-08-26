@@ -670,19 +670,57 @@ function updateSpecs(c,s,r,s2,r2){
 }
 
 async function saveProfile(){
-  const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,s2=$("pSpec2").value,r2=$("pRole2").value,n=Number($("pIlvl").value);
-  if(!p||!c||!cl||!s||!r||!n)return alert("Bitte Name, Charakter, Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
-  if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
-  if(formMode==="add"){
-    const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n});
-    if(error)return alert("Charakter konnte nicht gespeichert werden: "+error.message);
-    if(data?.ok===false)return alert(data.message||"Charakter konnte nicht gespeichert werden.");closeModal();return load();
+  try{
+    const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,s2=$("pSpec2").value,r2=$("pRole2").value,n=Number($("pIlvl").value);
+    if(!p||!c||!cl||!s||!r||!n)return alert("Bitte Name, Charakter, Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
+    if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
+    if(formMode==="add"){
+      const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n});
+      if(error)return alert("Charakter konnte nicht gespeichert werden: "+error.message);
+      if(data?.ok===false)return alert(data.message||"Charakter konnte nicht gespeichert werden.");
+      closeModal();return load();
+    }
+
+    const pin=$("pPin").value.trim();
+    if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");
+
+    // In Supabase existieren zwei create_raidkader_profile-Funktionen.
+    // Die aktuelle verwendet 7 Parameter; danach wird die Offspec separat
+    // über update_my_raidkader in die vorhandene Spalte "Offspec" geschrieben.
+    const {data,error}=await sb.rpc("create_raidkader_profile",{
+      p_player_name:p,
+      p_character_name:c,
+      p_class_name:cl,
+      p_spec:s,
+      p_role:r,
+      p_item_level:n,
+      p_pin:pin
+    });
+    if(error)return alert("Profil konnte nicht erstellt werden: "+error.message);
+    if(data?.ok===false)return alert(data.message||"Profil konnte nicht erstellt werden.");
+    if(!data?.id)return alert("Profil wurde nicht korrekt angelegt: Es wurde keine Charakter-ID zurückgegeben.");
+
+    if(s2){
+      const {data:offData,error:offError}=await sb.rpc("update_my_raidkader",{
+        p_id:data.id,
+        p_player_name:p,
+        p_pin:pin,
+        p_character_name:c,
+        p_class_name:cl,
+        p_spec:s,
+        p_role:r,
+        p_spec2:s2,
+        p_role2:r2||null,
+        p_item_level:n
+      });
+      if(offError)return alert("Profil wurde angelegt, aber die Offspec konnte nicht gespeichert werden: "+offError.message);
+    }
+
+    verifiedPlayer=p;verifiedPin=pin;closeModal();await load();
+  }catch(err){
+    console.error(err);
+    alert("Beim Speichern ist ein unerwarteter Fehler aufgetreten: "+(err?.message||err));
   }
-  const pin=$("pPin").value.trim();if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");
-  const {data,error}=await sb.rpc("create_raidkader_profile",{p_player_name:p,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n,p_pin:pin});
-  if(error)return alert("Profil konnte nicht erstellt werden: "+error.message);
-  if(data?.ok===false)return alert(data.message||"Profil konnte nicht erstellt werden.");
-  verifiedPlayer=p;verifiedPin=pin;closeModal();load();
 }
 function openProfile(){profileForm()}
 function addChar(player){
