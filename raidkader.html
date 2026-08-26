@@ -52,7 +52,24 @@ const SUPABASE_URL="https://lljhicrxjhfmddclyjme.supabase.co";
 const SUPABASE_PUBLISHABLE_KEY="sb_publishable_sS-deTm_y0JaocBmRo8DvQ_hUBY1QyY";
 const classes={"Todesritter":[["Blut","Tank"],["Frost","DD"],["Unheilig","DD"]],"Druide":[["Gleichgewicht","DD"],["Wildheit","DD"],["Wächter","Tank"],["Wiederherstellung","Heiler"]],"Jäger":[["Tierherrschaft","DD"],["Treffsicherheit","DD"],["Überleben","DD"]],"Magier":[["Arkan","DD"],["Feuer","DD"],["Frost","DD"]],"Mönch":[["Braumeister","Tank"],["Nebelwirker","Heiler"],["Windläufer","DD"]],"Paladin":[["Heilig","Heiler"],["Schutz","Tank"],["Vergeltung","DD"]],"Priester":[["Disziplin","Heiler"],["Heilig","Heiler"],["Schatten","DD"]],"Schamane":[["Elementar","DD"],["Verstärkung","DD"],["Wiederherstellung","Heiler"]],"Schurke":[["Meucheln","DD"],["Kampf","DD"],["Täuschung","DD"]],"Hexenmeister":[["Gebrechen","DD"],["Dämonologie","DD"],["Zerstörung","DD"]],"Krieger":[["Waffen","DD"],["Furor","DD"],["Schutz","Tank"]]};
 const sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);let rows=[],isAdmin=false,verifiedPlayer="",verifiedPin="",managePlayer="",managePin="",formMode="create";
-const $=id=>document.getElementById(id);function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function openModal(h){$("modalContent").innerHTML=h;$("modal").classList.add("open")}function closeModal(){$("modal").classList.remove("open");$("modalContent").innerHTML=""}function roleClass(r){return r==="Tank"?"tank":r==="Heiler"?"heal":"dd"}
+const $=id=>document.getElementById(id);function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function openModal(h){$("modalContent").innerHTML=h;$("modal").classList.add("open");setTimeout(setupEnterSubmit,50)}function closeModal(){$("modal").classList.remove("open");$("modalContent").innerHTML=""}function roleClass(r){return r==="Tank"?"tank":r==="Heiler"?"heal":"dd"}
+
+function setupEnterSubmit(){
+  const modalBox=$("modalContent");
+  if(!modalBox) return;
+  const inputs=modalBox.querySelectorAll("input");
+  const submitBtn=modalBox.querySelector(".modal-actions .btn-primary");
+  if(!submitBtn) return;
+  inputs.forEach(input=>{
+    input.addEventListener("keydown",e=>{
+      if(e.key==="Enter"){
+        e.preventDefault();
+        submitBtn.click();
+      }
+    });
+  });
+}
+
 async function load(){const {data,error}=await sb.from("raidkader").select("id,player_name,character_name,class_name,spec,role,item_level,created_at,updated_at").order("player_name").order("item_level",{ascending:false});if(error){$("roster").innerHTML='<div class="empty">Raidkader konnte nicht geladen werden.<br>'+esc(error.message)+'</div>';return}rows=data||[];render()}
 
 function render(){
@@ -66,10 +83,23 @@ function profileForm(player="",mode="create"){formMode=mode;const add=mode==="ad
 function specs(c,s,r){const entries=classes[$(c).value]||[];$(s).innerHTML='<option value="">Spezialisierung wählen</option>'+entries.map(x=>`<option value="${esc(x[0])}">${esc(x[0])}</option>`).join("");$(r).innerHTML='<option value="">Automatisch</option>';$(s).onchange=()=>{const x=entries.find(v=>v[0]===$(s).value);$(r).innerHTML=x?`<option value="${x[1]}">${x[1]}</option>`:'<option value="">Automatisch</option>'}}
 async function saveProfile(){const p=$("pName").value.trim(),c=$("pChar").value.trim(),cl=$("pClass").value,s=$("pSpec").value,r=$("pRole").value,n=Number($("pIlvl").value);if(!p||!c||!cl||!s||!r||!n)return alert("Bitte alle Felder ausfüllen.");if(formMode==="add"){const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);closeModal();return load()}const pin=$("pPin").value.trim();if(!/^\d{4,20}$/.test(pin))return alert("PIN muss 4–20 Ziffern enthalten.");const {data,error}=await sb.rpc("create_raidkader_profile",{p_player_name:p,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n,p_pin:pin});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);verifiedPlayer=p;verifiedPin=pin;closeModal();load()}
 function openProfile(){profileForm()}
-function addChar(player){openModal(`<h2>🔑 PIN erforderlich</h2><p class="muted">Für <strong>${esc(player)}</strong> bitte deinen persönlichen PIN eingeben.</p><div class="form-group"><label>PIN</label><input id="verifyPin" type="password" inputmode="numeric" maxlength="20"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick='verifyAdd(${JSON.stringify(player)})'>🔓 Bestätigen</button></div>`)}
+function addChar(player){
+  if(verifiedPlayer===player && verifiedPin){
+    profileForm(player,"add");
+    return;
+  }
+  openModal(`<h2>🔑 PIN erforderlich</h2><p class="muted">Für <strong>${esc(player)}</strong> bitte deinen persönlichen PIN eingeben.</p><div class="form-group"><label>PIN</label><input id="verifyPin" type="password" inputmode="numeric" maxlength="20"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick='verifyAdd(${JSON.stringify(player)})'>🔓 Bestätigen</button></div>`);
+}
 async function verifyAdd(player){const pin=$("verifyPin").value.trim();const {data,error}=await sb.rpc("get_my_raidkader",{p_player_name:player,p_pin:pin});if(error)return alert(error.message);if(!data?.length)return alert("PIN falsch oder Profil nicht gefunden.");verifiedPlayer=player;verifiedPin=pin;closeModal();profileForm(player,"add")}
 
-function manage(player=""){
+async function manage(player=""){
+  if(managePlayer===player && managePin){
+    const {data,error}=await sb.rpc("get_my_raidkader",{p_player_name:managePlayer,p_pin:managePin});
+    if(!error && data?.length){
+      openManageList(data);
+      return;
+    }
+  }
   openModal(`<h2>🔑 PIN erforderlich</h2><p class="muted">Bitte gib deinen PIN für das Profil <strong>${esc(player)}</strong> ein, um Charaktere zu bearbeiten oder zu löschen.</p><input type="hidden" id="mPlayer" value="${esc(player)}"><div class="form-group"><label>PIN</label><input id="mPin" type="password" inputmode="numeric" maxlength="20"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="verifyManage()">🔓 Bestätigen</button></div>`);
 }
 
@@ -85,7 +115,7 @@ async function verifyManage(){
 
 function openManageList(data){openModal(`<h2>👤 ${esc(managePlayer)} – Charaktere</h2><div class="manage-list">${data.map(r=>`<div class="manage-item"><div><strong>${esc(r.character_name)}</strong><span>${esc(r.class_name)} · ${esc(r.spec)} · ${esc(r.item_level)} GS</span></div><div><button class="btn btn-secondary small" onclick='editMine(${JSON.stringify(r)})'>✏️</button> <button class="btn btn-danger small" onclick="deleteMine(${r.id})">🗑️</button></div></div>`).join("")}</div><div class="modal-actions"><button class="btn btn-primary" onclick='closeModal();profileForm(${JSON.stringify(managePlayer)},"add")'>➕ Charakter hinzufügen</button><button class="btn btn-secondary" onclick="closeModal()">Schließen</button></div>`)}
 function editMine(r){const opts=Object.keys(classes).map(c=>`<option ${c===r.class_name?"selected":""}>${esc(c)}</option>`).join("");openModal(`<h2>✏️ ${esc(r.character_name)} bearbeiten</h2><div class="grid"><div class="form-group"><label>Charaktername</label><input id="eChar" value="${esc(r.character_name)}"></div><div class="form-group"><label>Klasse</label><select id="eClass" onchange="specs('eClass','eSpec','eRole')">${opts}</select></div><div class="form-group"><label>Spezialisierung</label><select id="eSpec"></select></div><div class="form-group"><label>Rolle</label><select id="eRole" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="eIlvl" type="number" value="${esc(r.item_level)}"></div></div><div class="modal-actions"><button class="btn btn-secondary" onclick="manage(managePlayer)">↩ Zurück</button><button class="btn btn-primary" onclick="saveMine(${r.id})">💾 Speichern</button></div>`);specs("eClass","eSpec","eRole");$("eSpec").value=r.spec;$("eSpec").onchange();}
-async function saveMine(id){const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,n=Number($("eIlvl").value);const {data,error}=await sb.rpc("update_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);load();manage(managePlayer)}
+async function saveMine(id){const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,n=Number($("eIlvl").value);const {data,error}=await sb.rpc("update_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);await load();manage(managePlayer)}
 async function deleteMine(id){if(!confirm("Diesen Charakter wirklich löschen?"))return;const {data,error}=await sb.rpc("delete_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);await load();const left=rows.filter(x=>x.player_name.trim().toLowerCase()===managePlayer.trim().toLowerCase());left.length?manage(managePlayer):closeModal()}
 async function openAdminLogin(){if(isAdmin){await sb.auth.signOut();return}openModal('<h2>🔐 Admin Login</h2><div class="form-group"><label>E-Mail</label><input id="aMail" type="email"></div><div class="form-group"><label>Passwort</label><input id="aPass" type="password"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="loginAdmin()">Einloggen</button></div>')}
 async function loginAdmin(){const {data,error}=await sb.auth.signInWithPassword({email:$("aMail").value.trim(),password:$("aPass").value});if(error)return alert(error.message);closeModal();await adminState(data.session)}
