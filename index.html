@@ -530,7 +530,21 @@ function getStartDate(item){
 
     return d;
 }
-function scrollToSection(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth"});}
+function scrollToSection(id){
+  const el=document.getElementById(id);
+  if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+// Navigation von Unterseiten: nach dem Laden zuverlässig zum gewünschten Bereich springen.
+function handleSectionNavigation(){
+  const params=new URLSearchParams(window.location.search);
+  const section=params.get("section") || (window.location.hash ? window.location.hash.slice(1) : "");
+  if(!section || !["news","raids","events"].includes(section)) return;
+  setTimeout(()=>{
+    const el=document.getElementById(section);
+    if(el) el.scrollIntoView({behavior:"smooth",block:"start"});
+  },120);
+}
 function openModal(html){const box=document.querySelector("#modal .modal-box");box.classList.toggle("rk-wide-modal",html.includes("rk-modal"));document.getElementById("modalContent").innerHTML=html;document.getElementById("modal").classList.add("active");}
 function closeModal(){document.getElementById("modal").classList.remove("active");document.getElementById("modalContent").innerHTML="";document.querySelector("#modal .modal-box").classList.remove("rk-wide-modal");}
 document.getElementById("modal").addEventListener("click",e=>{
@@ -1671,40 +1685,16 @@ async function saveRoster(){
   }
 
   if(raidKaderFormMode==="add"){
-    // Die bestätigte PIN-Sitzung aus der Verwaltung bzw. dem direkten
-    // Hinzufügen verwenden und unmittelbar vor dem Speichern erneut prüfen.
-    const authPlayer=(raidKaderVerifiedPlayer||raidKaderManagePlayer||"").trim();
-    const authPin=(raidKaderVerifiedPin||raidKaderManagePin||"").trim();
-    if(!authPlayer || !authPin){
+    if(!raidKaderVerifiedPlayer || !raidKaderVerifiedPin){
       alert("Bitte zuerst deinen PIN bestätigen.");
       return;
     }
 
-    const {data:profileRows,error:verifyError}=await supabaseClient.rpc("get_my_raidkader",{
-      p_player_name:authPlayer,
-      p_pin:authPin
-    });
-    if(verifyError){
-      alert("PIN-Prüfung fehlgeschlagen: "+verifyError.message);
-      return;
-    }
-    if(!profileRows?.length){
-      raidKaderVerifiedPlayer="";
-      raidKaderVerifiedPin="";
-      alert("PIN falsch oder Profil nicht gefunden. Bitte bestätige deinen PIN erneut.");
-      return;
-    }
-
-    // Den tatsächlich in der Datenbank gespeicherten Spielernamen verwenden.
-    const canonicalPlayer=String(profileRows[0].player_name||authPlayer).trim();
-    raidKaderVerifiedPlayer=canonicalPlayer;
-    raidKaderVerifiedPin=authPin;
-
-    // Die vorhandene Supabase-Funktion erwartet 7 Parameter. Die Offspec wird
-    // danach über update_my_raidkader gespeichert.
+    // Die vorhandene Supabase-Funktion add_raidkader_character erwartet
+    // 7 Parameter. Die Offspec wird danach über update_my_raidkader gespeichert.
     const {data,error}=await supabaseClient.rpc("add_raidkader_character",{
-      p_player_name:canonicalPlayer,
-      p_pin:authPin,
+      p_player_name:raidKaderVerifiedPlayer,
+      p_pin:raidKaderVerifiedPin,
       p_character_name:character,
       p_class_name:className,
       p_spec:spec,
@@ -1864,8 +1854,6 @@ async function verifyRaidkaderManage(){
 
   raidKaderManagePlayer=player;
   raidKaderManagePin=pin;
-  raidKaderVerifiedPlayer=player;
-  raidKaderVerifiedPin=pin;
 
   const items=data.map(row=>`
     <div class="rk-manage-item">
@@ -2019,7 +2007,7 @@ async function adminDeleteRaidkader(id){
 }
 
 function renderAll(){renderNews();renderRaids();renderEvents();updateAdminStatus();setTimeout(()=>loadRaidkader(),0);}
-renderAll();init();updateCountdowns();setInterval(updateCountdowns,1000);
+renderAll();init();updateCountdowns();handleSectionNavigation();setInterval(updateCountdowns,1000);
 </script>
 </body>
 </html>
