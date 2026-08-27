@@ -683,9 +683,25 @@ async function saveProfile(){
     if(!p||!c||!cl||!s||!r||!n)return alert("Bitte Name, Charakter, Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
     if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
     if(formMode==="add"){
+      const authPlayer=(verifiedPlayer||managePlayer||"").trim();
+      const authPin=(verifiedPin||managePin||"").trim();
+      if(!authPlayer||!authPin)return alert("Bitte zuerst deinen PIN bestätigen.");
+
+      const {data:profileRows,error:verifyError}=await sb.rpc("get_my_raidkader",{p_player_name:authPlayer,p_pin:authPin});
+      if(verifyError)return alert("PIN-Prüfung fehlgeschlagen: "+verifyError.message);
+      if(!profileRows?.length){
+        verifiedPlayer="";
+        verifiedPin="";
+        return alert("PIN falsch oder Profil nicht gefunden. Bitte bestätige deinen PIN erneut.");
+      }
+
+      const canonicalPlayer=String(profileRows[0].player_name||authPlayer).trim();
+      verifiedPlayer=canonicalPlayer;
+      verifiedPin=authPin;
+
       // Die vorhandene Supabase-Funktion erwartet 7 Parameter; die Offspec
       // wird anschließend separat über update_my_raidkader gespeichert.
-      const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});
+      const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:canonicalPlayer,p_pin:authPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});
       if(error)return alert("Charakter konnte nicht gespeichert werden: "+error.message);
       if(data?.ok===false)return alert(data.message||"Charakter konnte nicht gespeichert werden.");
 
@@ -771,6 +787,8 @@ async function verifyManage(){
   if(!data?.length)return alert("PIN falsch oder keine Einträge gefunden.");
   managePlayer=p;
   managePin=pin;
+  verifiedPlayer=p;
+  verifiedPin=pin;
   openManageList(data);
 }
 
