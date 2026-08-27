@@ -1676,6 +1676,8 @@ async function saveRoster(){
       return;
     }
 
+    // Die vorhandene Supabase-Funktion add_raidkader_character erwartet
+    // 7 Parameter. Die Offspec wird danach über update_my_raidkader gespeichert.
     const {data,error}=await supabaseClient.rpc("add_raidkader_character",{
       p_player_name:raidKaderVerifiedPlayer,
       p_pin:raidKaderVerifiedPin,
@@ -1683,12 +1685,47 @@ async function saveRoster(){
       p_class_name:className,
       p_spec:spec,
       p_role:role,
-      p_spec2:spec2||null,
-      p_role2:spec2?(role2||null):null,
       p_item_level:ilvl
     });
     if(error){alert("Charakter konnte nicht gespeichert werden: "+error.message);return;}
     if(data?.ok===false){alert(data.message||"Charakter konnte nicht gespeichert werden.");return;}
+
+    if(spec2){
+      let characterId=data?.id || data?.[0]?.id || null;
+      if(!characterId){
+        const {data:found}=await supabaseClient
+          .from("raidkader")
+          .select("id")
+          .eq("player_name",raidKaderVerifiedPlayer)
+          .eq("character_name",character)
+          .order("created_at",{ascending:false})
+          .limit(1)
+          .maybeSingle();
+        characterId=found?.id || null;
+      }
+      if(!characterId){
+        alert("Charakter wurde angelegt, aber die Offspec konnte nicht gespeichert werden.");
+        await loadRaidkader();
+        return;
+      }
+      const {error:offError}=await supabaseClient.rpc("update_my_raidkader",{
+        p_id:characterId,
+        p_player_name:raidKaderVerifiedPlayer,
+        p_pin:raidKaderVerifiedPin,
+        p_character_name:character,
+        p_class_name:className,
+        p_spec:spec,
+        p_role:role,
+        p_spec2:spec2,
+        p_role2:role2||null,
+        p_item_level:ilvl
+      });
+      if(offError){
+        alert("Charakter wurde angelegt, aber die Offspec konnte nicht gespeichert werden: "+offError.message);
+        await loadRaidkader();
+        return;
+      }
+    }
 
     closeModal();
     await loadRaidkader();
