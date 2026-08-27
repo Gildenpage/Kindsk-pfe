@@ -683,9 +683,22 @@ async function saveProfile(){
     if(!p||!c||!cl||!s||!r||!n)return alert("Bitte Name, Charakter, Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
     if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
     if(formMode==="add"){
-      const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n});
+      // Die vorhandene Supabase-Funktion erwartet 7 Parameter; die Offspec
+      // wird anschließend separat über update_my_raidkader gespeichert.
+      const {data,error}=await sb.rpc("add_raidkader_character",{p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_item_level:n});
       if(error)return alert("Charakter konnte nicht gespeichert werden: "+error.message);
       if(data?.ok===false)return alert(data.message||"Charakter konnte nicht gespeichert werden.");
+
+      if(s2){
+        let characterId=data?.id || data?.[0]?.id || null;
+        if(!characterId){
+          const {data:found}=await sb.from("raidkader").select("id").eq("player_name",verifiedPlayer).eq("character_name",c).order("created_at",{ascending:false}).limit(1).maybeSingle();
+          characterId=found?.id || null;
+        }
+        if(!characterId){await load();return alert("Charakter wurde angelegt, aber die Offspec konnte nicht gespeichert werden.");}
+        const {error:offError}=await sb.rpc("update_my_raidkader",{p_id:characterId,p_player_name:verifiedPlayer,p_pin:verifiedPin,p_character_name:c,p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2,p_role2:r2||null,p_item_level:n});
+        if(offError){await load();return alert("Charakter wurde angelegt, aber die Offspec konnte nicht gespeichert werden: "+offError.message);}
+      }
       closeModal();return load();
     }
 
