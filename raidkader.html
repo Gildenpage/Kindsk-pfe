@@ -803,8 +803,25 @@ async function saveMine(id){
   const cl=$("eClass").value,s=$("eSpec").value,r=$("eRole").value,s2=($("eSpec2").value||"").trim(),r2=$("eRole2").value,n=Number($("eIlvl").value);
   if(!cl||!s||!r||!n)return alert("Bitte Klasse, 1. Spezialisierung und Gegenstandsstufe ausfüllen.");
   if(s2===s)return alert("Die Offspec muss sich von der 1. Spezialisierung unterscheiden.");
-  const payload={p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n}; const {data,error}=await sb.rpc("update_my_raidkader",payload);
-  if(error)return alert("Änderung fehlgeschlagen: "+error.message);if(data?.ok===false)return alert(data.message||"Änderung fehlgeschlagen.");await load();manage(managePlayer)
+  const payload={p_id:id,p_player_name:managePlayer,p_pin:managePin,p_character_name:$("eChar").value.trim(),p_class_name:cl,p_spec:s,p_role:r,p_spec2:s2||null,p_role2:s2?(r2||null):null,p_item_level:n};
+  const {data,error}=await sb.rpc("update_my_raidkader",payload);
+  if(error)return alert("Änderung fehlgeschlagen: "+error.message);
+  if(data?.ok===false)return alert(data.message||"Änderung fehlgeschlagen.");
+
+  // Die bestehende RPC übernimmt bei der aktuellen Datenbank die Gegenstandsstufe
+  // nicht zuverlässig. Deshalb wird item_level zusätzlich über eine eigene,
+  // PIN-geschützte RPC gespeichert.
+  const {data:ilvlData,error:ilvlError}=await sb.rpc("update_my_raidkader_item_level",{
+    p_id:id,
+    p_player_name:managePlayer,
+    p_pin:managePin,
+    p_item_level:n
+  });
+  if(ilvlError)return alert("Gegenstandsstufe konnte nicht gespeichert werden: "+ilvlError.message);
+  if(ilvlData?.ok===false)return alert(ilvlData.message||"Gegenstandsstufe konnte nicht gespeichert werden.");
+
+  await load();
+  manage(managePlayer)
 }
 async function deleteMine(id){if(!confirm("Diesen Charakter wirklich löschen?"))return;const {data,error}=await sb.rpc("delete_my_raidkader",{p_id:id,p_player_name:managePlayer,p_pin:managePin});if(error)return alert(error.message);if(data?.ok===false)return alert(data.message);await load();const left=rows.filter(x=>x.player_name.trim().toLowerCase()===managePlayer.trim().toLowerCase());left.length?manage(managePlayer):closeModal()}
 async function openAdminLogin(){if(isAdmin){await sb.auth.signOut();return}openModal('<h2>🔐 Admin Login</h2><div class="form-group"><label>E-Mail</label><input id="aMail" type="email"></div><div class="form-group"><label>Passwort</label><input id="aPass" type="password"></div><div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button><button class="btn btn-primary" onclick="loginAdmin()">Einloggen</button></div>')}
