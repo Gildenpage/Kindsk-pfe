@@ -1996,6 +1996,17 @@ async function saveAdminRaidkader(id){
   });
   if(error){alert("Änderung fehlgeschlagen: "+error.message);return;}
   if(data?.ok===false){alert(data.message||"Änderung fehlgeschlagen.");return;}
+
+  // Gegenstandsstufe zusätzlich über die dedizierte RPC-Funktion speichern.
+  // Dadurch funktioniert die Änderung auch dann, wenn die bestehende
+  // admin_update_raidkader-Funktion den Parameter p_item_level nicht übernimmt.
+  const {data:ilvlData,error:ilvlError}=await supabaseClient.rpc("admin_update_raidkader_item_level",{
+    p_id:Number(id),
+    p_item_level:ilvl
+  });
+  if(ilvlError){alert("Gegenstandsstufe konnte nicht gespeichert werden: "+ilvlError.message);return;}
+  if(ilvlData?.ok===false){alert(ilvlData.message||"Gegenstandsstufe konnte nicht gespeichert werden.");return;}
+
   closeModal();await loadRaidkader();showToast("👑 Raidkader-Eintrag aktualisiert.");
 }
 async function adminDeleteRaidkader(id){
