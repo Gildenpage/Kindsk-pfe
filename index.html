@@ -1931,6 +1931,17 @@ async function saveMyRaidkaderEdit(id){
   });
   if(error){alert("Änderung fehlgeschlagen: "+error.message);return;}
   if(data?.ok===false){alert(data.message||"Änderung fehlgeschlagen.");return;}
+
+  // Gegenstandsstufe separat und PIN-geschützt speichern.
+  const {data:ilvlData,error:ilvlError}=await supabaseClient.rpc("update_my_raidkader_item_level",{
+    p_id:Number(id),
+    p_player_name:raidKaderManagePlayer,
+    p_pin:raidKaderManagePin,
+    p_item_level:ilvl
+  });
+  if(ilvlError){alert("Gegenstandsstufe konnte nicht gespeichert werden: "+ilvlError.message);return;}
+  if(ilvlData?.ok===false){alert(ilvlData.message||"Gegenstandsstufe konnte nicht gespeichert werden.");return;}
+
   await loadRaidkader();
   await verifyRaidkaderManage();
   showToast("✏️ Charakter aktualisiert.");
