@@ -436,7 +436,18 @@ td{padding:12px 14px;border-top:1px solid #26333f;font-size:14px;vertical-align:
 tr:hover td{background:#ffffff04}
 .char{font-weight:bold}.gs{font-weight:bold}
 th:nth-child(4),td:nth-child(4),th:nth-child(5),td:nth-child(5){text-align:center}
-th:nth-child(6),td:nth-child(6){text-align:center}.role{display:inline-block;min-width:65px;padding:5px 9px;text-align:center;border:1px solid;border-radius:999px;font-size:11px;font-weight:bold}.tank{color:#73b8f4;background:#14334c;border-color:#1e5c8f}.heal{color:#65d898;background:#0d3928;border-color:#17633f}.dd{color:#ef7474;background:#3c2025;border-color:#70303a}.empty{padding:35px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:9px}.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:18px;background:#000b}.modal.open{display:flex}.modal-box{position:relative;width:min(760px,100%);max-height:92vh;overflow:auto;padding:24px;background:#17222c;border:1px solid #53616d;border-top:4px solid var(--gold);border-radius:8px}.close{position:absolute;right:9px;top:5px;background:none;border:0;color:#aaa;font-size:28px}.modal-box h2{margin:0 0 8px;color:var(--gold);font:700 25px Georgia,serif}.add-character-title{display:flex;align-items:center;gap:8px;margin-bottom:8px !important}.add-character-player{color:#c7d0d7;font:600 13px Arial,Helvetica,sans-serif;letter-spacing:.3px;margin-bottom:16px}.add-character-player strong{color:var(--gold2)}.add-character-form .form-group{margin:10px 0 14px}.add-character-form .form-group label{font-size:13px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.profile-create-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.profile-create-grid .profile-single{grid-column:1/-1}.form-group{margin:13px 0}.form-group label{display:block;margin-bottom:6px;color:#c6cdd2;font-size:13px}input,select{width:100%;padding:11px;border:1px solid #465460;border-radius:5px;background:#0b1117;color:#fff;outline:none}input:focus,select:focus{border-color:var(--gold)}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:20px}.manage-list{display:grid;gap:8px;margin-top:15px}.manage-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#0c141c;border:1px solid var(--border);border-radius:7px}.manage-item span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.admin-status{display:none;position:fixed;right:15px;bottom:15px;z-index:100;padding:9px 13px;border-radius:5px;background:#2f7b43;font-size:12px;font-weight:bold}.admin-status.show{display:block}footer{padding:45px;text-align:center;border-top:1px solid var(--border);color:#777}footer strong{color:var(--gold)}
+th:nth-child(6),td:nth-child(6){text-align:center}.role{display:inline-block;min-width:65px;padding:5px 9px;text-align:center;border:1px solid;border-radius:999px;font-size:11px;font-weight:bold}.tank{color:#73b8f4;background:#14334c;border-color:#1e5c8f}.heal{color:#65d898;background:#0d3928;border-color:#17633f}.dd{color:#ef7474;background:#3c2025;border-color:#70303a}.empty{padding:35px;text-align:center;color:var(--muted);border:1px dashed var(--border);border-radius:9px}.modal{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:18px;background:#000b}.modal.open{display:flex}.modal-box{position:relative;width:min(760px,100%);max-height:92vh;overflow:auto;padding:24px;background:#17222c;border:1px solid #53616d;border-top:4px solid var(--gold);border-radius:8px}.close{position:absolute;right:9px;top:5px;background:none;border:0;color:#aaa;font-size:28px}.modal-box h2{margin:0 0 8px;color:var(--gold);font:700 25px Georgia,serif}
+/* ===== Erfolgsfenster nach erfolgreicher Profilerstellung ===== */
+.rk-success-modal{text-align:center;padding:8px 4px 2px}
+.rk-success-icon{width:58px;height:58px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(216,173,75,.55);border-radius:50%;background:rgba(216,173,75,.10);font-size:28px;box-shadow:0 0 22px rgba(216,173,75,.16)}
+.rk-success-modal h2{margin:0 0 14px;color:var(--gold2);font-size:28px}
+.rk-success-message{margin:0 auto;color:#dce5eb;line-height:1.7;max-width:680px}
+.rk-success-message strong{color:var(--gold2)}
+.rk-success-hint{margin:18px auto 0;padding:13px 15px;text-align:left;color:#b9c6d0;background:rgba(10,16,22,.65);border:1px solid rgba(216,173,75,.28);border-radius:7px;line-height:1.55}
+.rk-success-hint strong{color:var(--gold2)}
+.rk-success-actions{justify-content:center;margin-top:22px}
+.rk-success-actions .btn{min-width:130px}
+.add-character-title{display:flex;align-items:center;gap:8px;margin-bottom:8px !important}.add-character-player{color:#c7d0d7;font:600 13px Arial,Helvetica,sans-serif;letter-spacing:.3px;margin-bottom:16px}.add-character-player strong{color:var(--gold2)}.add-character-form .form-group{margin:10px 0 14px}.add-character-form .form-group label{font-size:13px}.muted{color:var(--muted);font-size:13px;line-height:1.5}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.profile-create-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.profile-create-grid .profile-single{grid-column:1/-1}.form-group{margin:13px 0}.form-group label{display:block;margin-bottom:6px;color:#c6cdd2;font-size:13px}input,select{width:100%;padding:11px;border:1px solid #465460;border-radius:5px;background:#0b1117;color:#fff;outline:none}input:focus,select:focus{border-color:var(--gold)}.modal-actions{display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap;margin-top:20px}.manage-list{display:grid;gap:8px;margin-top:15px}.manage-item{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px;background:#0c141c;border:1px solid var(--border);border-radius:7px}.manage-item span{display:block;color:var(--muted);font-size:12px;margin-top:4px}.admin-status{display:none;position:fixed;right:15px;bottom:15px;z-index:100;padding:9px 13px;border-radius:5px;background:#2f7b43;font-size:12px;font-weight:bold}.admin-status.show{display:block}footer{padding:45px;text-align:center;border-top:1px solid var(--border);color:#777}footer strong{color:var(--gold)}
 @media(max-width:700px){
   .profile-create-grid{grid-template-columns:1fr}
   .profile-create-grid .profile-single{grid-column:auto}
@@ -775,11 +786,51 @@ async function saveProfile(){
     }
 
     verifiedPlayer=p;verifiedPin=pin;closeModal();await load();
+    showRaidProfileCreatedSuccess(p,c);
   }catch(err){
     console.error(err);
     alert("Beim Speichern ist ein unerwarteter Fehler aufgetreten: "+(err?.message||err));
   }
 }
+function showRaidProfileCreatedSuccess(player, character){
+  const safePlayer=esc(player);
+  const safeCharacter=esc(character);
+
+  openModal(`
+    <div class="rk-success-modal" role="dialog" aria-modal="true" aria-labelledby="raidProfileSuccessTitle">
+      <div class="rk-success-icon" aria-hidden="true">✓</div>
+      <h2 id="raidProfileSuccessTitle">Profil erfolgreich angelegt</h2>
+      <p class="rk-success-message">
+        Dein Profil wurde erfolgreich unter dein Namen <strong>„${safePlayer}“</strong> angelegt.
+        <br>
+        Dein erster Charakter <strong>„${safeCharacter}“</strong> wurde ebenfalls erfolgreich hinzugefügt.
+        <br>
+        <strong>Mit deiner Pin kannst du dich jetzt unter Raidplaner / Eventplaner anmelden !</strong>
+      </p>
+      <div class="rk-success-hint">
+        <strong>Hinweis:</strong>
+        <br>
+        Im Raidkader kannst du unter deinem Namen weitere Charaktere über den Button <strong>„Charakter hinzufügen“</strong> hinterlegen.
+        <br><br>
+        <strong>Wichtig:</strong>
+        <br>
+        Merke dir deinen PIN gut – du wirst ihn künftig zum hinzufügen weiterer Charaktere und die Verwaltung deines Profils benötigen.
+      </div>
+      <div class="modal-actions rk-success-actions">
+        <button class="btn btn-primary" type="button" id="raidProfileSuccessOkay" onclick="confirmRaidProfileCreated()">Okay</button>
+      </div>
+    </div>
+  `);
+
+  requestAnimationFrame(()=>{
+    document.getElementById("raidProfileSuccessOkay")?.focus();
+  });
+}
+
+function confirmRaidProfileCreated(){
+  closeModal();
+}
+
 function openProfile(){profileForm()}
 function addChar(player){
   if(verifiedPlayer===player && verifiedPin){
