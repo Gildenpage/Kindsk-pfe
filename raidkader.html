@@ -490,6 +490,639 @@ nav .nav-btn {
   }
 }
 </style>
+
+<style id="kk-raid-premium-overlay-v2">
+/* =========================================================
+   KIND­SKÖPFE RAIDKADER — KOMPLETTES VISUAL REDESIGN
+   Nur Darstellung/CSS. JavaScript, IDs und Funktionen bleiben unverändert.
+   ========================================================= */
+
+:root{
+  --gold:#f3c85b;
+  --gold2:#ffe8a3;
+  --cyan:#73d7e8;
+  --violet:#9d8cff;
+  --bg:#05050a;
+  --panel:rgba(16,17,29,.84);
+  --panel2:rgba(24,25,41,.92);
+  --border:rgba(255,255,255,.10);
+  --text:#f4f5fa;
+  --muted:#9ca2b4;
+  --green:#53d18b;
+  --red:#f06d78;
+}
+
+html{scroll-behavior:smooth}
+body{
+  color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(126,92,255,.22),transparent 35%),
+    radial-gradient(circle at 5% 45%,rgba(54,205,229,.08),transparent 25%),
+    radial-gradient(circle at 95% 75%,rgba(243,200,91,.07),transparent 28%),
+    linear-gradient(135deg,#040409,#090a12 50%,#030409);
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:-1;
+  opacity:.30;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:42px 42px;
+  mask-image:linear-gradient(to bottom,#000,transparent 88%);
+}
+
+.hero{
+  height:470px;
+  position:relative;
+  overflow:hidden;
+  border-bottom:1px solid rgba(243,200,91,.55);
+  background:
+    radial-gradient(circle at 50% 42%,rgba(157,140,255,.18),transparent 28%),
+    radial-gradient(circle at 50% 100%,rgba(115,215,232,.08),transparent 42%),
+    linear-gradient(180deg,#080817,#0b0d18 60%,#05060b);
+}
+.hero::before{
+  content:"";
+  position:absolute;
+  width:720px;height:720px;
+  border:1px solid rgba(243,200,91,.08);
+  border-radius:50%;
+  box-shadow:0 0 100px rgba(157,140,255,.07),inset 0 0 100px rgba(115,215,232,.035);
+}
+.hero::after{
+  content:"✦";
+  position:absolute;
+  right:8%;top:7%;
+  color:rgba(243,200,91,.14);
+  font-size:150px;
+  transform:rotate(18deg);
+}
+.hero>div{position:relative;z-index:2}
+.hero-kicker{
+  color:var(--cyan);
+  font-size:11px;
+  letter-spacing:5px;
+  text-transform:uppercase;
+}
+.hero h1{
+  color:#fff;
+  font:900 clamp(54px,9vw,110px)/.9 Georgia,serif;
+  letter-spacing:7px;
+  text-shadow:0 0 35px rgba(157,140,255,.18),0 8px 30px #000;
+}
+.hero-line{
+  background:linear-gradient(90deg,transparent,var(--cyan),var(--gold),var(--cyan),transparent);
+  box-shadow:0 0 16px rgba(115,215,232,.22);
+}
+.hero h2{
+  color:var(--gold2);
+  letter-spacing:5px;
+}
+.hero p{color:#b9c5d5;letter-spacing:3px}
+
+nav{
+  background:rgba(5,6,12,.78);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(18px) saturate(140%);
+  box-shadow:0 10px 35px rgba(0,0,0,.25);
+}
+.nav-btn,.btn{
+  color:#eef0f6;
+  background:linear-gradient(180deg,rgba(38,40,59,.88),rgba(19,20,31,.92));
+  border:1px solid rgba(255,255,255,.11);
+  border-radius:10px;
+  box-shadow:0 8px 22px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.05);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+.nav-btn:hover,.btn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(115,215,232,.38);
+  box-shadow:0 12px 28px rgba(0,0,0,.30),0 0 20px rgba(115,215,232,.07);
+}
+nav .nav-btn{
+  width:160px;
+  min-width:160px;
+  height:46px;
+  padding:0 12px;
+}
+.btn-primary{
+  color:#111!important;
+  border-color:var(--gold)!important;
+  background:linear-gradient(135deg,#f0bd45,#ffe29a)!important;
+  box-shadow:0 8px 28px rgba(243,200,91,.16),inset 0 1px 0 rgba(255,255,255,.45)!important;
+}
+.btn-secondary{background:linear-gradient(180deg,#31364a,#202331)}
+.btn-danger{background:linear-gradient(135deg,#b94756,#f06d78);border-color:rgba(240,109,120,.4)}
+.separator{background:rgba(243,200,91,.38);box-shadow:0 0 12px rgba(243,200,91,.12)}
+
+main{width:min(1320px,94%);margin:44px auto 90px}
+.titlebar{
+  border-bottom-color:rgba(255,255,255,.09);
+  padding-bottom:15px;
+  margin-bottom:22px;
+}
+.titlebar h2{
+  color:var(--gold2);
+  font-size:30px;
+  letter-spacing:.5px;
+}
+.titlebar p{color:#8f95a8}
+
+.promo{
+  position:relative;
+  overflow:hidden;
+  padding:25px 27px;
+  border:1px solid rgba(243,200,91,.20);
+  border-left:3px solid var(--gold);
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 90% 0,rgba(157,140,255,.10),transparent 30%),
+    linear-gradient(145deg,rgba(25,27,44,.88),rgba(10,11,18,.94));
+  box-shadow:0 24px 70px rgba(0,0,0,.42);
+}
+.promo::after{
+  content:"✦";
+  position:absolute;
+  right:25px;
+  top:-25px;
+  font-size:120px;
+  color:rgba(243,200,91,.045);
+  pointer-events:none;
+}
+.promo strong{color:var(--gold2)}
+.promo span{color:#b8c1d1}
+
+.roster-overview{
+  gap:18px;
+  margin:24px 0 28px;
+}
+.roster-stat,.roster-search{
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  background:
+    radial-gradient(circle at 90% 0,rgba(157,140,255,.10),transparent 32%),
+    linear-gradient(145deg,rgba(24,26,43,.92),rgba(9,10,17,.97));
+  box-shadow:0 24px 70px rgba(0,0,0,.45),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.roster-stat{
+  min-height:235px;
+  padding:25px 28px;
+}
+.roster-stat-image{
+  width:170px;height:185px;
+  border:1px solid rgba(243,200,91,.32);
+  border-radius:13px;
+  background:#070810;
+  box-shadow:0 0 0 7px rgba(243,200,91,.025),0 15px 35px rgba(0,0,0,.45);
+}
+.roster-stat-image::before{
+  inset:7px;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;
+}
+.roster-stat-value{
+  color:var(--gold);
+  font-size:68px;
+  text-shadow:0 0 24px rgba(243,200,91,.20),0 3px 0 rgba(0,0,0,.4);
+}
+.roster-stat-label{color:#9fa6b7}
+.roster-stat-sub{color:#b6bfce}
+
+.roster-search{min-height:235px;padding:28px 32px}
+.roster-search label{
+  color:var(--gold2);
+  letter-spacing:2.5px;
+}
+.roster-search label::before{
+  border-color:var(--cyan)!important;
+  box-shadow:0 0 0 3px rgba(115,215,232,.035),0 0 14px rgba(115,215,232,.18)!important;
+}
+.roster-search label::after{background:var(--cyan)!important}
+.roster-search-row input{
+  height:54px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+  background:rgba(5,6,11,.78);
+  box-shadow:inset 0 1px 8px rgba(0,0,0,.28);
+}
+.roster-search-row input:focus{
+  border-color:rgba(115,215,232,.65);
+  box-shadow:0 0 0 3px rgba(115,215,232,.08),0 0 20px rgba(115,215,232,.06);
+}
+.roster-enter{background:rgba(30,32,47,.9);color:#9ca3b4}
+.roster-search-btn{
+  height:54px;
+  border-radius:10px;
+}
+
+.roster{gap:18px}
+.card{
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:16px;
+  background:linear-gradient(145deg,rgba(22,24,39,.92),rgba(9,10,17,.96));
+  box-shadow:0 24px 70px rgba(0,0,0,.42);
+}
+.card-head{
+  padding:20px 22px;
+  background:linear-gradient(135deg,rgba(36,39,61,.88),rgba(16,18,29,.96));
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+.player{color:var(--gold2);font-size:23px}
+.meta{color:#8f95a8}
+table{background:transparent}
+th{
+  padding:13px 15px;
+  color:var(--gold2);
+  background:rgba(29,31,48,.95);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+td{padding:13px 15px;border-top-color:rgba(255,255,255,.07)}
+tr:hover td{background:rgba(115,215,232,.035)}
+.role{
+  padding:6px 10px;
+  border-radius:999px;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+.tank{color:#82c8ff;background:rgba(27,65,93,.72);border-color:rgba(115,184,244,.32)}
+.heal{color:#6fe4a1;background:rgba(14,70,46,.72);border-color:rgba(83,209,139,.32)}
+.dd{color:#ff7f87;background:rgba(83,30,39,.72);border-color:rgba(240,109,120,.32)}
+.empty{border-color:rgba(255,255,255,.10);background:rgba(8,9,15,.55)}
+
+.modal{
+  background:rgba(0,0,0,.74)!important;
+  backdrop-filter:blur(10px);
+}
+.modal-box{
+  width:min(780px,100%);
+  padding:28px;
+  background:
+    radial-gradient(circle at 100% 0,rgba(157,140,255,.11),transparent 35%),
+    linear-gradient(145deg,rgba(25,27,44,.98),rgba(9,10,17,.99));
+  border:1px solid rgba(255,255,255,.12);
+  border-top:2px solid var(--gold);
+  border-radius:18px;
+  box-shadow:0 35px 100px rgba(0,0,0,.70),0 0 45px rgba(157,140,255,.07);
+}
+.modal-box h2{color:var(--gold2)}
+.close{color:#9da2b2}
+.close:hover{color:#fff}
+.form-group label{color:#bfc5d3}
+input,select{
+  color:#f5f6fa;
+  background:rgba(5,6,11,.78);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:10px;
+}
+input:focus,select:focus{
+  border-color:rgba(115,215,232,.65);
+  box-shadow:0 0 0 3px rgba(115,215,232,.08),0 0 20px rgba(115,215,232,.06);
+}
+.manage-item{
+  padding:14px;
+  background:linear-gradient(145deg,rgba(22,24,38,.88),rgba(9,10,17,.94));
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:11px;
+}
+.manage-item span{color:#8f95a8}
+.rk-success-icon{
+  border-color:rgba(243,200,91,.5);
+  background:rgba(243,200,91,.08);
+  box-shadow:0 0 35px rgba(243,200,91,.12);
+}
+.rk-success-modal h2{color:var(--gold2)}
+.rk-success-hint{
+  background:rgba(5,6,11,.65);
+  border-color:rgba(115,215,232,.16);
+}
+.admin-status{
+  border:1px solid rgba(83,209,139,.35);
+  border-radius:10px;
+  background:rgba(20,69,48,.94);
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+footer{
+  padding:50px 20px;
+  color:#777d8e;
+  border-top:1px solid rgba(255,255,255,.08);
+  background:rgba(4,5,9,.45);
+}
+footer strong{color:var(--gold)}
+
+@media(max-width:900px){
+  .roster-stat{min-height:210px}
+}
+@media(max-width:700px){
+  .hero{height:350px}
+  .hero h1{font-size:48px;letter-spacing:3px}
+  .hero h2{font-size:18px;letter-spacing:2px}
+  .titlebar,.card-head,.promo{flex-direction:column;align-items:flex-start}
+  .promo-actions{width:100%}
+  .promo-btn{width:100%;min-width:0}
+  nav .nav-btn{width:160px;min-width:160px;height:44px}
+  .roster-stat{min-height:195px;padding:20px}
+  .roster-stat-image{width:130px;height:145px;flex-basis:130px}
+  .roster-stat-value{font-size:52px}
+  .roster-search{padding:22px 18px}
+  .modal-box{padding:20px;border-radius:14px}
+}
+</style>
+
+
+<style id="kk-pro-overlay-raid">
+/* KINDSKÖPFE RAIDKADER PRO UI — reine Darstellung, keine Logikänderung */
+:root{
+  --pro-gold:#f6c95d;--pro-gold-hi:#fff0b2;--pro-blue:#71dff2;--pro-purple:#a18cff;
+}
+body{
+  background:
+    radial-gradient(900px 500px at 50% -120px,rgba(161,140,255,.22),transparent 65%),
+    radial-gradient(650px 420px at -10% 35%,rgba(113,223,242,.07),transparent 65%),
+    radial-gradient(650px 420px at 110% 65%,rgba(246,201,93,.06),transparent 65%),
+    #04050a;
+}
+.hero{
+  height:540px;
+  border-bottom:1px solid rgba(246,201,93,.42);
+  box-shadow:0 30px 90px rgba(0,0,0,.55);
+}
+.hero::before{
+  width:850px;height:850px;border-color:rgba(246,201,93,.075);
+  box-shadow:0 0 140px rgba(161,140,255,.09),inset 0 0 100px rgba(113,223,242,.035);
+}
+.hero-kicker{
+  display:inline-flex;padding:8px 15px;border:1px solid rgba(113,223,242,.20);
+  border-radius:999px;background:rgba(8,12,21,.52);
+}
+.hero h1{
+  font-size:clamp(64px,10vw,132px);
+  letter-spacing:9px;
+  background:linear-gradient(180deg,#fff 10%,#f8e8ac 58%,#b9903c 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 14px 30px rgba(0,0,0,.65));
+}
+.hero-line{height:2px;opacity:.8}
+nav{background:rgba(4,5,11,.72);border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-btn,.btn{position:relative;overflow:hidden}
+.nav-btn::before,.btn::before{
+  content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 25%,rgba(255,255,255,.10) 50%,transparent 75%);
+  transform:translateX(-120%);transition:transform .5s ease;pointer-events:none;
+}
+.nav-btn:hover::before,.btn:hover::before{transform:translateX(120%)}
+main{margin-top:52px}
+.titlebar{position:relative}
+.titlebar::before{
+  content:"";position:absolute;left:0;bottom:-1px;width:160px;height:2px;
+  background:linear-gradient(90deg,var(--pro-gold),transparent);
+}
+.titlebar h2{text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.promo{
+  border-left-width:4px;
+  box-shadow:0 25px 75px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.promo strong{font-size:23px}
+.roster-stat,.roster-search{
+  position:relative;
+  box-shadow:0 25px 75px rgba(0,0,0,.48),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.roster-stat::after,.roster-search::after{
+  content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(135deg,rgba(255,255,255,.045),transparent 28%,transparent 72%,rgba(161,140,255,.035));
+}
+.roster-stat-image{
+  border-color:rgba(246,201,93,.35);
+  box-shadow:0 0 0 7px rgba(246,201,93,.025),0 20px 40px rgba(0,0,0,.50);
+}
+.roster-stat-value{
+  background:linear-gradient(180deg,#fff0b2,#f6c95d,#a97622);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  filter:drop-shadow(0 8px 18px rgba(246,201,93,.13));
+}
+.card{
+  box-shadow:0 24px 70px rgba(0,0,0,.45);
+  transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease;
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(113,223,242,.22);
+  box-shadow:0 32px 85px rgba(0,0,0,.55),0 0 35px rgba(113,223,242,.035);
+}
+.card-head{
+  position:relative;
+  background:linear-gradient(135deg,rgba(38,41,64,.82),rgba(14,16,27,.98));
+}
+.player{
+  font-size:24px;
+  text-shadow:0 2px 18px rgba(0,0,0,.45);
+}
+table{border-collapse:separate;border-spacing:0}
+th:first-child{border-top-left-radius:7px}
+th:last-child{border-top-right-radius:7px}
+tr:hover td{background:rgba(113,223,242,.045)}
+.role{font-weight:800;letter-spacing:.03em}
+.modal-box{
+  box-shadow:0 35px 110px rgba(0,0,0,.76),0 0 55px rgba(161,140,255,.09);
+}
+input,select{outline:none;min-height:44px}
+footer{position:relative;text-align:center}
+footer::before{
+  content:"";position:absolute;top:0;left:50%;width:min(520px,70%);height:1px;
+  transform:translateX(-50%);background:linear-gradient(90deg,transparent,var(--pro-gold),transparent);
+}
+@media(max-width:700px){
+  .hero{height:390px}
+  .hero h1{letter-spacing:3px}
+}
+</style>
+
+
+<style id="kk-display-fix-raid">
+/* DISPLAY FIX — verhindert abgeschnittene Hero-Elemente bei 1100–1400px Breite */
+.hero{
+  height:auto !important;
+  min-height:430px !important;
+  padding:20px 12px;
+  box-sizing:border-box;
+}
+.hero>div{
+  width:min(1100px,100%);
+  box-sizing:border-box;
+}
+.hero h1{
+  display:block;
+  width:100%;
+  max-width:100%;
+  margin:14px auto 0 !important;
+  font-size:clamp(48px,8vw,108px) !important;
+  line-height:.95 !important;
+  letter-spacing:clamp(1px,.45vw,5px) !important;
+  white-space:nowrap;
+  overflow:visible;
+  box-sizing:border-box;
+}
+.hero-line{width:min(600px,72vw);margin:18px auto}
+.hero h2{
+  font-size:clamp(18px,2.6vw,32px) !important;
+  letter-spacing:clamp(2px,.35vw,4px) !important;
+}
+.hero p{font-size:12px;letter-spacing:2px}
+@media(max-width:700px){
+  .hero{min-height:340px !important;padding:15px 8px}
+  .hero h1{
+    font-size:clamp(38px,12.5vw,66px) !important;
+    letter-spacing:1px !important;
+  }
+  .hero-kicker{font-size:10px;letter-spacing:2px}
+  .hero-line{width:72%;margin:12px auto}
+  .hero h2{font-size:clamp(15px,5vw,22px)!important}
+  .hero p{font-size:10px;letter-spacing:1px}
+}
+</style>
+
+
+<style id="kk-final-layout-sync-raid">
+/* FINAL LAYOUT SYNC — nur CSS, keine Funktionen/JS verändert */
+
+/* ---------- Gemeinsame Header-Größe ---------- */
+.hero{
+  height:430px !important;
+  min-height:430px !important;
+  max-height:430px !important;
+  padding:0 !important;
+  overflow:hidden !important;
+  box-sizing:border-box;
+  display:flex !important;
+  align-items:center;
+  justify-content:center;
+}
+.hero>div{
+  width:100%;
+  max-width:1200px;
+  box-sizing:border-box;
+  padding:20px 24px !important;
+}
+.hero h1{
+  margin:12px auto 8px !important;
+  font-size:clamp(52px,8vw,108px) !important;
+  line-height:.9 !important;
+  letter-spacing:clamp(1px,.42vw,5px) !important;
+  white-space:nowrap;
+}
+.hero-line{margin:17px auto !important}
+.hero h2{
+  font-size:clamp(18px,2.6vw,32px) !important;
+  letter-spacing:clamp(2px,.34vw,4px) !important;
+}
+.hero p{
+  margin-top:10px !important;
+  font-size:11px !important;
+  letter-spacing:2.5px !important;
+}
+
+/* Stern oben rechts komplett entfernen */
+.hero::after{content:none !important;display:none !important}
+
+/* ---------- Raidkader-Navigation als gemeinsame Referenz ---------- */
+nav{
+  min-height:72px;
+  box-sizing:border-box;
+  padding:12px 14px !important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px !important;
+}
+.nav-btn{
+  width:160px !important;
+  min-width:160px !important;
+  height:46px !important;
+  min-height:46px !important;
+  padding:0 12px !important;
+  display:inline-flex !important;
+  align-items:center;
+  justify-content:center;
+  box-sizing:border-box;
+  font:inherit;
+  font-size:14px;
+}
+.separator{
+  width:1px !important;
+  height:28px !important;
+  min-width:1px !important;
+  margin:0 3px !important;
+  flex:0 0 1px;
+}
+.nav-btn{
+  color:#eef0f6 !important;
+  background:linear-gradient(180deg,rgba(38,40,59,.88),rgba(19,20,31,.92)) !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  border-radius:10px !important;
+  box-shadow:0 8px 22px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.05) !important;
+}
+.nav-btn:hover{
+  transform:translateY(-2px);
+  border-color:rgba(115,215,232,.38) !important;
+  box-shadow:0 12px 28px rgba(0,0,0,.30),0 0 20px rgba(115,215,232,.07) !important;
+}
+
+/* ---------- Mobile: gleicher Header + stimmige Navigation ---------- */
+@media(max-width:760px){
+  .hero{
+    height:340px !important;
+    min-height:340px !important;
+    max-height:340px !important;
+  }
+  .hero>div{padding:14px 10px !important}
+  .hero h1{
+    font-size:clamp(38px,12.5vw,64px) !important;
+    letter-spacing:1px !important;
+  }
+  .hero-line{width:72vw !important;margin:12px auto !important}
+  .hero-kicker{
+    font-size:9px !important;
+    letter-spacing:2px !important;
+    white-space:nowrap;
+  }
+  .hero h2{
+    font-size:clamp(15px,5vw,22px) !important;
+    letter-spacing:2px !important;
+  }
+  .hero p{
+    font-size:9px !important;
+    letter-spacing:1.2px !important;
+  }
+  nav{
+    min-height:0;
+    padding:9px 7px !important;
+    display:grid !important;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:7px !important;
+  }
+  .nav-btn{
+    width:100% !important;
+    min-width:0 !important;
+    height:43px !important;
+    min-height:43px !important;
+    padding:0 5px !important;
+    font-size:12px !important;
+  }
+  .separator{display:none !important}
+  main{margin-top:30px !important}
+}
+@media(max-width:380px){
+  .hero h1{font-size:36px !important}
+  .hero-kicker{font-size:8px !important;letter-spacing:1.4px !important}
+  .nav-btn{font-size:11px !important}
+}
+</style>
+
 </head>
 <body>
 <header class="hero">
