@@ -493,7 +493,7 @@ nav .nav-btn {
 
 <style id="kk-raid-premium-overlay-v2">
 /* =========================================================
-   KIND­SKÖPFE RAIDKADER — KOMPLETTES VISUAL REDESIGN
+   KINDSKÖPFE RAIDKADER — KOMPLETTES VISUAL REDESIGN
    Nur Darstellung/CSS. JavaScript, IDs und Funktionen bleiben unverändert.
    ========================================================= */
 
@@ -1123,12 +1123,51 @@ nav{
 }
 </style>
 
+
+<style id="kk-title-final-fix-raid">
+/* Titel-Fix: Ö vollständig sichtbar, auch auf kleinen Displays */
+.hero{
+  overflow:visible !important;
+}
+.hero>div{
+  overflow:visible !important;
+}
+.hero h1{
+  display:block !important;
+  overflow:visible !important;
+  width:100% !important;
+  padding:14px 0 4px !important;
+  margin:4px auto 0 !important;
+  box-sizing:border-box !important;
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-weight:900 !important;
+  line-height:1.08 !important;
+  white-space:nowrap !important;
+  text-transform:uppercase !important;
+}
+@media(max-width:760px){
+  .hero h1{
+    font-size:clamp(34px,11vw,62px) !important;
+    letter-spacing:0 !important;
+    padding-top:16px !important;
+    line-height:1.12 !important;
+    transform:none !important;
+  }
+}
+</style>
+
+
+<style id="kk-remove-kicker">
+/* Header-Kicker entfernt */
+.hero-kicker{display:none !important;}
+</style>
+
 </head>
 <body>
 <header class="hero">
   <div>
     <div class="hero-kicker">Allianz · Gilde · Raids · Zusammenhalt</div>
-    <h1>KIND­SKÖPFE</h1>
+    <h1>KINDSKÖPFE</h1>
     <div class="hero-line"></div>
     <h2>RAIDKADER</h2>
     <p>GEMEINSAM RAIDEN · GEMEINSAM ERLEBEN</p>
