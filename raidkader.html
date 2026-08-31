@@ -555,7 +555,7 @@ body::before{
   box-shadow:0 0 100px rgba(157,140,255,.07),inset 0 0 100px rgba(115,215,232,.035);
 }
 .hero::after{
-  content:"";
+  content:"✦";
   position:absolute;
   right:8%;top:7%;
   color:rgba(243,200,91,.14);
@@ -646,7 +646,7 @@ main{width:min(1320px,94%);margin:44px auto 90px}
   box-shadow:0 24px 70px rgba(0,0,0,.42);
 }
 .promo::after{
-  content:"";
+  content:"✦";
   position:absolute;
   right:25px;
   top:-25px;
@@ -1162,6 +1162,42 @@ nav{
 .hero-kicker{display:none !important;}
 </style>
 
+
+<style id="kk-player-counter-fix">
+/* Spielerzahl: goldener Schimmer wie im ursprünglichen Design */
+.roster-stat-value{
+  font-family:Georgia,serif !important;
+  font-weight:700 !important;
+  font-size:68px !important;
+  line-height:.88 !important;
+  letter-spacing:-2px !important;
+  font-variant-numeric:normal;
+  background:linear-gradient(180deg,#fff0b2,#f6c95d,#a97622) !important;
+  -webkit-background-clip:text !important;
+  background-clip:text !important;
+  -webkit-text-fill-color:transparent !important;
+  color:transparent !important;
+  filter:drop-shadow(0 8px 18px rgba(246,201,93,.13)) !important;
+  text-shadow:0 0 24px rgba(243,200,91,.20),0 3px 0 rgba(0,0,0,.4) !important;
+}
+@media(max-width:700px){
+  .roster-stat-value{font-size:52px !important;line-height:1 !important;padding-bottom:5px !important;}
+}
+</style>
+
+<style id="fix-player-counter-clipping">
+/* Counter: untere Rundungen der Ziffern nicht mehr abschneiden */
+.roster-stat{overflow:visible;}
+.roster-stat-value{
+  display:block;
+  line-height:1.05;
+  padding:0 0 6px;
+  margin-bottom:-6px;
+  overflow:visible;
+}
+.roster-stat-copy{overflow:visible;}
+</style>
+
 </head>
 <body>
 <header class="hero">
@@ -1212,7 +1248,6 @@ Wichtig: Bewahre deinen PIN sicher auf und gib ihn nicht weiter.</span>
       <div class="roster-stat-copy">
         <div class="roster-stat-label">ANGEMELDETE SPIELER</div>
         <div class="roster-stat-value" id="playerCount">–</div>
-        <div class="roster-stat-sub">Einzigartige Spieler im Raidkader</div>
       </div>
     </div>
 
@@ -1288,7 +1323,8 @@ function render(){
   });
 
   const players=Object.values(groups);
-  $("playerCount").textContent=players.length;
+  // Anzahl der angelegten Spielerprofile (ein Spieler = ein Profil, unabhängig von der Charakteranzahl)
+  $("playerCount").textContent=new Set(rows.map(r=>String(r.player_name||"").trim().toLowerCase()).filter(Boolean)).size;
 
   if(!rows.length){
     $("roster").innerHTML='<div class="empty">Noch keine Charaktere im Raidkader vorhanden.</div>';
