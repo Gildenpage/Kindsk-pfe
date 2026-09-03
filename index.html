@@ -1,43 +1,22 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Kindsköpfe – Raid & Event Portal</title>
-<link rel="shortcut icon" type="image/x-icon"
-        href="https://i.ibb.co/twDMcsqf/Screenshot-2026-08-24-100345.png" />
-
-
-
-
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Kindsköpfe – Raid &amp; Event Portal</title>
+<link href="https://i.ibb.co/twDMcsqf/Screenshot-2026-08-24-100345.png" rel="shortcut icon" type="image/x-icon"/>
 <!-- Titel der Vorschau -->
-    <meta property="og:title" content="Kindsköpfe – Raid und Event Portal" />
-    
-    <!-- Kurze Beschreibung darunter -->
-    <meta property="og:description" content="Allianz • Gilde • Raids • Events • Zusammenhalt" />
-    
-    <!-- Hier tragen Sie den echten Link ein, unter dem das Bild im Internet erreichbar ist -->
-    <meta property="og:image" content="https://gildenpage.github.io/Kindsk-pfe" />
-    
-    <!-- Die URL Ihrer Webseite -->
-    <meta property="og:url" content="https://gildenpage.github.io/Kindsk-pfe" />
-    <meta property="og:type" content="website" />
-    
-    <!-- Option: Ein edler Gold-Ton für den Discord-Seitenbalken (passend zur Schrift) -->
-    <meta name="theme-color" content="#E5C158" />
-
-
-
-
-
-
-
-
-
-	
-
-
-
+<meta content="Kindsköpfe – Raid und Event Portal" property="og:title"/>
+<!-- Kurze Beschreibung darunter -->
+<meta content="Allianz • Gilde • Raids • Events • Zusammenhalt" property="og:description"/>
+<!-- Hier tragen Sie den echten Link ein, unter dem das Bild im Internet erreichbar ist -->
+<meta content="https://gildenpage.github.io/Kindsk-pfe" property="og:image">
+<!-- Die URL Ihrer Webseite -->
+<meta content="https://gildenpage.github.io/Kindsk-pfe" property="og:url">
+<meta content="website" property="og:type"/>
+<!-- Option: Ein edler Gold-Ton für den Discord-Seitenbalken (passend zur Schrift) -->
+<meta content="#E5C158" name="theme-color"/>
 <style>
 :root{
   --gold:#d8ad4b;--gold2:#ffe09a;--blue:#3d78a8;--dark:#060b12;
@@ -180,6 +159,126 @@ footer{padding:45px 20px;text-align:center;color:#777;border-top:1px solid var(-
 .admin-status-select{width:100%;margin-top:7px;padding:6px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.22);color:inherit;font:inherit;cursor:pointer}
 .status-player .admin-status-select{width:auto;margin:0 6px}
 
+
+/* ===== Besucher-Raidprofil-Login + Info nebeneinander ===== */
+.profile-top-layout{
+  width:min(1320px,94%);
+  margin:18px auto 0;
+  display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(390px,.85fr);
+  gap:14px;
+  align-items:stretch;
+}
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar{
+  width:100%;
+  height:100%;
+  margin:0;
+}
+.profile-top-layout .raidkader-intro{
+  min-height:180px;
+  margin-bottom:0;
+}
+.profile-login-bar{
+  border:1px solid rgba(216,173,75,.42);
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(20,35,47,.96),rgba(8,15,22,.96));
+  box-shadow:0 10px 30px rgba(0,0,0,.28),0 0 18px rgba(216,173,75,.07);
+}
+.profile-login-inner{
+  min-height:100%;
+  height:100%;
+  padding:18px 20px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:18px;
+  align-items:center;
+}
+.profile-login-info{
+  display:grid;
+  grid-template-columns:44px minmax(0,1fr);
+  gap:13px;
+  align-items:center;
+  min-width:0;
+}
+.profile-login-icon{
+  width:44px;height:44px;
+  display:flex;align-items:center;justify-content:center;
+  border:1px solid rgba(216,173,75,.35);
+  border-radius:50%;
+  background:rgba(216,173,75,.08);
+  font-size:18px;
+}
+.profile-login-info strong{display:block;color:var(--gold2);margin-bottom:5px}
+.profile-login-info span:last-child{display:block;color:#aebbc5;font-size:13px;line-height:1.5}
+.profile-login-actions{
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  gap:8px;
+  min-width:205px;
+}
+.profile-login-actions .btn{
+  width:100%;
+  min-height:43px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.profile-login-bar.logged-in{
+  border-color:rgba(63,154,97,.50);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(63,154,97,.10),transparent 40%),
+    linear-gradient(135deg,rgba(16,30,39,.98),rgba(7,14,20,.98));
+  box-shadow:0 10px 30px rgba(0,0,0,.28),0 0 18px rgba(63,154,97,.08);
+}
+.profile-login-bar.logged-in .profile-login-icon{
+  border-color:rgba(63,154,97,.48);
+  background:rgba(63,154,97,.11);
+}
+.profile-login-bar.logged-in .profile-login-info strong{color:#fff}
+.profile-login-logged-title{
+  display:flex !important;
+  align-items:center;
+  gap:9px;
+  flex-wrap:wrap;
+  color:#fff !important;
+  font-size:18px;
+  line-height:1.2;
+}
+.profile-login-badge{
+  display:inline-flex !important;
+  align-items:center;
+  gap:5px;
+  margin:0 !important;
+  padding:4px 8px;
+  border:1px solid rgba(83,209,139,.34);
+  border-radius:999px;
+  background:rgba(83,209,139,.10);
+  color:#8de0a8 !important;
+  font-size:10px !important;
+  font-weight:800;
+  letter-spacing:.6px;
+  text-transform:uppercase;
+}
+.profile-login-badge::before{
+  content:"";
+  width:6px;height:6px;
+  border-radius:50%;
+  background:#62d992;
+  box-shadow:0 0 8px rgba(98,217,146,.65);
+}
+.profile-login-edit{min-width:0}
+.profile-login-bar.logged-in #profileLoginText{
+  max-width:520px;
+}
+@media(max-width:900px){
+  .profile-top-layout{grid-template-columns:1fr}
+}
+@media(max-width:700px){
+  .profile-login-inner{grid-template-columns:1fr;align-items:stretch}
+  .profile-login-actions{min-width:0}
+}
 
 /* Raidkader-Hinweis oberhalb der Gilden-News */
 .raidkader-intro{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 24px;margin-bottom:20px;border:1px solid var(--border);border-left:5px solid var(--gold);border-radius:10px;background:linear-gradient(135deg,#14232f,#0b131b)}
@@ -453,7 +552,6 @@ a[href*="raidkader"][class*="btn"] {
 }
 </style>
 <style id="raidkader-player-actions-style">.rk-player-actions{display:flex;gap:8px;align-items:center;justify-content:flex-end;flex-wrap:wrap}.rk-player-actions .btn{white-space:nowrap}@media(max-width:700px){.rk-player-actions{justify-content:flex-start;width:100%}}</style>
-
 <style id="kk-premium-overlay-v2">
 /* =========================================================
    KIND­SKÖPFE — KOMPLETTES VISUAL REDESIGN
@@ -815,8 +913,6 @@ footer strong{color:var(--gold)}
   .modal-box{padding:20px;border-radius:14px}
 }
 </style>
-
-
 <style id="kk-pro-overlay">
 /* KINDSKÖPFE PRO UI — reine Darstellung, keine Logikänderung */
 :root{
@@ -947,8 +1043,6 @@ footer::before{
   .section-title{align-items:center;gap:12px}
 }
 </style>
-
-
 <style id="kk-display-fix">
 /* DISPLAY FIX — verhindert abgeschnittene Hero-Elemente bei 1100–1400px Breite */
 .hero{
@@ -993,8 +1087,6 @@ footer::before{
   .hero-description{font-size:10px;letter-spacing:1px}
 }
 </style>
-
-
 <style id="kk-final-layout-sync">
 /* FINAL LAYOUT SYNC — nur CSS, keine Funktionen/JS verändert */
 
@@ -1144,8 +1236,6 @@ nav button:hover{
   .nav-main > button,.nav-admin button{font-size:11px !important}
 }
 </style>
-
-
 <style id="kk-title-final-fix">
 /* Titel-Fix: Ö vollständig sichtbar, auch auf kleinen Displays */
 .hero{
@@ -1177,13 +1267,2012 @@ nav button:hover{
   }
 }
 </style>
-
-
 <style id="kk-remove-kicker">
 /* Header-Kicker entfernt */
 .hero-kicker{display:none !important;}
 </style>
+<style id="raidprofil-professional-overrides">
+/* ===== Raidprofil – aufgeräumtes Dashboard-Layout ===== */
+.profile-top-layout{
+  width:min(1280px,94%);
+  margin:34px auto 0;
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:18px;
+  align-items:stretch;
+}
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar{
+  min-height:238px;
+  height:100%;
+  margin:0;
+  border-radius:15px;
+  border:1px solid rgba(243,200,91,.20);
+  border-left:4px solid var(--gold);
+  background:
+    radial-gradient(circle at 100% 0,rgba(157,140,255,.10),transparent 34%),
+    linear-gradient(145deg,rgba(25,27,44,.94),rgba(10,11,18,.97));
+  box-shadow:0 25px 75px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.profile-top-layout .raidkader-intro{
+  padding:30px 32px;
+  display:flex;
+  align-items:center;
+}
+.raidkader-intro-text{max-width:760px}
+.raidkader-intro-text strong{
+  font-size:25px;
+  line-height:1.2;
+  margin-bottom:12px;
+}
+.raidkader-intro-text span{
+  font-size:15px;
+  line-height:1.7;
+}
+.profile-login-bar{
+  border-left-color:rgba(115,215,232,.55);
+}
+.profile-login-inner{
+  min-height:238px;
+  height:100%;
+  padding:28px 30px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:stretch;
+  gap:24px;
+}
+.profile-login-info{
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:15px;
+  align-items:center;
+}
+.profile-login-icon{
+  width:52px;height:52px;font-size:21px;
+  border-radius:14px;
+}
+.profile-login-info strong{font-size:20px}
+.profile-login-info span:last-child{font-size:14px;line-height:1.6}
+.profile-login-actions{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  min-width:0;
+}
+.profile-login-actions .btn{
+  min-height:48px;
+  border-radius:10px;
+  padding:10px 14px;
+}
+/* Logged-in state gets a clear, compact action area. */
+.profile-login-bar.logged-in{
+  border-left-color:#53d18b;
+  background:
+    radial-gradient(circle at 100% 0,rgba(63,154,97,.13),transparent 38%),
+    linear-gradient(145deg,rgba(18,31,39,.97),rgba(9,12,18,.98));
+}
+.profile-login-bar.logged-in .profile-login-info{align-items:start}
+.profile-login-bar.logged-in .profile-login-icon{
+  border-radius:14px;
+}
+.profile-login-badge{
+  padding:5px 9px;
+  font-size:10px!important;
+}
+.profile-login-bar.logged-in .profile-login-actions{
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+}
+.profile-login-bar.logged-in #profileEditButton{
+  background:linear-gradient(180deg,rgba(216,173,75,.98),rgba(186,139,44,.98));
+  color:#111;
+  border-color:rgba(255,224,154,.7);
+}
+.profile-login-bar.logged-in #profileLogoutButton{
+  background:rgba(255,255,255,.055);
+  color:#e5e9ed;
+  border-color:rgba(255,255,255,.12);
+}
+.profile-login-bar.logged-in #profileLogoutButton:hover{
+  background:rgba(169,68,68,.18)!important;
+  border-color:rgba(169,68,68,.55)!important;
+}
+/* Raidkader promo gets the same visual weight as the profile cards. */
+main>.raid-list-promo{
+  min-height:238px;
+  margin-bottom:30px;
+  border-radius:15px;
+  border-left-width:4px;
+  box-shadow:0 25px 75px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.045);
+}
+.raid-list-promo-content{padding:34px 36px}
+.raid-list-promo-title{font-size:32px!important}
+.signup-actions-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-top:18px;
+}
+.signup-actions-row .btn{min-height:44px}
+.signup-roster-hint{
+  margin:12px 0 0!important;
+  padding:10px 12px;
+  border-left:2px solid rgba(216,173,75,.35);
+  color:#8f9ba7;
+  background:rgba(255,255,255,.025);
+  border-radius:0 7px 7px 0;
+  line-height:1.5;
+}
+@media(max-width:900px){
+  .profile-top-layout{grid-template-columns:1fr}
+  .profile-top-layout .raidkader-intro,.profile-top-layout .profile-login-bar{min-height:220px}
+  .profile-login-inner{min-height:220px}
+}
+@media(max-width:560px){
+  .profile-top-layout{width:calc(100% - 20px);margin-top:22px;gap:12px}
+  .profile-top-layout .raidkader-intro{padding:24px 22px}
+  .profile-login-inner{padding:24px 22px;min-height:0}
+  .profile-login-actions,.profile-login-bar.logged-in .profile-login-actions{grid-template-columns:1fr}
+  main>.raid-list-promo{min-height:190px}
+  .raid-list-promo-content{padding:26px 22px}
+  .raid-list-promo-title{font-size:25px!important}
+}
+</style>
+<style id="raidprofil-login-size-final">
+/* ===== Raidprofil/Login: exakt gleiche Breite und kompakte Höhe wie die Raidkader-Box ===== */
+.profile-top-layout{
+  width:min(1320px,94%);
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:18px;
+  align-items:stretch;
+}
 
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar{
+  height:258px;
+  min-height:258px;
+  box-sizing:border-box;
+}
+
+.profile-top-layout .raidkader-intro{
+  padding:22px 28px;
+  overflow:hidden;
+}
+.profile-top-layout .raidkader-intro-text{
+  max-width:760px;
+}
+.profile-top-layout .raidkader-intro-text strong{
+  font-size:23px;
+  margin-bottom:8px;
+}
+.profile-top-layout .raidkader-intro-text span{
+  font-size:14px;
+  line-height:1.45;
+}
+
+.profile-top-layout .profile-login-bar{
+  padding:22px 28px;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.profile-login-heading{
+  display:block;
+  color:var(--gold2);
+  font-size:23px;
+  line-height:1.2;
+  font-weight:800;
+  margin:0 0 14px;
+  text-shadow:0 2px 14px rgba(0,0,0,.45);
+}
+.profile-login-inner{
+  min-height:0;
+  height:auto;
+  padding:0;
+  gap:16px;
+}
+.profile-login-info{
+  grid-template-columns:48px minmax(0,1fr);
+  gap:13px;
+}
+.profile-login-icon{
+  width:48px;
+  height:48px;
+}
+.profile-login-info strong{font-size:19px}
+.profile-login-info span:last-child{font-size:13px;line-height:1.5}
+.profile-login-actions .btn{
+  min-height:46px;
+  padding:8px 12px;
+}
+
+/* Die untere Raidkader-Box bleibt die Referenz für die Höhe. */
+main>.raid-list-promo{
+  min-height:258px;
+}
+main>.raid-list-promo .raid-list-promo-content{
+  min-height:190px;
+  box-sizing:border-box;
+}
+
+@media(max-width:900px){
+  .profile-top-layout{grid-template-columns:1fr;}
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{height:auto;min-height:258px;}
+}
+@media(max-width:700px){
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{min-height:0;height:auto;}
+  .profile-top-layout .raidkader-intro{padding:22px;}
+  .profile-top-layout .profile-login-bar{padding:22px;}
+}
+</style>
+<style id="raidprofil-card-final-polish">
+/* ===== Einheitliches Karten-Design: linke Box als Muster ===== */
+.profile-top-layout{
+  width:min(1320px,94%);
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:22px;
+  align-items:stretch;
+}
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar{
+  min-height:238px;
+  height:238px;
+  box-sizing:border-box;
+  border-radius:15px;
+  padding:30px 32px;
+  font-family:inherit;
+}
+/* Beide Karten verwenden exakt die Typografie der linken Box. */
+.profile-top-layout .raidkader-intro-text strong,
+.profile-top-layout .profile-login-heading{
+  display:block;
+  color:var(--gold2);
+  font-size:25px;
+  line-height:1.2;
+  font-weight:800;
+  margin:0 0 12px;
+}
+.profile-top-layout .raidkader-intro-text span,
+.profile-top-layout .profile-login-info span:last-child{
+  color:#c1d0dc;
+  font-size:15px;
+  line-height:1.7;
+}
+/* Linke Karte: Text und Button sauber auf gemeinsame Unterkante ausrichten. */
+.profile-top-layout .raidkader-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:28px;
+}
+.profile-top-layout .raidkader-intro-text{
+  max-width:none;
+  align-self:start;
+}
+.profile-top-layout .raidkader-intro-actions{
+  align-self:center;
+  justify-self:end;
+}
+.profile-top-layout .raidkader-intro .promo-btn{
+  min-height:60px;
+  padding:14px 24px;
+  border-radius:11px;
+  font-size:17px;
+}
+/* Rechte Karte: gleiche Überschrift wie links, Info darunter, Button unten. */
+.profile-top-layout .profile-login-bar{
+  border-left-color:var(--gold);
+}
+.profile-top-layout .profile-login-inner{
+  min-height:0;
+  height:100%;
+  padding:0;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:12px;
+  box-sizing:border-box;
+}
+.profile-top-layout .profile-login-heading{
+  margin:0;
+}
+.profile-top-layout .profile-login-info{
+  align-self:start;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:15px;
+}
+.profile-top-layout .profile-login-info strong{
+  color:var(--gold2);
+  font-size:20px;
+  line-height:1.25;
+  font-weight:800;
+}
+.profile-top-layout .profile-login-actions{
+  align-self:end;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+.profile-top-layout .profile-login-actions .btn{
+  min-height:60px;
+  padding:14px 24px;
+  border-radius:11px;
+  font-size:16px;
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+  grid-template-columns:none;
+}
+@media(max-width:900px){
+  .profile-top-layout{grid-template-columns:1fr;gap:18px}
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{height:auto;min-height:238px}
+}
+@media(max-width:560px){
+  .profile-top-layout{width:calc(100% - 20px);gap:12px}
+  .profile-top-layout .raidkader-intro{
+    grid-template-columns:1fr;
+    padding:24px 22px;
+  }
+  .profile-top-layout .raidkader-intro-actions{justify-self:stretch;width:100%}
+  .profile-top-layout .raidkader-intro .promo-btn{width:100%}
+  .profile-top-layout .profile-login-bar{height:auto;min-height:238px;padding:24px 22px}
+  .profile-top-layout .profile-login-actions{display:grid;grid-template-columns:1fr}
+  .profile-top-layout .profile-login-actions .btn{width:100%}
+}
+</style>
+<style id="raidprofil-layout-professional-final">
+/* ===== Raidprofil-Bereich – einheitliche, professionelle Karten ===== */
+.profile-top-layout{
+  width:min(1320px,94%);
+  margin:18px auto 0;
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:22px;
+  align-items:stretch;
+}
+
+/* Alle drei Karten haben bewusst dieselbe Höhe wie die Raidkader-Promo */
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar,
+main > .raid-list-promo.raid-list-promo-wide{
+  box-sizing:border-box;
+  min-height:300px;
+  height:300px;
+  border-radius:15px;
+}
+
+/* Linke Karte = typografische Referenz */
+.profile-top-layout .raidkader-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:stretch;
+  gap:30px;
+  padding:30px 32px;
+  margin:0;
+  overflow:hidden;
+}
+
+.profile-top-layout .raidkader-intro-text{
+  max-width:none;
+  min-width:0;
+  align-self:start;
+}
+
+.profile-top-layout .raidkader-intro-text strong,
+.profile-top-layout .profile-login-heading{
+  display:block;
+  margin:0 0 14px;
+  color:var(--gold2);
+  font-size:25px;
+  line-height:1.2;
+  font-weight:800;
+  letter-spacing:0;
+  text-shadow:0 2px 14px rgba(0,0,0,.35);
+}
+
+.profile-top-layout .raidkader-intro-text span{
+  display:block;
+  color:#c1d0dc;
+  font-size:15px;
+  line-height:1.62;
+}
+
+/* Button unten statt mitten in der Karte */
+.profile-top-layout .raidkader-intro-actions{
+  align-self:end;
+  justify-self:end;
+  display:flex;
+  align-items:flex-end;
+}
+
+.profile-top-layout .raidkader-intro .promo-btn{
+  min-height:60px;
+  padding:14px 24px;
+  border-radius:11px;
+  font-size:17px;
+  white-space:nowrap;
+}
+
+/* Rechte Login-Karte */
+.profile-top-layout .profile-login-bar{
+  position:relative;
+  display:grid;
+  grid-template-rows:auto 1fr auto;
+  gap:18px;
+  padding:30px 32px;
+  margin:0;
+  overflow:hidden;
+  border:1px solid rgba(243,200,91,.20);
+  border-left:4px solid var(--gold);
+  background:
+    radial-gradient(circle at 100% 0,rgba(157,140,255,.10),transparent 36%),
+    linear-gradient(145deg,rgba(25,27,44,.98),rgba(9,10,17,.99));
+  box-shadow:0 24px 65px rgba(0,0,0,.40);
+}
+
+.profile-top-layout .profile-login-heading{
+  margin:0;
+  align-self:start;
+}
+
+.profile-top-layout .profile-login-inner{
+  min-height:0;
+  height:auto;
+  padding:0;
+  display:grid;
+  grid-template-rows:1fr auto;
+  gap:18px;
+  align-self:stretch;
+}
+
+.profile-top-layout .profile-login-info{
+  align-self:start;
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:15px;
+  align-items:start;
+}
+
+.profile-top-layout .profile-login-icon{
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  font-size:21px;
+  box-sizing:border-box;
+}
+
+.profile-top-layout .profile-login-info strong{
+  display:block;
+  margin:0 0 7px;
+  color:var(--gold2);
+  font-size:20px;
+  line-height:1.25;
+  font-weight:800;
+}
+
+.profile-top-layout .profile-login-info span:last-child{
+  display:block;
+  color:#c1d0dc;
+  font-size:15px;
+  line-height:1.62;
+}
+
+.profile-top-layout .profile-login-actions{
+  align-self:end;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  min-width:0;
+}
+
+.profile-top-layout .profile-login-actions .btn{
+  min-height:60px;
+  padding:14px 24px;
+  border-radius:11px;
+  font-size:16px;
+  width:auto;
+  flex:0 0 auto;
+}
+
+/* Im eingeloggten Zustand bleiben beide Aktionen sauber auf einer Grundlinie */
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+  display:flex;
+  align-items:stretch;
+}
+
+/* Raidkader-Box als echte Referenz: gleiche Höhe + gleicher Außenrahmen */
+main > .raid-list-promo.raid-list-promo-wide{
+  min-height:300px;
+  margin:0 0 20px;
+}
+
+main > .raid-list-promo.raid-list-promo-wide .raid-list-promo-content{
+  min-height:300px;
+  height:300px;
+  box-sizing:border-box;
+  padding:34px 36px;
+}
+
+/* Ab 900px untereinander, aber weiterhin mit gleicher Kartenlogik */
+@media(max-width:900px){
+  .profile-top-layout{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{
+    height:auto;
+    min-height:300px;
+  }
+}
+
+/* Mobil: Inhalt untereinander statt gequetscht */
+@media(max-width:560px){
+  .profile-top-layout{
+    width:calc(100% - 20px);
+    gap:12px;
+  }
+
+  .profile-top-layout .raidkader-intro{
+    grid-template-columns:1fr;
+    gap:22px;
+    padding:24px 22px;
+  }
+
+  .profile-top-layout .raidkader-intro-actions{
+    width:100%;
+    justify-self:stretch;
+  }
+
+  .profile-top-layout .raidkader-intro .promo-btn{
+    width:100%;
+  }
+
+  .profile-top-layout .profile-login-bar{
+    height:auto;
+    min-height:300px;
+    padding:24px 22px;
+  }
+
+  .profile-top-layout .profile-login-inner{
+    grid-template-rows:auto auto;
+  }
+
+  .profile-top-layout .profile-login-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    width:100%;
+  }
+
+  .profile-top-layout .profile-login-actions .btn{
+    width:100%;
+  }
+
+  main > .raid-list-promo.raid-list-promo-wide,
+  main > .raid-list-promo.raid-list-promo-wide .raid-list-promo-content{
+    min-height:220px;
+    height:220px;
+  }
+}
+</style>
+<style id="profile-cards-professional-final">
+/* ===== Professionelles Raidprofil / Login Kartenlayout ===== */
+.profile-top-layout{
+  width:min(1320px,94%);
+  margin:24px auto 0;
+  display:grid;
+  grid-template-columns:minmax(0,1.55fr) minmax(0,.85fr);
+  gap:20px;
+  align-items:stretch;
+}
+
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar{
+  width:100%;
+  height:340px;
+  min-height:340px;
+  max-height:340px;
+  margin:0;
+  box-sizing:border-box;
+  border-radius:14px;
+  overflow:hidden;
+}
+
+.profile-top-layout .raidkader-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 285px;
+  align-items:center;
+  gap:28px;
+  padding:34px 38px;
+  border:1px solid rgba(216,173,75,.34);
+  border-left:4px solid var(--gold);
+  background:
+    radial-gradient(circle at 0% 0%,rgba(246,201,93,.055),transparent 38%),
+    linear-gradient(135deg,rgba(24,25,43,.98),rgba(10,12,21,.98));
+  box-shadow:0 18px 50px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.raidkader-intro-text{
+  min-width:0;
+  align-self:center;
+}
+.raidkader-intro-text strong{
+  display:block;
+  margin:0 0 14px;
+  color:var(--gold2);
+  font:700 30px/1.15 Georgia,serif;
+  letter-spacing:-.3px;
+}
+.raidkader-intro-text span{
+  display:block;
+  color:#c7d0db;
+  font:400 16px/1.62 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+
+.raidkader-intro-actions{
+  width:100%;
+  align-self:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.raidkader-intro .raidprofil-top-btn{
+  width:100%;
+  min-height:58px;
+  padding:14px 18px;
+  border-radius:11px;
+  font-size:17px;
+  white-space:nowrap;
+}
+
+.profile-login-bar{
+  position:relative;
+  border:1px solid rgba(216,173,75,.34);
+  border-left:4px solid var(--gold);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(246,201,93,.055),transparent 42%),
+    linear-gradient(135deg,rgba(24,25,43,.98),rgba(10,12,21,.98));
+  box-shadow:0 18px 50px rgba(0,0,0,.32), inset 0 1px 0 rgba(255,255,255,.035);
+}
+.profile-login-heading{
+  position:absolute;
+  top:34px;
+  left:38px;
+  margin:0;
+  color:var(--gold2);
+  font:700 30px/1.15 Georgia,serif;
+  letter-spacing:-.3px;
+}
+.profile-login-inner{
+  height:100%;
+  min-height:0;
+  padding:88px 38px 34px;
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 245px;
+  gap:24px;
+  align-items:center;
+  box-sizing:border-box;
+}
+.profile-login-info{
+  display:grid;
+  grid-template-columns:52px minmax(0,1fr);
+  gap:16px;
+  align-items:start;
+  min-width:0;
+}
+.profile-login-icon{
+  width:52px;
+  height:52px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(216,173,75,.34);
+  background:rgba(216,173,75,.055);
+  font-size:21px;
+  box-sizing:border-box;
+}
+.profile-login-info strong{
+  display:block;
+  margin:2px 0 9px;
+  color:var(--gold2);
+  font:700 24px/1.15 Georgia,serif;
+}
+.profile-login-info span:last-child{
+  display:block;
+  color:#c7d0db;
+  font:400 15px/1.6 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.profile-login-actions{
+  width:100%;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  gap:10px;
+}
+.profile-login-actions .btn{
+  width:100%;
+  min-height:56px;
+  border-radius:11px;
+  font-size:16px;
+  box-sizing:border-box;
+}
+
+/* Untere Raidkader-Karte als gleichwertiges Modul */
+.raid-list-promo-wide{
+  width:min(1320px,94%);
+  min-height:340px;
+  height:340px;
+  margin:24px auto 24px;
+  border-radius:14px;
+  box-sizing:border-box;
+}
+.raid-list-promo-wide .raid-list-promo-content{
+  min-height:340px;
+  height:100%;
+  box-sizing:border-box;
+}
+
+@media(max-width:1050px){
+  .profile-top-layout{grid-template-columns:minmax(0,1.35fr) minmax(340px,.9fr);gap:16px}
+  .profile-top-layout .raidkader-intro{grid-template-columns:minmax(0,1fr) 235px;padding:30px}
+  .profile-login-inner{grid-template-columns:minmax(0,1fr) 205px;padding-left:30px;padding-right:30px}
+  .profile-login-heading{left:30px}
+}
+
+@media(max-width:800px){
+  .profile-top-layout{grid-template-columns:1fr;width:calc(100% - 20px);gap:16px}
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{height:auto;min-height:340px;max-height:none}
+  .profile-top-layout .raidkader-intro{grid-template-columns:1fr;padding:30px}
+  .raidkader-intro-actions{max-width:320px}
+  .profile-login-inner{grid-template-columns:1fr;padding:88px 30px 30px}
+  .profile-login-actions{max-width:320px}
+  .raid-list-promo-wide{width:calc(100% - 20px);height:280px;min-height:280px}
+  .raid-list-promo-wide .raid-list-promo-content{min-height:280px}
+}
+
+@media(max-width:520px){
+  .profile-top-layout .raidkader-intro{padding:24px}
+  .raidkader-intro-text strong,.profile-login-heading{font-size:25px}
+  .raidkader-intro-text span{font-size:14px;line-height:1.55}
+  .profile-login-heading{left:24px;top:25px}
+  .profile-login-inner{padding:78px 24px 24px}
+  .profile-login-info{grid-template-columns:46px minmax(0,1fr);gap:12px}
+  .profile-login-icon{width:46px;height:46px}
+  .profile-login-info strong{font-size:21px}
+  .profile-login-info span:last-child{font-size:14px}
+}
+</style>
+<style id="raidprofil-clean-final">
+/* ===== FINAL: Raidprofil / Login – ruhige, saubere Dashboard-Karten ===== */
+.profile-top-layout{
+  width:min(1320px,94%);
+  margin:18px auto 30px;
+  display:grid;
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr);
+  gap:22px;
+  align-items:stretch;
+}
+
+/* Beide oberen Karten exakt gleich groß wie die große Raidkader-Karte */
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar{
+  height:300px !important;
+  min-height:300px !important;
+  max-height:300px !important;
+  box-sizing:border-box;
+  margin:0 !important;
+  border-radius:15px;
+  overflow:hidden;
+}
+
+/* Linke Karte als verbindliches Typografie-Muster */
+.profile-top-layout .raidkader-intro{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:stretch;
+  gap:28px;
+  padding:30px 32px;
+  background:
+    radial-gradient(circle at 100% 0,rgba(157,140,255,.08),transparent 38%),
+    linear-gradient(145deg,rgba(25,27,44,.98),rgba(9,10,17,.99));
+  border:1px solid rgba(243,200,91,.20);
+  border-left:4px solid var(--gold);
+  box-shadow:0 24px 65px rgba(0,0,0,.40),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.profile-top-layout .raidkader-intro-text{
+  min-width:0;
+  max-width:760px;
+  align-self:start;
+}
+.profile-top-layout .raidkader-intro-text strong{
+  display:block;
+  margin:0 0 14px;
+  color:var(--gold2);
+  font:800 25px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:-.3px;
+  text-shadow:0 2px 14px rgba(0,0,0,.35);
+}
+.profile-top-layout .raidkader-intro-text span{
+  display:block;
+  color:#c7d0db;
+  font:400 15px/1.62 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+.profile-top-layout .raidkader-intro-actions{
+  align-self:end;
+  justify-self:end;
+  display:flex;
+  align-items:flex-end;
+}
+.profile-top-layout .raidkader-intro .promo-btn{
+  min-height:60px;
+  padding:14px 24px;
+  border-radius:11px;
+  font-size:16px;
+  white-space:nowrap;
+}
+
+/* Rechte Karte: gleiche Typografie, klare 3-Ebenen-Struktur */
+.profile-top-layout .profile-login-bar{
+  position:relative;
+  display:grid !important;
+  grid-template-rows:auto 1fr auto !important;
+  gap:18px;
+  padding:30px 32px !important;
+  box-sizing:border-box;
+  background:
+    radial-gradient(circle at 100% 0,rgba(157,140,255,.08),transparent 38%),
+    linear-gradient(145deg,rgba(25,27,44,.98),rgba(9,10,17,.99));
+  border:1px solid rgba(243,200,91,.20);
+  border-left:4px solid var(--gold);
+  box-shadow:0 24px 65px rgba(0,0,0,.40),inset 0 1px 0 rgba(255,255,255,.035);
+}
+.profile-top-layout .profile-login-heading{
+  position:static !important;
+  inset:auto !important;
+  display:block;
+  margin:0 !important;
+  padding:0 !important;
+  color:var(--gold2) !important;
+  font:800 25px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  letter-spacing:-.3px;
+  text-shadow:0 2px 14px rgba(0,0,0,.35);
+}
+.profile-top-layout .profile-login-inner{
+  min-height:0 !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  display:grid !important;
+  grid-template-rows:1fr auto !important;
+  gap:18px;
+  align-self:stretch;
+  box-sizing:border-box;
+}
+.profile-top-layout .profile-login-info{
+  min-width:0;
+  min-height:0;
+  display:grid !important;
+  grid-template-columns:52px minmax(0,1fr) !important;
+  gap:15px !important;
+  align-items:start !important;
+  align-self:start !important;
+}
+.profile-top-layout .profile-login-icon{
+  width:52px !important;
+  height:52px !important;
+  min-width:52px;
+  border-radius:14px !important;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:21px;
+}
+.profile-top-layout .profile-login-info > div{
+  min-width:0;
+}
+.profile-top-layout .profile-login-info strong,
+.profile-top-layout .profile-login-info .profile-login-logged-title{
+  display:flex !important;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:9px;
+  margin:2px 0 8px !important;
+  color:var(--gold2) !important;
+  font:800 20px/1.25 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  letter-spacing:-.15px;
+}
+.profile-top-layout .profile-login-info span#profileLoginText{
+  display:block;
+  max-width:none !important;
+  color:#c7d0db !important;
+  font:400 15px/1.62 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+}
+.profile-top-layout .profile-login-info span#profileLoginText span{
+  color:#c7d0db !important;
+  font:inherit !important;
+}
+.profile-top-layout .profile-login-actions{
+  align-self:end !important;
+  width:100%;
+  min-width:0;
+  display:flex !important;
+  flex-direction:row !important;
+  flex-wrap:nowrap !important;
+  gap:10px !important;
+}
+.profile-top-layout .profile-login-actions .btn{
+  flex:1 1 0;
+  width:auto !important;
+  min-width:0;
+  min-height:60px !important;
+  padding:14px 18px !important;
+  border-radius:11px !important;
+  font:700 16px/1.2 system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  white-space:nowrap;
+}
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions .btn{
+  flex:0 0 auto;
+  min-width:230px;
+}
+
+/* Eingeloggt: grün nur als Statussignal, nicht als zweites Design */
+.profile-top-layout .profile-login-bar.logged-in{
+  border-left-color:#53d18b;
+  background:
+    radial-gradient(circle at 100% 0,rgba(63,154,97,.10),transparent 38%),
+    linear-gradient(145deg,rgba(18,31,39,.98),rgba(9,12,18,.99));
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-icon{
+  border-color:rgba(83,209,139,.38);
+  background:rgba(83,209,139,.08);
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions #profileEditButton{
+  background:linear-gradient(180deg,rgba(246,201,93,.98),rgba(220,171,59,.98));
+  color:#111;
+  border-color:rgba(255,224,154,.7);
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions #profileLogoutButton{
+  background:rgba(255,255,255,.055);
+  color:#e5e9ed;
+  border-color:rgba(255,255,255,.12);
+}
+
+/* Raidkader-Karte als Referenz */
+main > .raid-list-promo.raid-list-promo-wide{
+  width:min(1320px,94%);
+  height:300px !important;
+  min-height:300px !important;
+  max-height:300px !important;
+  box-sizing:border-box;
+  margin:0 auto 30px;
+  border-radius:15px;
+}
+
+@media(max-width:900px){
+  .profile-top-layout{
+    grid-template-columns:1fr;
+    gap:18px;
+  }
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{
+    height:300px !important;
+    min-height:300px !important;
+    max-height:300px !important;
+  }
+}
+@media(max-width:560px){
+  .profile-top-layout{
+    width:calc(100% - 20px);
+    gap:14px;
+  }
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar{
+    height:auto !important;
+    min-height:0 !important;
+    max-height:none !important;
+    padding:24px !important;
+  }
+  .profile-top-layout .raidkader-intro{
+    grid-template-columns:1fr;
+    gap:20px;
+  }
+  .profile-top-layout .raidkader-intro-actions,
+  .profile-top-layout .profile-login-actions{
+    width:100%;
+  }
+  .profile-top-layout .raidkader-intro .promo-btn,
+  .profile-top-layout .profile-login-actions .btn,
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions .btn{
+    width:100% !important;
+    min-width:0 !important;
+  }
+  .profile-top-layout .profile-login-inner{
+    gap:20px;
+  }
+  .profile-top-layout .profile-login-actions{
+    flex-direction:column !important;
+  }
+  main > .raid-list-promo.raid-list-promo-wide{
+    width:calc(100% - 20px);
+    height:260px !important;
+    min-height:260px !important;
+    max-height:260px !important;
+  }
+}
+</style>
+<style id="raidprofil-final-layout-fix">
+/* ===== FINAL: gemeinsame Breite, klare Hierarchie und gleiche Button-Grundlinie ===== */
+main{
+  width:min(1320px,94%) !important;
+}
+.profile-top-layout{
+  width:min(1320px,94%) !important;
+  grid-template-columns:minmax(0,1.45fr) minmax(0,1fr) !important;
+  gap:22px !important;
+  margin:24px auto 30px !important;
+}
+
+/* Oben und unten exakt dieselbe Kartenbreite */
+main > .raid-list-promo.raid-list-promo-wide{
+  width:100% !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+
+/* Linke Karte: Textbereich + Button sauber auf gemeinsamer Grundlinie */
+.profile-top-layout .raidkader-intro{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(230px,280px) !important;
+  align-items:stretch !important;
+  gap:28px !important;
+  padding:30px 32px !important;
+}
+.profile-top-layout .raidkader-intro-text{
+  align-self:start !important;
+}
+.profile-top-layout .raidkader-intro-actions{
+  align-self:end !important;
+  justify-self:stretch !important;
+  width:100% !important;
+}
+.profile-top-layout .raidkader-intro .promo-btn{
+  width:100% !important;
+  min-height:60px !important;
+  box-sizing:border-box !important;
+}
+
+/* Rechte Karte: Überschrift oben, Inhalt daneben, Aktion unten */
+.profile-top-layout .profile-login-bar{
+  display:grid !important;
+  grid-template-rows:auto minmax(0,1fr) !important;
+  gap:18px !important;
+  padding:30px 32px !important;
+}
+.profile-top-layout .profile-login-inner{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(220px,250px) !important;
+  grid-template-rows:1fr !important;
+  align-items:stretch !important;
+  gap:24px !important;
+  height:auto !important;
+  min-height:0 !important;
+  padding:0 !important;
+}
+.profile-top-layout .profile-login-info{
+  align-self:start !important;
+  width:100% !important;
+}
+.profile-top-layout .profile-login-actions{
+  align-self:end !important;
+  width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:row !important;
+  align-items:stretch !important;
+  justify-content:stretch !important;
+  gap:10px !important;
+}
+.profile-top-layout .profile-login-actions .btn{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:60px !important;
+  height:60px !important;
+  box-sizing:border-box !important;
+  white-space:normal !important;
+}
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions .btn{
+  min-width:0 !important;
+}
+
+/* Einheitliche Typografie */
+.profile-top-layout .raidkader-intro-text strong,
+.profile-top-layout .profile-login-heading{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  font-weight:800 !important;
+  color:var(--gold2) !important;
+}
+.profile-top-layout .raidkader-intro-text span,
+.profile-top-layout .profile-login-info span#profileLoginText{
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+}
+
+/* Eingeloggt: zwei Aktionen bleiben sauber nebeneinander und unten */
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+}
+
+@media(max-width:900px){
+  .profile-top-layout{
+    width:min(1320px,94%) !important;
+    grid-template-columns:1fr !important;
+  }
+}
+@media(max-width:700px){
+  main{width:calc(100% - 20px) !important;}
+  .profile-top-layout{width:calc(100% - 20px) !important;}
+  .profile-top-layout .raidkader-intro{
+    grid-template-columns:1fr !important;
+    gap:20px !important;
+  }
+  .profile-top-layout .profile-login-inner{
+    grid-template-columns:1fr !important;
+    gap:20px !important;
+  }
+  .profile-top-layout .profile-login-actions,
+  .profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+    grid-template-columns:1fr !important;
+  }
+  .profile-top-layout .profile-login-actions .btn{height:56px !important;min-height:56px !important;}
+}
+</style>
+<style id="raidprofil-logged-in-final">
+/* ===== FINAL: Eingeloggter Zustand – klare, ruhige Kartenstruktur ===== */
+.profile-top-layout .profile-login-bar{
+  min-width:0;
+}
+
+/* Login-Inhalt immer als vertikale Karte: Überschrift -> Profil -> Aktionen */
+.profile-top-layout .profile-login-bar .profile-login-inner{
+  min-width:0 !important;
+  width:100% !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  justify-content:flex-start !important;
+  gap:16px !important;
+}
+
+.profile-top-layout .profile-login-bar .profile-login-info{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:52px minmax(0,1fr) !important;
+  gap:15px !important;
+  align-items:start !important;
+}
+
+.profile-top-layout .profile-login-bar .profile-login-info > div{
+  min-width:0 !important;
+}
+
+/* Eingeloggt: Name + Status sauber in einer Zeile */
+.profile-top-layout .profile-login-bar.logged-in .profile-login-info .profile-login-logged-title{
+  display:flex !important;
+  align-items:center !important;
+  flex-wrap:wrap !important;
+  gap:9px !important;
+  margin:0 0 8px !important;
+  color:var(--gold2) !important;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  font-size:20px !important;
+  line-height:1.25 !important;
+  font-weight:800 !important;
+}
+
+.profile-top-layout .profile-login-bar.logged-in #profileLoginText{
+  display:block !important;
+  width:100% !important;
+  max-width:100% !important;
+  color:#c7d0db !important;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  font-size:15px !important;
+  line-height:1.55 !important;
+}
+
+/* Aktionen ganz unten – dadurch keine Überlagerung mit dem Profiltext */
+.profile-top-layout .profile-login-bar .profile-login-actions,
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+  width:100% !important;
+  margin-top:auto !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;
+  gap:10px !important;
+  align-items:stretch !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+  grid-template-columns:1fr !important;
+}
+
+.profile-top-layout .profile-login-bar .profile-login-actions .btn{
+  width:100% !important;
+  min-width:0 !important;
+  height:56px !important;
+  min-height:56px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  white-space:normal !important;
+  padding:10px 14px !important;
+  border-radius:11px !important;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif !important;
+  font-size:15px !important;
+  line-height:1.2 !important;
+}
+
+/* Linke Karte: Button ebenfalls unten auf derselben visuellen Linie */
+.profile-top-layout .raidkader-intro{
+  position:relative;
+}
+.profile-top-layout .raidkader-intro-actions{
+  align-self:end !important;
+}
+.profile-top-layout .raidkader-intro .promo-btn{
+  height:56px !important;
+  min-height:56px !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+/* Mobile: wieder bewusst untereinander */
+@media(max-width:700px){
+  .profile-top-layout .profile-login-bar .profile-login-actions,
+  .profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+    grid-template-columns:1fr !important;
+  }
+}
+
+/* ===== Eingeloggt: nur Bearbeiten + Abmelden, beide unten bündig ===== */
+.profile-top-layout .profile-login-bar.logged-in #profileLoginButton{
+  display:none !important;
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+  width:100% !important;
+  margin-top:auto !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1.35fr) minmax(130px,.65fr) !important;
+  gap:10px !important;
+  align-items:stretch !important;
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions #profileEditButton,
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions #profileLogoutButton{
+  width:100% !important;
+  height:56px !important;
+  min-height:56px !important;
+  box-sizing:border-box !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 !important;
+}
+@media(max-width:700px){
+  .profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+    grid-template-columns:1fr !important;
+  }
+}
+</style>
+<style id="login-logout-layout-final">
+/* Ausgeloggt: PIN-Aktion unten rechts, passend zum Button links */
+.profile-login-bar .profile-login-inner{
+  display:flex;
+  flex-direction:column;
+  height:100%;
+  min-height:100%;
+}
+
+.profile-login-bar .profile-login-info{
+  flex:1 1 auto;
+}
+
+.profile-login-bar .profile-login-actions{
+  margin-top:auto;
+  display:flex;
+  justify-content:flex-end;
+  align-items:flex-end;
+  gap:12px;
+  width:100%;
+}
+
+.profile-login-bar #profileLoginButton{
+  margin-left:auto;
+  min-width:270px;
+}
+
+/* Eingeloggt: bestehende zwei Aktionen unten beibehalten */
+.profile-login-bar.logged-in .profile-login-actions{
+  justify-content:flex-end;
+}
+
+@media (max-width:760px){
+  .profile-login-bar .profile-login-actions{
+    justify-content:stretch;
+  }
+  .profile-login-bar #profileLoginButton{
+    width:100%;
+    min-width:0;
+  }
+}
+</style>
+<style id="logout-state-final-fix">
+/* =========================================================
+   AUSGELOGGT – nur "Mit PIN anmelden"
+   Der eingeloggte Zustand wird davon nicht verändert.
+   ========================================================= */
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileEditButton,
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLogoutButton{
+  display:none !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-inner{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  height:100% !important;
+  min-height:100% !important;
+  padding:22px 24px !important;
+  box-sizing:border-box !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info{
+  flex:1 1 auto !important;
+  min-width:0 !important;
+  align-items:center !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+  width:100% !important;
+  margin-top:auto !important;
+  padding-top:18px !important;
+  display:flex !important;
+  flex-direction:row !important;
+  justify-content:flex-end !important;
+  align-items:flex-end !important;
+  min-width:0 !important;
+  gap:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+  display:inline-flex !important;
+  width:auto !important;
+  min-width:270px !important;
+  height:56px !important;
+  min-height:56px !important;
+  margin:0 !important;
+  box-sizing:border-box !important;
+  align-items:center !important;
+  justify-content:center !important;
+}
+
+@media(max-width:700px){
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+    padding-top:14px !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+    width:100% !important;
+    min-width:0 !important;
+  }
+}
+</style>
+<style id="logout-final-alignment">
+/* Ausgeloggt: Login-Inhalt exakt an der linken Textkante der linken Karte.
+   PIN-Button sitzt unten rechts auf derselben Höhe wie "Raidprofil erstellen". */
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-inner{
+  position:relative !important;
+  display:block !important;
+  height:100% !important;
+  min-height:100% !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info{
+  position:absolute !important;
+  top:108px !important;
+  left:0 !important;
+  right:0 !important;
+  display:block !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-icon{
+  display:none !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info > div{
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginTitle{
+  display:none !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginText{
+  display:block !important;
+  width:min(560px, 100%) !important;
+  margin:0 !important;
+  padding:0 !important;
+  font-size:17px !important;
+  line-height:1.7 !important;
+  color:#cbd0dc !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+  position:absolute !important;
+  right:0 !important;
+  bottom:0 !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  justify-content:flex-end !important;
+  align-items:flex-end !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+  display:inline-flex !important;
+  width:auto !important;
+  min-width:306px !important;
+  height:61px !important;
+  min-height:61px !important;
+  margin:0 !important;
+  padding:0 28px !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-sizing:border-box !important;
+}
+
+/* Gleiche Innenkante wie die linke Karte */
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-inner{
+  padding-left:38px !important;
+  padding-right:38px !important;
+  padding-bottom:0 !important;
+  box-sizing:border-box !important;
+}
+
+@media(max-width:760px){
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-inner{
+    padding:0 22px !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info{
+    position:static !important;
+    padding-top:28px !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginText{
+    width:100% !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+    position:static !important;
+    width:100% !important;
+    margin-top:24px !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+    width:100% !important;
+    min-width:0 !important;
+  }
+}
+</style>
+<style id="logout-final-clean-layout">
+/* FINAL: sauberer ausgeloggter Login-Bereich.
+   Nur der ausgeloggte Zustand wird überschrieben. */
+.profile-top-layout .profile-login-bar:not(.logged-in){
+  position:relative !important;
+  overflow:hidden !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-heading{
+  position:absolute !important;
+  top:34px !important;
+  left:38px !important;
+  right:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  text-align:left !important;
+  font-family:Georgia,"Times New Roman",serif !important;
+  font-size:30px !important;
+  line-height:1.15 !important;
+  font-weight:800 !important;
+  color:var(--gold2) !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-inner{
+  position:static !important;
+  display:block !important;
+  height:100% !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info{
+  position:absolute !important;
+  top:112px !important;
+  left:38px !important;
+  right:38px !important;
+  display:block !important;
+  margin:0 !important;
+  padding:0 !important;
+  min-width:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-icon,
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginTitle{
+  display:none !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info > div{
+  display:block !important;
+  width:100% !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginText{
+  display:block !important;
+  width:min(540px,100%) !important;
+  max-width:540px !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#cbd0dc !important;
+  font-family:inherit !important;
+  font-size:16px !important;
+  line-height:1.55 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+  position:absolute !important;
+  left:38px !important;
+  right:38px !important;
+  bottom:0 !important;
+  width:auto !important;
+  height:61px !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:flex !important;
+  justify-content:flex-end !important;
+  align-items:flex-end !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+  display:inline-flex !important;
+  width:306px !important;
+  min-width:306px !important;
+  height:61px !important;
+  min-height:61px !important;
+  margin:0 !important;
+  padding:0 24px !important;
+  box-sizing:border-box !important;
+  align-items:center !important;
+  justify-content:center !important;
+  white-space:nowrap !important;
+}
+
+/* Sicherheitsregel: ausgeloggte Verwaltungsbuttons niemals anzeigen */
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileEditButton,
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLogoutButton{
+  display:none !important;
+}
+
+@media(max-width:760px){
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-heading{
+    position:static !important;
+    padding:24px 22px 0 !important;
+    font-size:28px !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info{
+    position:static !important;
+    padding:22px 22px 0 !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+    position:static !important;
+    height:auto !important;
+    padding:22px !important;
+  }
+  .profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+    width:100% !important;
+    min-width:0 !important;
+  }
+}
+</style>
+</meta></meta>
+
+
+
+
+
+
+
+<style id="both-logged-out-cards-identical">
+/* ============================================================
+   AUSGELOGGT: beide Karten sind bewusst 1:1 gleich aufgebaut.
+   Gleiche Größe / gleicher Hintergrund / gleiche Innenabstände /
+   gleiche Typografie / gleicher Button.
+   ============================================================ */
+
+.profile-top-layout{
+  width:min(1320px,94%) !important;
+  grid-template-columns:1fr 1fr !important;
+  gap:18px !important;
+  align-items:stretch !important;
+}
+
+/* Beide Karten exakt gleich groß und optisch gleich */
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar:not(.logged-in){
+  position:relative !important;
+  width:100% !important;
+  height:320px !important;
+  min-height:320px !important;
+  max-height:320px !important;
+  margin:0 !important;
+  padding:30px 38px 32px !important;
+  box-sizing:border-box !important;
+  border:1px solid rgba(243,200,91,.20) !important;
+  border-left:4px solid var(--gold) !important;
+  border-radius:15px !important;
+  background:
+    radial-gradient(circle at 100% 0,rgba(157,140,255,.10),transparent 34%),
+    linear-gradient(145deg,rgba(25,27,44,.94),rgba(10,11,18,.97)) !important;
+  box-shadow:
+    0 25px 75px rgba(0,0,0,.42),
+    inset 0 1px 0 rgba(255,255,255,.045) !important;
+  overflow:hidden !important;
+}
+
+/* Linke Karte: gleicher einfacher Aufbau wie rechts */
+.profile-top-layout .raidkader-intro{
+  display:block !important;
+}
+
+/* Beide Überschriften exakt gleiche Position und Schrift */
+.profile-top-layout .raidkader-intro-text strong,
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-heading{
+  display:block !important;
+  position:static !important;
+  margin:0 0 20px !important;
+  padding:0 !important;
+  color:var(--gold2) !important;
+  font-family:inherit !important;
+  font-size:25px !important;
+  line-height:1.2 !important;
+  font-weight:800 !important;
+  letter-spacing:-.3px !important;
+  text-align:left !important;
+  text-shadow:0 2px 14px rgba(0,0,0,.45) !important;
+}
+
+/* Linker Text */
+.profile-top-layout .raidkader-intro-text{
+  width:calc(100% - 10px) !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .raidkader-intro-text span{
+  display:block !important;
+  margin:0 !important;
+  color:#cbd0dc !important;
+  font-family:inherit !important;
+  font-size:15px !important;
+  line-height:1.7 !important;
+  font-weight:400 !important;
+  text-align:left !important;
+}
+
+/* Linker Button: unten rechts */
+.profile-top-layout .raidkader-intro-actions{
+  position:absolute !important;
+  right:38px !important;
+  bottom:32px !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:block !important;
+}
+
+.profile-top-layout .raidkader-intro .raidprofil-top-btn{
+  display:inline-flex !important;
+  width:306px !important;
+  min-width:306px !important;
+  max-width:306px !important;
+  height:60px !important;
+  min-height:60px !important;
+  max-height:60px !important;
+  margin:0 !important;
+  padding:14px 24px !important;
+  box-sizing:border-box !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:11px !important;
+  font-family:inherit !important;
+  font-size:16px !important;
+  line-height:1.2 !important;
+  font-weight:700 !important;
+  white-space:nowrap !important;
+}
+
+/* Rechte Karte im ausgeloggten Zustand: exakt dieselbe Struktur */
+.profile-top-layout .profile-login-bar:not(.logged-in){
+  display:block !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-inner{
+  position:static !important;
+  width:100% !important;
+  height:100% !important;
+  min-height:0 !important;
+  padding:0 !important;
+  margin:0 !important;
+  display:block !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info{
+  position:static !important;
+  display:block !important;
+  width:calc(100% - 10px) !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-icon,
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginTitle{
+  display:none !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginText{
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  color:#cbd0dc !important;
+  font-family:inherit !important;
+  font-size:15px !important;
+  line-height:1.7 !important;
+  font-weight:400 !important;
+  text-align:left !important;
+  white-space:normal !important;
+  overflow-wrap:break-word !important;
+}
+
+/* Rechter Button: exakt gleiche Maße und Position wie links */
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+  position:absolute !important;
+  right:38px !important;
+  bottom:32px !important;
+  width:auto !important;
+  margin:0 !important;
+  padding:0 !important;
+  display:block !important;
+}
+
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+  display:inline-flex !important;
+  width:306px !important;
+  min-width:306px !important;
+  max-width:306px !important;
+  height:60px !important;
+  min-height:60px !important;
+  max-height:60px !important;
+  margin:0 !important;
+  padding:14px 24px !important;
+  box-sizing:border-box !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:11px !important;
+  font-family:inherit !important;
+  font-size:16px !important;
+  line-height:1.2 !important;
+  font-weight:700 !important;
+  white-space:nowrap !important;
+}
+
+/* Mobile */
+@media(max-width:900px){
+  .profile-top-layout{
+    grid-template-columns:1fr !important;
+  }
+
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar:not(.logged-in){
+    height:320px !important;
+    min-height:320px !important;
+    max-height:320px !important;
+  }
+}
+
+@media(max-width:560px){
+  .profile-top-layout{
+    width:calc(100% - 20px) !important;
+    gap:12px !important;
+  }
+
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar:not(.logged-in){
+    height:auto !important;
+    min-height:320px !important;
+    max-height:none !important;
+    padding:26px 22px 24px !important;
+  }
+
+  .profile-top-layout .raidkader-intro-actions,
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+    left:22px !important;
+    right:22px !important;
+    bottom:24px !important;
+  }
+
+  .profile-top-layout .raidkader-intro .raidprofil-top-btn,
+  .profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+  }
+}
+</style>
+
+
+<style id="logged-out-buttons-left-bottom-final">
+/* Ausgeloggter Modus: Button links unten, Text bleibt vollständig frei. */
+.profile-top-layout .raidkader-intro,
+.profile-top-layout .profile-login-bar:not(.logged-in){
+  height:360px !important;
+  min-height:360px !important;
+  max-height:360px !important;
+  padding:30px 38px 32px !important;
+  box-sizing:border-box !important;
+}
+
+.profile-top-layout .raidkader-intro-actions,
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+  position:absolute !important;
+  left:38px !important;
+  right:auto !important;
+  bottom:32px !important;
+  width:306px !important;
+  margin:0 !important;
+  padding:0 !important;
+}
+
+.profile-top-layout .raidkader-intro .raidprofil-top-btn,
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+  width:306px !important;
+  min-width:306px !important;
+  max-width:306px !important;
+  height:60px !important;
+  min-height:60px !important;
+  max-height:60px !important;
+  margin:0 !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  box-sizing:border-box !important;
+}
+
+/* Der Text bekommt bewusst die volle Fläche oberhalb des Buttons. */
+.profile-top-layout .raidkader-intro-text,
+.profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-info,
+.profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginText{
+  max-width:100% !important;
+  width:100% !important;
+}
+
+@media(max-width:560px){
+  .profile-top-layout .raidkader-intro,
+  .profile-top-layout .profile-login-bar:not(.logged-in){
+    min-height:390px !important;
+    height:390px !important;
+    padding:26px 22px 24px !important;
+  }
+  .profile-top-layout .raidkader-intro-actions,
+  .profile-top-layout .profile-login-bar:not(.logged-in) .profile-login-actions{
+    left:22px !important;
+    bottom:24px !important;
+    width:calc(100% - 44px) !important;
+  }
+  .profile-top-layout .raidkader-intro .raidprofil-top-btn,
+  .profile-top-layout .profile-login-bar:not(.logged-in) #profileLoginButton{
+    width:100% !important;
+    min-width:0 !important;
+    max-width:none !important;
+  }
+}
+</style>
+
+
+<style>
+/* Eingeloggt: rechte Login-Box exakt auf die Höhe der "Neu hier?"-Box bringen */
+@media (min-width: 901px){
+  .profile-top-layout{align-items:stretch !important;}
+  .profile-top-layout > .raidkader-intro,
+  .profile-top-layout > .profile-login-bar{
+    height:100% !important;
+    min-height:0 !important;
+    box-sizing:border-box !important;
+  }
+  .profile-top-layout .profile-login-bar.logged-in{
+    height:auto !important;
+    min-height:0 !important;
+  }
+}
+</style>
+
+
+<style id="fix-logged-in-box-height">
+.profile-top-layout .profile-login-bar.logged-in{
+  min-height:360px !important;
+  height:360px !important;
+  box-sizing:border-box !important;
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-inner{
+  height:calc(100% - 56px) !important;
+  min-height:0 !important;
+  box-sizing:border-box !important;
+  display:flex !important;
+  flex-direction:column !important;
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-info{
+  flex:1 1 auto !important;
+  min-height:0 !important;
+}
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+  margin-top:auto !important;
+  flex:0 0 auto !important;
+}
+@media(max-width:900px){
+  .profile-top-layout .profile-login-bar.logged-in{
+    height:auto !important;
+    min-height:360px !important;
+  }
+}
+</style>
+
+<style id="fix-logged-in-buttons-same-vertical-line">
+/* Eingeloggt: beide Buttons exakt auf dieselbe vertikale Höhe wie „Raidprofil erstellen“. */
+@media(min-width:701px){
+  .profile-top-layout .profile-login-bar.logged-in{
+    position:relative !important;
+  }
+  .profile-top-layout .profile-login-bar.logged-in .profile-login-actions{
+    position:absolute !important;
+    left:38px !important;
+    right:38px !important;
+    bottom:32px !important;
+    width:auto !important;
+    margin:0 !important;
+    padding:0 !important;
+    display:grid !important;
+    grid-template-columns:minmax(0,1.35fr) minmax(130px,.65fr) !important;
+    gap:10px !important;
+  }
+}
+</style>
 </head>
 <body>
 <header class="hero"><div class="hero-content">
@@ -1192,38 +3281,59 @@ nav button:hover{
 <h2 class="hero-subtitle">Raid und Event Portal</h2>
 <p class="hero-description">GEMEINSAM RAIDEN · GEMEINSAM ERLEBEN</p>
 </div></header>
-
 <nav>
-  <div class="nav-main">
-    <button onclick="scrollToSection('news')">📰 News</button>
-    <button onclick="scrollToSection('raids')">⚔️ Raidplaner</button>
-    <button onclick="scrollToSection('events')">🎉 Eventplaner</button>
-    <button onclick="window.location.href='raidkader.html'">👥 Raidkader</button>
-    <span class="nav-separator" aria-hidden="true"></span>
-    <div class="nav-admin">
-      <button class="nav-manage" onclick="openAdminLogin()">🔐 Admin</button>
-    </div>
-  </div>
+<div class="nav-main">
+<button onclick="scrollToSection('news')">📰 News</button>
+<button onclick="scrollToSection('raids')">⚔️ Raidplaner</button>
+<button onclick="scrollToSection('events')">🎉 Eventplaner</button>
+<button onclick="window.location.href='raidkader.html'">👥 Raidkader</button>
+<span aria-hidden="true" class="nav-separator"></span>
+<div class="nav-admin">
+<button class="nav-manage" onclick="openAdminLogin()">🔐 Admin</button>
+</div>
+</div>
 </nav>
-
+<!-- ===== RAIDPROFIL / EINSTIEG ===== -->
+<div class="profile-top-layout">
+<div class="raidkader-intro">
+<div class="raidkader-intro-text">
+<strong>Neu hier? So funktioniert’s!</strong>
+<span>Richte einmalig dein persönliches Raidprofil ein.<br/>
+      Mit deinem PIN kannst du danach weitere Charaktere im Raidkader hinzufügen und bearbeiten.<br/>
+      Dein Profil ermöglicht dir außerdem die Anmeldung für kommende ⚔️ Raids und 🎉 Gilden-Events.
+      <br/><br/>
+      Wichtig: Bewahre deinen PIN sicher auf und gebe ihn nicht weiter.</span>
+</div>
+<div class="raidkader-intro-actions">
+<button aria-label="Raidprofil erstellen" class="btn btn-primary promo-btn raidprofil-top-btn" onclick="openRaidkaderForm()" type="button">➕ Raidprofil erstellen</button>
+</div>
+</div>
+<div class="profile-login-bar" id="profileLoginBar">
+<div class="profile-login-heading">Login</div>
+<div class="profile-login-inner">
+<div class="profile-login-info">
+<span aria-hidden="true" class="profile-login-icon">🔐</span>
+<div>
+<strong id="profileLoginTitle">Raidprofil</strong>
+<span id="profileLoginText">Mit deinem Raidprofil-PIN anmelden, um Chars hinzuzufügen, zu bearbeiten oder dich im Raid-/Eventplaner einzutragen.</span>
+</div>
+</div>
+<div class="profile-login-actions">
+<button class="btn btn-primary" id="profileLoginButton" onclick="openProfileLogin()" type="button">🔑 Mit PIN anmelden</button>
+<button class="btn btn-primary profile-login-edit" id="profileEditButton" onclick="openLoggedInRaidkaderManage()" style="display:none" type="button">✏️ Chars hinzufügen / bearbeiten</button>
+<button class="btn btn-secondary" id="profileLogoutButton" onclick="logoutRaidProfile()" style="display:none" type="button">🚪 Abmelden</button>
+</div>
+</div>
+</div>
+</div>
 <main>
-<div class="raidkader-intro"><div class="raidkader-intro-text"><strong>Neu hier? So funktioniert’s!</strong><span>Richte einmalig dein persönliches Raidprofil ein.<br>
-Mit deinem PIN kannst du danach weitere Charaktere im Raidkader hinzufügen und bearbeiten.<br>
-Dein Profil ermöglicht dir außerdem die Anmeldung für kommende ⚔️ Raids und 🎉 Gilden-Events.
-<br>
-	<br>
-Wichtig: Bewahre deinen PIN sicher auf und gebe ihn nicht weiter.</span></div><div class="raidkader-intro-actions"><button class="btn btn-primary promo-btn raidprofil-top-btn" type="button" onclick="openRaidkaderForm()" aria-label="Raidprofil erstellen">➕ Raidprofil erstellen</button></div></div>
-<a class="raid-list-promo raid-list-promo-wide" href="raidkader.html" aria-label="Zum Raidkader"><div class="raid-list-promo-content"><div class="raid-list-promo-kicker">KINDSKÖPFE · RAIDKADER</div><h3 class="raid-list-promo-title">Hier gehts zum Raidkader</h3></div></a>
-<section id="news"><div class="section-title"><h2>📰 Gilden-News</h2><button class="btn btn-primary admin-only" onclick="openNewsForm()">+ News erstellen</button></div><div class="news-section-layout"><div id="newsContainer" class="news-grid"></div></div></section>
+<section id="news"><div class="section-title"><h2>📰 Gilden-News</h2><button class="btn btn-primary admin-only" onclick="openNewsForm()">+ News erstellen</button></div><div class="news-section-layout"><div class="news-grid" id="newsContainer"></div></div></section>
 <section id="raids"><div class="section-title"><h2>⚔️ Raidplaner</h2><button class="btn btn-primary admin-only" onclick="openRaidForm()">+ Raid erstellen</button></div><div id="raidContainer"></div></section>
 <section id="events"><div class="section-title"><h2>🎉 Eventplaner</h2><button class="btn btn-primary admin-only" onclick="openEventForm()">+ Event erstellen</button></div><div id="eventContainer"></div></section>
-
 </main>
-
-<footer><strong>Kindsköpfe</strong><br><br>Raid und Event Portal</footer>
-<div id="adminStatus" class="admin-status">🔐 Admin-Modus aktiv</div><div id="toast" class="toast"></div>
-<div id="modal" class="modal"><div class="modal-box"><button class="close-modal" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
-
+<footer><strong>Kindsköpfe</strong><br/><br/>Raid und Event Portal</footer>
+<div class="admin-status" id="adminStatus">🔐 Admin-Modus aktiv</div><div class="toast" id="toast"></div>
+<div class="modal" id="modal"><div class="modal-box"><button class="close-modal" onclick="closeModal()">×</button><div id="modalContent"></div></div></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
@@ -1351,6 +3461,7 @@ async function init(){
     const {data:{session},error:sessionError}=await supabaseClient.auth.getSession();
     if(sessionError) throw sessionError;
     await updateAdminState(session);
+     await restoreRaidProfileSession();
     await refreshData();
     supabaseClient.auth.onAuthStateChange(async (_event,session)=>{
       try{
@@ -1693,7 +3804,28 @@ function openManageSignupChooser(){
   updateManageItems();
 }
 
-function openManageSignupChooserFor(type,id){
+async function openManageSignupChooserFor(type,id){
+  const logged=getLoggedInRaidProfile();
+
+  // Eingeloggt: keine PIN-Abfrage mehr anzeigen. Die bestehende Session wird
+  // intern für die Zuordnung der Anmeldung verwendet.
+  if(logged){
+    if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
+    const {data,error}=await supabaseClient.rpc("manage_signup_by_pin",{p_pin:logged.pin});
+    if(error){dbError(error);return;}
+
+    const signups=Array.isArray(data?.signups)?data.signups:[];
+    const match=signups.find(x=>String(x.item_type)===String(type) && Number(x.item_id)===Number(id));
+    if(!match){
+      showToast("ℹ️ Für diesen Eintrag besteht noch keine Anmeldung.");
+      return;
+    }
+
+    openManagedSignupActions(match.item_type,match.item_id,match.player,match.character,logged.pin,match);
+    return;
+  }
+
+  // Besucher: bisheriger PIN-Dialog bleibt unverändert.
   openManageSignupChooser();
   const typeEl=document.getElementById("manageItemType");
   if(typeEl){typeEl.value=type;updateManageItems();}
@@ -1973,8 +4105,11 @@ function renderRaids(){
            ${statusList(absent)}
          </div>
        </div>
-       <br><button class="btn btn-primary" onclick="openSignup('raid',${r.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('raid',${r.id})">🔑 Meine Anmeldung verwalten</button>
-       <p class="signup-roster-hint"><strong>Hinweis:</strong> Du kannst dich erst für ein Raid anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.</p>
+       <div class="signup-actions-row">
+         <button class="btn btn-primary" onclick="openSignup('raid',${r.id})">${getLoggedInRaidProfile() ? '➕ Anmeldung' : '+ Anmeldung'}</button>
+         <button class="btn btn-secondary" onclick="openManageSignupChooserFor('raid',${r.id})">${getLoggedInRaidProfile() ? '⚙️ Meine Anmeldung verwalten' : '🔑 Meine Anmeldung verwalten'}</button>
+       </div>
+       <p class="signup-roster-hint">${getLoggedInRaidProfile() ? '<strong>Raidprofil aktiv:</strong> Deine Anmeldung wird automatisch deinem eingeloggten Profil zugeordnet – kein PIN nötig.' : '<strong>Hinweis:</strong> Du kannst dich erst für ein Raid anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.'}</p>
      </div>
    </article>`);
  });
@@ -2103,11 +4238,141 @@ function renderEvents(){
            ${statusList(absent)}
          </div>
        </div>
-       <br><button class="btn btn-primary" onclick="openSignup('event',${e.id})">+ Anmeldung</button> <button class="btn btn-secondary" onclick="openManageSignupChooserFor('event',${e.id})">🔑 Meine Anmeldung verwalten</button>
-       <p class="signup-roster-hint"><strong>Hinweis:</strong> Du kannst dich erst für ein Event anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.</p>
+       <div class="signup-actions-row">
+         <button class="btn btn-primary" onclick="openSignup('event',${e.id})">${getLoggedInRaidProfile() ? '➕ Anmeldung' : '+ Anmeldung'}</button>
+         <button class="btn btn-secondary" onclick="openManageSignupChooserFor('event',${e.id})">${getLoggedInRaidProfile() ? '⚙️ Meine Anmeldung verwalten' : '🔑 Meine Anmeldung verwalten'}</button>
+       </div>
+       <p class="signup-roster-hint">${getLoggedInRaidProfile() ? '<strong>Raidprofil aktiv:</strong> Deine Anmeldung wird automatisch deinem eingeloggten Profil zugeordnet – kein PIN nötig.' : '<strong>Hinweis:</strong> Du kannst dich erst für ein Event anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.'}</p>
      </div>
    </article>`);
  });
+}
+
+/* ===== BESUCHER-RAIDPROFIL-LOGIN ===== */
+let raidProfileSession = {player:"",pin:"",characters:[]};
+
+function getRaidProfileSession(){
+  try{
+    const raw=sessionStorage.getItem("kindskopfeRaidProfileSession");
+    if(!raw)return null;
+    const data=JSON.parse(raw);
+    if(!data?.player || !data?.pin)return null;
+    return data;
+  }catch(e){return null;}
+}
+
+function saveRaidProfileSession(data){
+  raidProfileSession={
+    player:String(data?.player||"").trim(),
+    pin:String(data?.pin||"").trim(),
+    characters:Array.isArray(data?.characters)?data.characters:[]
+  };
+  sessionStorage.setItem("kindskopfeRaidProfileSession",JSON.stringify(raidProfileSession));
+  updateRaidProfileLoginUI();
+}
+
+function clearRaidProfileSession(){
+  raidProfileSession={player:"",pin:"",characters:[]};
+  sessionStorage.removeItem("kindskopfeRaidProfileSession");
+  updateRaidProfileLoginUI();
+}
+
+function updateRaidProfileLoginUI(){
+  const bar=document.getElementById("profileLoginBar");
+  const title=document.getElementById("profileLoginTitle");
+  const text=document.getElementById("profileLoginText");
+  const loginBtn=document.getElementById("profileLoginButton");
+  const editBtn=document.getElementById("profileEditButton");
+  const logoutBtn=document.getElementById("profileLogoutButton");
+  if(!bar||!title||!text||!loginBtn||!editBtn||!logoutBtn)return;
+
+  if(raidProfileSession.player && raidProfileSession.pin){
+    bar.classList.add("logged-in");
+    title.className="profile-login-logged-title";
+    title.innerHTML=`${escapeHTML(raidProfileSession.player)} <span class="profile-login-badge">Eingeloggt</span>`;
+    text.innerHTML=`Dein Raidprofil ist aktiv.<br><span style="color:#d6e0e7">Füge hier weiter Chars hinzu, bearbeite hier deine bestehenden Charaktere oder melde dich unten direkt im Raid- und Eventplaner an.</span>`;
+    loginBtn.style.display="none";
+    editBtn.style.display="inline-flex";
+    logoutBtn.style.display="inline-flex";
+  }else{
+    bar.classList.remove("logged-in");
+    title.className="";
+    title.textContent="Raidprofil";
+    text.textContent="Mit deinem Raidprofil-PIN anmelden, um Chars hinzuzufügen, zu bearbeiten oder dich im Raid-/Eventplaner einzutragen.";
+    loginBtn.textContent="🔑 Mit PIN anmelden";
+    loginBtn.disabled=false;
+    loginBtn.style.opacity="";
+    loginBtn.style.display="inline-flex";
+    editBtn.style.display="none";
+    logoutBtn.style.display="none";
+  }
+}
+
+function openProfileLogin(){
+  if(!supabaseClient){alert("Supabase ist noch nicht eingerichtet.");return;}
+  if(raidProfileSession.player && raidProfileSession.pin){
+    showToast("👤 Du bist bereits als "+raidProfileSession.player+" eingeloggt.");
+    return;
+  }
+  openModal(`<h2>🔐 Raidprofil anmelden</h2>
+    <p class="muted">Melde dich mit dem persönlichen PIN deines Raidprofils an. Danach wird dein Profilname automatisch angezeigt und du kannst dich direkt für Raids anmelden.</p>
+    <div class="form-group">
+      <label>Raidprofil-PIN *</label>
+      <input id="profileLoginPin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="current-password" placeholder="4–20 Ziffern">
+    </div>
+    <p class="signup-status-help">Der PIN gehört zu deinem Raidprofil und ist kein Admin-Login.</p>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
+      <button class="btn btn-primary" onclick="loginWithRaidProfilePin()">🔓 Einloggen</button>
+    </div>`);
+  document.getElementById("profileLoginPin")?.focus();
+}
+
+async function loginWithRaidProfilePin(){
+  const pin=normalizeName(document.getElementById("profileLoginPin")?.value);
+  if(!pinIsValid(pin)){alert("Bitte deinen 4–20-stelligen Raidprofil-PIN eingeben.");return;}
+
+  const {data,error}=await supabaseClient.rpc("get_raidkader_signup_context",{p_pin:pin});
+  if(error){dbError(error);return;}
+  if(!data?.ok){alert(data?.message||"Kein Raidprofil mit diesem PIN gefunden.");return;}
+
+  const characters=Array.isArray(data.characters)?data.characters:[];
+  if(!characters.length){alert("Zu diesem Raidprofil wurden keine Charaktere gefunden.");return;}
+
+  saveRaidProfileSession({player:data.player_name,pin,characters});
+  raidKaderVerifiedPlayer=data.player_name;
+  raidKaderVerifiedPin=pin;
+  raidKaderManagePlayer=data.player_name;
+  raidKaderManagePin=pin;
+  closeModal();
+  showToast("👤 Erfolgreich als "+data.player_name+" eingeloggt.");
+}
+
+async function restoreRaidProfileSession(){
+  const stored=getRaidProfileSession();
+  if(!stored){updateRaidProfileLoginUI();return;}
+
+  const {data,error}=await supabaseClient.rpc("get_raidkader_signup_context",{p_pin:stored.pin});
+  if(error || !data?.ok){clearRaidProfileSession();return;}
+
+  const characters=Array.isArray(data.characters)?data.characters:[];
+  if(!characters.length){clearRaidProfileSession();return;}
+
+  saveRaidProfileSession({player:data.player_name,pin:stored.pin,characters});
+  raidKaderVerifiedPlayer=data.player_name;
+  raidKaderVerifiedPin=stored.pin;
+  raidKaderManagePlayer=data.player_name;
+  raidKaderManagePin=stored.pin;
+}
+
+function logoutRaidProfile(){
+  const player=raidProfileSession.player;
+  clearRaidProfileSession();
+  showToast("🚪 "+(player?player+" wurde abgemeldet.":"Raidprofil abgemeldet."));
+}
+
+function getLoggedInRaidProfile(){
+  return (raidProfileSession.player && raidProfileSession.pin) ? raidProfileSession : null;
 }
 
 /* ===== ANMELDUNG ===== */
@@ -2116,6 +4381,13 @@ let raidSignupContext = null;
 function openSignup(type,id){
   const item=type==="raid"?raids.find(x=>x.id===id):events.find(x=>x.id===id);
   if(!item)return;
+
+  const logged=getLoggedInRaidProfile();
+  if(logged){
+    raidSignupContext={type,id,pin:logged.pin,player:logged.player,characters:logged.characters};
+    renderRaidSignupForm();
+    return;
+  }
 
   openModal(`<h2>${type==="raid"?"⚔️ Raid-Anmeldung":"🎉 Event-Anmeldung"}</h2>
     <p class="muted">${escapeHTML(item.name)}</p>
@@ -2128,7 +4400,7 @@ function openSignup(type,id){
       <input id="signupPin" inputmode="numeric" pattern="[0-9]{4,20}" maxlength="20" type="password" autocomplete="off" placeholder="4–20 Ziffern">
       <p class="signup-status-help">Du kannst dich nur mit einem bestehenden Raidkader-Profil anmelden.</p>
     </div>
-    <p id="raidSignupNoProfileHint" class="signup-roster-hint"><strong>Noch kein Raidkader-Profil?</strong class="raidkader-login-hint"> Du kannst dich erst für ein Raid / Event anmelden, wenn du dich in den Raidkader eingetragen hast.</p>
+    <p id="raidSignupNoProfileHint" class="signup-roster-hint"><strong>Noch kein Raidkader-Profil?</strong> Du kannst dich erst für ein Raid / Event anmelden, wenn du dich in den Raidkader eingetragen hast.</p>
     <div class="modal-actions">
       <button class="btn btn-secondary" onclick="closeModal()">Abbrechen</button>
       <button class="btn btn-primary" onclick="verifyRaidSignupPin('${type}',${id})">Weiter</button>
@@ -2171,8 +4443,8 @@ function renderRaidSignupForm(){
     <p class="muted">${escapeHTML(item.name)}</p>
 
     <div class="rk-signup-context">
-      <strong>👤 Spielerprofil: ${escapeHTML(player)}</strong><br>
-      <span class="muted">Dein Raidkader-PIN wurde bestätigt. Wähle jetzt den Charakter, mit dem du dich anmelden möchtest.</span>
+      <strong>👤 Eingeloggt als: ${escapeHTML(player)}</strong><br>
+      <span class="muted">Dein Raidprofil ist aktiv. Wähle jetzt den Charakter, mit dem du dich anmelden möchtest.</span>
     </div>
 
     <div class="form-group">
@@ -2204,11 +4476,6 @@ function renderRaidSignupForm(){
         <option value="absent">🚫 Abwesend</option>
       </select>
       <p class="signup-status-help">„Dabei“ zählt für das Rollenlimit. Bank, Unsicher und Abwesend werden separat angezeigt und belegen keinen festen Platz.</p>
-    </div>
-
-    <div class="form-group rk-signup-readonly">
-      <label>Raidkader-PIN</label>
-      <input value="${escapeHTML(pin)}" readonly type="password">
     </div>
 
     <div class="modal-actions">
@@ -2755,6 +5022,49 @@ async function openRaidkaderManage(){
     </div>`);
 }
 
+async function openLoggedInRaidkaderManage(){
+  const logged=getLoggedInRaidProfile();
+  if(!logged){
+    openProfileLogin();
+    return;
+  }
+
+  const {data,error}=await supabaseClient.rpc("get_my_raidkader",{
+    p_player_name:logged.player,
+    p_pin:logged.pin
+  });
+  if(error){alert("Verwaltung konnte nicht geöffnet werden: "+error.message);return;}
+  if(!data?.length){
+    alert("Für dein Raidprofil wurden keine Charaktere gefunden.");
+    return;
+  }
+
+  raidKaderManagePlayer=logged.player;
+  raidKaderManagePin=logged.pin;
+  raidKaderVerifiedPlayer=logged.player;
+  raidKaderVerifiedPin=logged.pin;
+
+  const items=data.map(row=>`
+    <div class="rk-manage-item">
+      <div>
+        <strong>${escapeHTML(row.character_name)}</strong>
+        <span>${escapeHTML(row.class_name)} · ${escapeHTML(row.spec)} · ${escapeHTML(row.item_level)} GS</span>
+      </div>
+      <div>
+        <button class="btn btn-secondary btn-small" onclick='openRaidkaderEdit(${JSON.stringify(row)})'>✏️</button>
+        <button class="btn btn-danger btn-small" onclick="deleteMyRaidkader(${row.id})">🗑️</button>
+      </div>
+    </div>`).join("");
+
+  openModal(`<h2>👤 ${escapeHTML(logged.player)} – Charaktere</h2>
+    <div class="rk-manage-list">${items}</div>
+    <p class="rk-muted-note">Du bist bereits über dein Raidprofil eingeloggt. Dein PIN muss nicht erneut eingegeben werden.</p>
+    <div class="modal-actions">
+      <button class="btn btn-primary" onclick='closeModal();openRaidkaderForm(${JSON.stringify(logged.player)},"add")'>➕ Weiteren Charakter hinzufügen</button>
+      <button class="btn btn-secondary" onclick="closeModal()">Schließen</button>
+    </div>`);
+}
+
 async function verifyRaidkaderManage(){
   const player=document.getElementById("rkManagePlayer").value.trim();
   const pin=document.getElementById("rkManagePin").value.trim();
@@ -2942,6 +5252,16 @@ async function adminDeleteRaidkader(id){
 
 function renderAll(){renderNews();renderRaids();renderEvents();updateAdminStatus();setTimeout(()=>loadRaidkader(),0);}
 renderAll();init();updateCountdowns();handleSectionNavigation();setInterval(updateCountdowns,1000);
+  updateRaidProfileLoginUI();
 </script>
 </body>
 </html>
+<style>
+/* Eingeloggt: beide Buttons auf die gleiche Höhe wie "Raidprofil erstellen" */
+.profile-top-layout .profile-login-bar.logged-in .profile-login-actions .btn,
+.profile-top-layout .raidkader-intro .raidprofil-top-btn{
+  height:56px !important;
+  min-height:56px !important;
+  box-sizing:border-box !important;
+}
+</style>
