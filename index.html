@@ -5103,7 +5103,7 @@ function openRaidkaderEdit(row){
     <div class="form-row"><div class="form-group"><label>Klasse</label><select id="rkeClass" onchange="updateEditSpecs()">${classOptions}</select></div><div class="form-group"><label>Spezialisierung</label><select id="rkeSpec"></select></div></div>
     <div class="form-row"><div class="form-group"><label>2. Spezialisierung / Offspec <span class="muted">(optional)</span></label><select id="rkeSpec2"></select></div><div class="form-group"><label>Offspec-Rolle</label><select id="rkeRole2" disabled></select></div></div>
     <div class="form-row"><div class="form-group"><label>Rolle</label><select id="rkeRole" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="rkeIlvl" type="number" min="1" max="999" value="${escapeHTML(String(row.item_level))}"></div></div>
-    <div class="modal-actions"><button class="btn btn-secondary" onclick="verifyRaidkaderManage()">↩ Zurück</button><button class="btn btn-primary" onclick="saveMyRaidkaderEdit(${row.id})">💾 Speichern</button></div>`);
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="openLoggedInRaidkaderManage()">↩ Zurück</button><button class="btn btn-primary" onclick="saveMyRaidkaderEdit(${row.id})">💾 Speichern</button></div>`);
   document.getElementById("rkeSpec").dataset.wanted=row.spec;
   document.getElementById("rkeSpec2").dataset.wanted=spec2;
   updateEditSpecs();
@@ -5132,7 +5132,7 @@ async function saveMyRaidkaderEdit(id){
   if(error){alert("Änderung fehlgeschlagen: "+error.message);return;} if(data?.ok===false){alert(data.message||"Änderung fehlgeschlagen.");return;}
   const {data:ilvlData,error:ilvlError}=await supabaseClient.rpc("update_my_raidkader_item_level",{p_id:Number(id),p_player_name:raidKaderManagePlayer,p_pin:raidKaderManagePin,p_item_level:ilvl});
   if(ilvlError){alert("Gegenstandsstufe konnte nicht gespeichert werden: "+ilvlError.message);return;} if(ilvlData?.ok===false){alert(ilvlData.message||"Gegenstandsstufe konnte nicht gespeichert werden.");return;}
-  await loadRaidkader(); showToast("✏️ Charakter erfolgreich aktualisiert."); await verifyRaidkaderManage();
+  await loadRaidkader(); showToast("✏️ Charakter erfolgreich aktualisiert."); await openLoggedInRaidkaderManage();
 }
 
 async function deleteMyRaidkader(id){
