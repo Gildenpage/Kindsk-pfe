@@ -3765,7 +3765,7 @@ function openRaidForm(id=null){
 function updateRaidTotal(){const a=+document.getElementById("raidTankLimit")?.value||0,b=+document.getElementById("raidHealLimit")?.value||0,c=+document.getElementById("raidDDLimit")?.value||0,s=+document.getElementById("raidSize")?.value||0,p=document.getElementById("raidTotalPreview");if(p)p.innerHTML=a+b+c>s?`<span style="color:#ff6969">⚠️ ${a+b+c}/${s} Rollen – zu viele!</span>`:`Rollen: ${a+b+c}/${s}`;}
 async function saveRaid(id){ if(!isAdmin){alert("Admin-Sitzung ist nicht mehr aktiv. Bitte neu einloggen.");return;}
  const payload={name:document.getElementById("raidName").value.trim(),size:+document.getElementById("raidSize").value,date:document.getElementById("raidDate").value,time:document.getElementById("raidTime").value,tank_limit:+document.getElementById("raidTankLimit").value,heal_limit:+document.getElementById("raidHealLimit").value,dd_limit:+document.getElementById("raidDDLimit").value,description:document.getElementById("raidDescription").value.trim()};if(!payload.name||!payload.date||!payload.time){alert("Raidname, Datum und Startzeit sind erforderlich.");return;}if(payload.tank_limit+payload.heal_limit+payload.dd_limit>payload.size){alert("Die Rollenanforderungen dürfen die Raidgröße nicht überschreiten.");return;}
- if(id!==null){const r=raids.find(x=>x.id===id);if(r&&r.players.length>payload.size){alert("Die Raidgröße kann nicht kleiner als die Teilnehmerzahl sein.");return;}if(r&&r.players.filter(p=>p.role==="Tank").length>payload.tank_limit||r&&r.players.filter(p=>p.role==="Heiler").length>payload.heal_limit||r&&r.players.filter(p=>p.role==="DD").length>payload.dd_limit){alert("Ein Rollenlimit ist kleiner als bereits angemeldete Spieler.");return;}}
+ if(id!==null){const r=raids.find(x=>x.id===id);const confirmed=r?(r.players||[]).filter(p=>(p.status||"confirmed")==="confirmed"):[];if(r&&confirmed.length>payload.size){alert("Die Raidgröße kann nicht kleiner als die Anzahl der fest angemeldeten Teilnehmer sein.");return;}if(r&&confirmed.filter(p=>p.role==="Tank").length>payload.tank_limit||r&&confirmed.filter(p=>p.role==="Heiler").length>payload.heal_limit||r&&confirmed.filter(p=>p.role==="DD").length>payload.dd_limit){alert("Ein Rollenlimit ist kleiner als bereits fest angemeldete Spieler.");return;}}
  const q=id===null?supabaseClient.from("raids").insert(payload):supabaseClient.from("raids").update(payload).eq("id",id);const {error}=await q;if(error){dbError(error);return;}closeModal();await refreshData();showToast(id===null?"⚔️ Raid erstellt.":"⚔️ Raid aktualisiert.");
 }
 async function deleteRaid(id){
@@ -4513,6 +4513,35 @@ async function saveRaidkaderSignup(){
   if(!c){
     alert("Bitte einen Charakter auswählen.");
     return;
+  }
+
+  // Ist der Raid bereits mit fest angemeldeten Teilnehmern voll,
+  // darf nur bei einer gewünschten "Dabei"-Anmeldung auf die Ersatzbank
+  // ausgewichen werden. Ersatzbank/Unsicher/Abwesend bleiben davon unberührt.
+  if(type==="raid" && status==="confirmed") {
+    const raid=raids.find(r=>Number(r.id)===Number(id));
+    const confirmedCount=raid ? (raid.players||[]).filter(p=>(p.status||"confirmed")==="confirmed").length : 0;
+    const raidSize=Number(raid?.size||0);
+    if(raidSize>0 && confirmedCount>=raidSize){
+      const ok=confirm("Der Raid ist mit "+confirmedCount+"/"+raidSize+" fest angemeldeten Teilnehmern voll besetzt.\n\nMöchtest du stattdessen auf die Ersatzbank?");
+      if(!ok){showToast("Anmeldung nicht gespeichert.");return;}
+
+      const retry=await supabaseClient.rpc("register_signup_from_raidkader",{
+        p_item_type:type,
+        p_item_id:id,
+        p_raidkader_id:c.id,
+        p_pin:pin,
+        p_status:"bench"
+      });
+      if(retry.error){dbError(retry.error);return;}
+      if(!retry.data?.ok){alert(retry.data?.message||"Anmeldung konnte nicht gespeichert werden.");return;}
+
+      raidSignupContext=null;
+      closeModal();
+      await refreshData();
+      showToast("🪑 Auf der Ersatzbank eingetragen.");
+      return;
+    }
   }
 
   const {data,error}=await supabaseClient.rpc("register_signup_from_raidkader",{
