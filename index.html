@@ -5097,85 +5097,42 @@ async function verifyRaidkaderManage(){
 
 function openRaidkaderEdit(row){
   const classOptions=Object.keys(wowClasses).map(c=>`<option value="${escapeHTML(c)}" ${c===row.class_name?"selected":""}>${escapeHTML(c)}</option>`).join("");
+  const spec2=row?.Offspec ?? row?.offspec ?? row?.spec2 ?? "";
   openModal(`<h2>✏️ ${escapeHTML(row.character_name)} bearbeiten</h2>
-    <div class="form-row">
-      <div class="form-group"><label>Spielername</label><input id="rkePlayer" value="${escapeHTML(raidKaderManagePlayer)}" readonly></div>
-      <div class="form-group"><label>Charaktername</label><input id="rkeChar" value="${escapeHTML(row.character_name)}"></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Klasse</label><select id="rkeClass" onchange="updateEditSpecs()">${classOptions}</select></div>
-      <div class="form-group"><label>Spezialisierung</label><select id="rkeSpec"></select></div>
-    </div>
-    <div class="form-row">
-      <div class="form-group"><label>Rolle</label><select id="rkeRole" disabled></select></div>
-      <div class="form-group"><label>Gegenstandsstufe</label><input id="rkeIlvl" type="number" min="1" max="999" value="${escapeHTML(String(row.item_level))}"></div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-secondary" onclick="verifyRaidkaderManage()">↩ Zurück</button>
-      <button class="btn btn-primary" onclick="saveMyRaidkaderEdit(${row.id})">💾 Speichern</button>
-    </div>`);
-  const sel=document.getElementById("rkeSpec");
-  sel.dataset.wanted=row.spec;
+    <div class="form-row"><div class="form-group"><label>Spielername</label><input id="rkePlayer" value="${escapeHTML(raidKaderManagePlayer)}" readonly></div><div class="form-group"><label>Charaktername</label><input id="rkeChar" value="${escapeHTML(row.character_name)}"></div></div>
+    <div class="form-row"><div class="form-group"><label>Klasse</label><select id="rkeClass" onchange="updateEditSpecs()">${classOptions}</select></div><div class="form-group"><label>Spezialisierung</label><select id="rkeSpec"></select></div></div>
+    <div class="form-row"><div class="form-group"><label>2. Spezialisierung / Offspec <span class="muted">(optional)</span></label><select id="rkeSpec2"></select></div><div class="form-group"><label>Offspec-Rolle</label><select id="rkeRole2" disabled></select></div></div>
+    <div class="form-row"><div class="form-group"><label>Rolle</label><select id="rkeRole" disabled></select></div><div class="form-group"><label>Gegenstandsstufe</label><input id="rkeIlvl" type="number" min="1" max="999" value="${escapeHTML(String(row.item_level))}"></div></div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="verifyRaidkaderManage()">↩ Zurück</button><button class="btn btn-primary" onclick="saveMyRaidkaderEdit(${row.id})">💾 Speichern</button></div>`);
+  document.getElementById("rkeSpec").dataset.wanted=row.spec;
+  document.getElementById("rkeSpec2").dataset.wanted=spec2;
   updateEditSpecs();
 }
 
 function updateEditSpecs(){
-  const cls=document.getElementById("rkeClass"),spec=document.getElementById("rkeSpec"),role=document.getElementById("rkeRole");
-  if(!cls||!spec||!role)return;
+  const cls=document.getElementById("rkeClass"),spec=document.getElementById("rkeSpec"),role=document.getElementById("rkeRole"),offspec=document.getElementById("rkeSpec2"),offrole=document.getElementById("rkeRole2");
+  if(!cls||!spec||!role||!offspec||!offrole)return;
   const entries=wowClasses[cls.value]||[];
   spec.innerHTML='<option value="">Spezialisierung wählen</option>';
   entries.forEach(([s,r])=>{const o=new Option(s,s);o.dataset.role=r;spec.add(o);});
-  if(spec.dataset.wanted && [...spec.options].some(o=>o.value===spec.dataset.wanted)){
-    spec.value=spec.dataset.wanted;
-  }
-  role.innerHTML='<option value="">Rolle</option>';
-  const found=entries.find(x=>x[0]===spec.value);
-  if(found)role.add(new Option(found[1],found[1]));
-  role.value=found?.[1]||"";
-  spec.onchange=()=>{
-    const f=entries.find(x=>x[0]===spec.value);
-    role.innerHTML=f?`<option value="${f[1]}">${f[1]}</option>`:'<option value="">Rolle</option>';
-    role.value=f?.[1]||"";
-  };
+  if(spec.dataset.wanted && [...spec.options].some(o=>o.value===spec.dataset.wanted))spec.value=spec.dataset.wanted;
+  offspec.innerHTML='<option value="">Keine Offspec</option>';
+  entries.forEach(([s,r])=>{if(s!==spec.value){const o=new Option(s,s);o.dataset.role=r;offspec.add(o);}});
+  if(offspec.dataset.wanted && [...offspec.options].some(o=>o.value===offspec.dataset.wanted))offspec.value=offspec.dataset.wanted;
+  const updateRoles=()=>{const f=entries.find(x=>x[0]===spec.value),of=entries.find(x=>x[0]===offspec.value);role.innerHTML=f?`<option value="${f[1]}">${f[1]}</option>`:'<option value="">Rolle</option>';role.value=f?.[1]||"";offrole.innerHTML=of?`<option value="${of[1]}">${of[1]}</option>`:'<option value="">Wird automatisch gesetzt</option>';offrole.value=of?.[1]||"";};
+  updateRoles();
+  spec.onchange=()=>{const wantedOff=offspec.value;offspec.innerHTML='<option value="">Keine Offspec</option>';entries.forEach(([s,r])=>{if(s!==spec.value){const o=new Option(s,s);o.dataset.role=r;offspec.add(o);}});if(wantedOff && [...offspec.options].some(o=>o.value===wantedOff))offspec.value=wantedOff;updateRoles();};
+  offspec.onchange=updateRoles;
 }
 
 async function saveMyRaidkaderEdit(id){
-  const character=document.getElementById("rkeChar").value.trim();
-  const className=document.getElementById("rkeClass").value;
-  const spec=document.getElementById("rkeSpec").value;
-  const role=document.getElementById("rkeRole").value;
-  const ilvl=Number(document.getElementById("rkeIlvl").value);
-  if(!character||!className||!spec||!role||!ilvl){alert("Bitte alle Felder ausfüllen.");return;}
-
-  // Die aktuelle Supabase-RPC erwartet zusätzlich die beiden Offspec-Parameter.
-  // Beim Bearbeiten werden sie aus dem vorhandenen Charakter übernommen, damit
-  // eine reine Änderung der Gegenstandsstufe/GS die Offspec nicht löscht.
-  const currentRow=raidKaderRows.find(r=>Number(r.id)===Number(id));
-  const spec2=currentRow?.Offspec ?? currentRow?.offspec ?? currentRow?.spec2 ?? "";
-  const role2Entry=(wowClasses[className]||[]).find(([specName])=>specName===spec2);
-  const role2=role2Entry ? role2Entry[1] : (currentRow?.role2 ?? null);
-
-  const {data,error}=await supabaseClient.rpc("update_my_raidkader",{
-    p_id:Number(id),p_player_name:raidKaderManagePlayer,p_pin:raidKaderManagePin,
-    p_character_name:character,p_class_name:className,p_spec:spec,p_role:role,
-    p_spec2:spec2||null,p_role2:role2||null,p_item_level:ilvl
-  });
-  if(error){alert("Änderung fehlgeschlagen: "+error.message);return;}
-  if(data?.ok===false){alert(data.message||"Änderung fehlgeschlagen.");return;}
-
-  // Gegenstandsstufe separat und PIN-geschützt speichern.
-  const {data:ilvlData,error:ilvlError}=await supabaseClient.rpc("update_my_raidkader_item_level",{
-    p_id:Number(id),
-    p_player_name:raidKaderManagePlayer,
-    p_pin:raidKaderManagePin,
-    p_item_level:ilvl
-  });
-  if(ilvlError){alert("Gegenstandsstufe konnte nicht gespeichert werden: "+ilvlError.message);return;}
-  if(ilvlData?.ok===false){alert(ilvlData.message||"Gegenstandsstufe konnte nicht gespeichert werden.");return;}
-
-  await loadRaidkader();
-  await verifyRaidkaderManage();
-  showToast("✏️ Charakter aktualisiert.");
+  const character=document.getElementById("rkeChar").value.trim(),className=document.getElementById("rkeClass").value,spec=document.getElementById("rkeSpec").value,role=document.getElementById("rkeRole").value,spec2=document.getElementById("rkeSpec2")?.value||"",role2=document.getElementById("rkeRole2")?.value||"",ilvl=Number(document.getElementById("rkeIlvl").value);
+  if(!character||!className||!spec||!role||!ilvl){alert("Bitte alle Pflichtfelder ausfüllen.");return;}
+  const {data,error}=await supabaseClient.rpc("update_my_raidkader",{p_id:Number(id),p_player_name:raidKaderManagePlayer,p_pin:raidKaderManagePin,p_character_name:character,p_class_name:className,p_spec:spec,p_role:role,p_spec2:spec2||null,p_role2:role2||null,p_item_level:ilvl});
+  if(error){alert("Änderung fehlgeschlagen: "+error.message);return;} if(data?.ok===false){alert(data.message||"Änderung fehlgeschlagen.");return;}
+  const {data:ilvlData,error:ilvlError}=await supabaseClient.rpc("update_my_raidkader_item_level",{p_id:Number(id),p_player_name:raidKaderManagePlayer,p_pin:raidKaderManagePin,p_item_level:ilvl});
+  if(ilvlError){alert("Gegenstandsstufe konnte nicht gespeichert werden: "+ilvlError.message);return;} if(ilvlData?.ok===false){alert(ilvlData.message||"Gegenstandsstufe konnte nicht gespeichert werden.");return;}
+  await loadRaidkader(); showToast("✏️ Charakter erfolgreich aktualisiert."); await verifyRaidkaderManage();
 }
 
 async function deleteMyRaidkader(id){
