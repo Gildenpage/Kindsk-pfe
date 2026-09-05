@@ -469,6 +469,8 @@ a[href*="raidkader"][class*="btn"] {
   }
 }
 
+
+.pin-key-icon{display:inline-block;margin-right:.35em;filter:grayscale(1) brightness(.18);transform:translateY(1px);}
 </style>
 <style id="raidkader-mop-fix-style">
 </style>
@@ -3319,7 +3321,7 @@ main > .raid-list-promo.raid-list-promo-wide{
 </div>
 </div>
 <div class="profile-login-actions">
-<button class="btn btn-primary" id="profileLoginButton" onclick="openProfileLogin()" type="button">🔑 Mit PIN anmelden</button>
+<button class="btn btn-primary" id="profileLoginButton" onclick="openProfileLogin()" type="button"><span class="pin-key-icon" aria-hidden="true">🔑</span>Mit PIN anmelden</button>
 <button class="btn btn-primary profile-login-edit" id="profileEditButton" onclick="openLoggedInRaidkaderManage()" style="display:none" type="button">✏️ Chars hinzufügen / bearbeiten</button>
 <button class="btn btn-secondary" id="profileLogoutButton" onclick="logoutRaidProfile()" style="display:none" type="button">🚪 Abmelden</button>
 </div>
@@ -4299,7 +4301,7 @@ function updateRaidProfileLoginUI(){
     title.className="";
     title.textContent="Raidprofil";
     text.textContent="Mit deinem Raidprofil-PIN anmelden, um Chars hinzuzufügen, zu bearbeiten oder dich im Raid-/Eventplaner einzutragen.";
-    loginBtn.textContent="🔑 Mit PIN anmelden";
+    loginBtn.innerHTML='<span class="pin-key-icon" aria-hidden="true">🔑</span>Mit PIN anmelden';
     loginBtn.disabled=false;
     loginBtn.style.opacity="";
     loginBtn.style.display="inline-flex";
