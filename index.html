@@ -4109,7 +4109,7 @@ function renderRaids(){
          <button class="btn btn-primary" onclick="openSignup('raid',${r.id})">${getLoggedInRaidProfile() ? '➕ Anmeldung' : '+ Anmeldung'}</button>
          <button class="btn btn-secondary" onclick="openManageSignupChooserFor('raid',${r.id})">${getLoggedInRaidProfile() ? '⚙️ Meine Anmeldung verwalten' : '🔑 Meine Anmeldung verwalten'}</button>
        </div>
-       <p class="signup-roster-hint">${getLoggedInRaidProfile() ? '<strong>Raidprofil aktiv:</strong> Deine Anmeldung wird automatisch deinem eingeloggten Profil zugeordnet – kein PIN nötig.' : '<strong>Hinweis:</strong> Du kannst dich erst für ein Raid anmelden, wenn du dich im Raidkader eingetragen hast. Verwende dafür den PIN deines Raidkader-Profils.'}</p>
+       <p class="signup-roster-hint">${getLoggedInRaidProfile() ? '<strong>Raidprofil aktiv:</strong> Deine Anmeldung wird automatisch deinem eingeloggten Profil zugeordnet – kein PIN nötig.' : '<strong>Hinweis:</strong> Bitte logge dich weiter oben mit deinem Profil ein, um dich für einen Raid anzumelden oder deine Anmeldung zu verwalten.'}</p>
      </div>
    </article>`);
  });
